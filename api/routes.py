@@ -116,8 +116,9 @@ def poster(id):
     })
     if id.startswith("tt"): id = id[2:]
     do = request.args.get('do', None)
+    baseURL = request.base_url.split('/api')[0]
     posterURL = imdb.IMDBtoPoster(id)
-    if not posterURL: posterURL = "/static/img/nopicture.jpg"
+    if not posterURL: posterURL = f"{baseURL}/static/img/nopicture.jpg"
     if do == 'redirect': return redirect(posterURL)
     elif do == 'show':
         if not os.path.exists(postersFolder): os.makedirs(postersFolder)
