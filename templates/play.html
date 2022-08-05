@@ -17,7 +17,7 @@
         }
         #player {
             background:black;
-            height:90%;
+            height:85%;
             position:absolute;
             top:0px;
             right:0px;
@@ -25,13 +25,13 @@
             left:0px;
         }
         .footer {
-            height: 10%;
+            height: 15%;
             background: rgb(17, 17, 17);
             border-radius: 25px;
         }
         .footer > button {
             width: 100%;
-            height: 100%;
+            height: 50%;
             border: none;
             background: rgb(17, 17, 17);
             color: white;
@@ -55,11 +55,15 @@
     </script>
     <div class="footer">
         <button id="favs">
-            Lodaing Button ...
+            Loading Button ...
+        </button>
+        <button id="playlist">
+            Loading Button ...
         </button>
     </div>
     <script>
         const favs = document.getElementById("favs");
+        const playlist = document.getElementById("playlist");
     
         // Check if movie is in favourites
         window.addEventListener("load", function() {
@@ -75,6 +79,18 @@
                 }
             };
             xhr.send();
+            xhr2 = new XMLHttpRequest();
+            xhr2.open("GET", "/api/isInPlaylist/{{ id }}", true);
+            xhr2.onreadystatechange = function() {
+                if (xhr2.readyState == 4 && xhr2.status == 200) {
+                    if (xhr2.responseText.match(/Movie found in playlist/)) {
+                        playlist.innerHTML = "Remove from playlist";
+                    } else {
+                        playlist.innerHTML = "Add to playlist";
+                    }
+                }
+            };
+            xhr2.send();
         });
     
         // Add or remove movie from favorites
@@ -96,6 +112,33 @@
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         favs.innerHTML = "Add to favorites";
+                    }
+                };
+                xhr.send();
+            } else {
+                console.log("Unknown button state");
+            }
+        });
+
+        // Add or remove movie from playlist
+        playlist.addEventListener("click", function() {
+            if (playlist.innerHTML == "Add to playlist") {
+                playlist.innerHTML = "Adding ...";
+                xhr = new XMLHttpRequest();
+                xhr.open("GET", "/api/addToPlaylist/{{ id }}", true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        playlist.innerHTML = "Remove from playlist";
+                    }
+                };
+                xhr.send();
+            } else if (playlist.innerHTML == "Remove from playlist") {
+                playlist.innerHTML = "Removing ...";
+                xhr = new XMLHttpRequest();
+                xhr.open("GET", "/api/removeFromPlaylist/{{ id }}", true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        playlist.innerHTML = "Add to playlist";
                     }
                 };
                 xhr.send();

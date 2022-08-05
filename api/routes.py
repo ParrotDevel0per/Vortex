@@ -1,19 +1,22 @@
 from flask import Blueprint, jsonify, Response, redirect, request, send_from_directory
 from plugins.gomo import resolve as gomoResolve
+from settings import getSetting
+from utils.logger import log
 import plugins.imdb as imdb
 import requests
 import shutil
 import psutil
 import json
 import time
+from utils.paths import CACHE_FOLDER, DB_FOLDER
 import os
 
 api = Blueprint('api', __name__)
-cachePosters = True
-cacheFolder = ".cache"
-DBFolder = "DB"
-if not os.path.exists(cacheFolder): os.makedirs(cacheFolder)
-if not os.path.exists(DBFolder): os.makedirs(DBFolder)
+cachePosters = bool(getSetting("cachePosters"))
+cacheRegistry = os.path.join(CACHE_FOLDER, "registry.json")
+postersFolder = os.path.join(CACHE_FOLDER, "posters")
+favoritesFile = os.path.join(DB_FOLDER, "favorites.json")
+playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 
 def chunkedDownload(url, filename, chunkSize=8192):
     r = requests.get(url, stream=True)
@@ -24,42 +27,42 @@ def chunkedDownload(url, filename, chunkSize=8192):
     return filename
 
 def addToCacheRegistry(filename, folder):
-    if not os.path.exists(f"{cacheFolder}/registry.json"): open(f"{cacheFolder}/registry.json", 'w').write("{}")
-    reg = json.load(open(f"{cacheFolder}/registry.json", 'r'))
+    if not os.path.exists(cacheRegistry): open(cacheRegistry, 'w').write("{}")
+    reg = json.load(open(cacheRegistry, 'r'))
     reg[f"{folder}-{filename}"] = {
         "filename": filename,
         "folder": folder,
         "expiry": time.time() + (24 * 60 * 60)
     }
-    open(f"{cacheFolder}/registry.json", 'w').write(json.dumps(reg))
+    open(cacheRegistry, 'w').write(json.dumps(reg))
 
 def removeFromCacheRegistry(filename, folder):
-    if not os.path.exists(f"{cacheFolder}/registry.json"): open(f"{cacheFolder}/registry.json", 'w').write("{}")
-    reg = json.load(open(f"{cacheFolder}/registry.json", 'r'))
+    if not os.path.exists(cacheRegistry): open(cacheRegistry, 'w').write("{}")
+    reg = json.load(open(cacheRegistry, 'r'))
     if f"{folder}-{filename}" in reg:
         del reg[f"{folder}-{filename}"]
-    open(f"{cacheFolder}/registry.json", 'w').write(json.dumps(reg))
+    open(cacheRegistry, 'w').write(json.dumps(reg))
 
 def searchForExpiredItems():
-    if not os.path.exists(f"{cacheFolder}/registry.json"): open(f"{cacheFolder}/registry.json", 'w').write("{}")
-    reg = json.load(open(f"{cacheFolder}/registry.json", 'r'))
+    if not os.path.exists(cacheRegistry): open(cacheRegistry, 'w').write("{}")
+    reg = json.load(open(cacheRegistry, 'r'))
     for key in reg:
         if reg[key]["expiry"] < time.time():
             removeFromCacheRegistry(reg[key]["filename"], reg[key]["folder"])
-            os.remove(f"{cacheFolder}/{reg[key]['folder']}/{reg[key]['filename']}")
+            os.remove(os.path.join(CACHE_FOLDER, reg[key]['folder'], reg[key]['filename']))
             print(f"Removed {reg[key]['filename']} from {reg[key]['folder']}")
 
 def cacheItem(filename, folder, data):
     searchForExpiredItems()
     addToCacheRegistry(filename, folder)
-    if not os.path.exists(f"{cacheFolder}/{folder}"): os.makedirs(f"{cacheFolder}/{folder}")
-    with open(f"{cacheFolder}/{folder}/{filename}", 'w') as f:
+    if not os.path.exists(os.path.join(CACHE_FOLDER, folder)): os.makedirs(os.path.join(CACHE_FOLDER, folder))
+    with open(os.path.join(CACHE_FOLDER, folder, filename), 'w') as f:
         f.write(data)
 
 def getCachedItem(filename, folder):
     searchForExpiredItems()
-    if os.path.exists(f"{cacheFolder}/{folder}/{filename}"):
-        with open(f"{cacheFolder}/{folder}/{filename}", 'r') as f:
+    if os.path.exists(os.path.join(CACHE_FOLDER, folder, filename)):
+        with open(os.path.join(CACHE_FOLDER, folder, filename), 'r') as f:
             return f.read()
     return None
 
@@ -69,11 +72,10 @@ def getCPUUsage(): return f"{psutil.cpu_percent()}%"
 
 def getCacheSize():
     used = 0
-    for folder, subfolders, filenames in os.walk(cacheFolder):
+    for folder, subfolders, filenames in os.walk(CACHE_FOLDER):
         for filename in filenames:
             used += os.path.getsize(os.path.join(folder, filename))
     return f"{round(used / (1024 * 1024), 2)}MB"
-
 
 @api.route('/')
 def index():
@@ -118,11 +120,11 @@ def poster(id):
     if not posterURL: posterURL = "/static/img/nopicture.jpg"
     if do == 'redirect': return redirect(posterURL)
     elif do == 'show':
-        if not os.path.exists(f"{cacheFolder}/posters"): os.makedirs(f"{cacheFolder}/posters")
+        if not os.path.exists(postersFolder): os.makedirs(postersFolder)
         if not cachePosters or "nopicture" in posterURL: return Response(requests.get(posterURL).content, mimetype="image/jpeg")
-        if f"tt{id}.png" not in os.listdir(f"{cacheFolder}/posters"):
-            chunkedDownload(posterURL, f"{cacheFolder}/posters/tt{id}.png")
-        return send_from_directory(f"{cacheFolder}/posters", f"tt{id}.png")
+        if f"tt{id}.png" not in os.listdir(postersFolder):
+            chunkedDownload(posterURL, os.path.join(postersFolder, f"tt{id}.png"))
+        return send_from_directory(postersFolder, f"tt{id}.png")
     return jsonify({
         "id": id,
         "url": posterURL
@@ -144,6 +146,7 @@ def search(query):
             "results": results
         })
     print(f"Returning cached search results for \"{query}\"")
+    log(f"Returning cached search results for \"{query}\"")
     return jsonify({
         "query": query,
         "results": json.loads(cached)
@@ -159,6 +162,7 @@ def top250movies():
             "results": results
         })
     print("Returning cached top250movies.json")
+    log("Returning cached top250movies.json")
     return jsonify({
         "results": json.loads(cached)
     })
@@ -173,6 +177,7 @@ def bottom100movies():
             "results": results
         })
     print("Returning cached bottom100movies.json")
+    log("Returning cached bottom100movies.json")
     return jsonify({
         "results": json.loads(cached)
     })
@@ -180,27 +185,27 @@ def bottom100movies():
 
 @api.route('/favorites/')
 def favorites():
-    if not os.path.exists(f"{DBFolder}/favorites.json"): open(f"{DBFolder}/favorites.json", "w").write("{}")
-    return json.loads(open(f"DB/favorites.json", "r").read())
+    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
+    return json.loads(open(favoritesFile, "r").read())
 
 @api.route('/addToFavorites/<id>')
 @api.route('/addToFavorites/', defaults={'id': None})
 def addToFavorites(id):
-    if not os.path.exists(f"{DBFolder}/favorites.json"): open(f"{DBFolder}/favorites.json", "w").write("{}")
+    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
     movie = imdb.getMovieInfo(id)
-    favorites = json.loads(open(f"DB/favorites.json", "r").read())
+    favorites = json.loads(open(favoritesFile, "r").read())
     favorites[id] = {
         "title": movie["title"],
         "year": movie["year"],
         "poster": movie["full-size cover url"],
         "id": f"tt{id}"
     }
-    open(f"DB/favorites.json", "w").write(json.dumps(favorites))
+    open(favoritesFile, "w").write(json.dumps(favorites))
     return jsonify({
         "status": "ok",
         "message": "Movie added to favorites"
@@ -209,16 +214,16 @@ def addToFavorites(id):
 @api.route('/removeFromFavorites/<id>')
 @api.route('/removeFromFavorites/', defaults={'id': None})
 def removeFromFavorites(id):
-    if not os.path.exists(f"{DBFolder}/favorites.json"): open(f"{DBFolder}/favorites.json", "w").write("{}")
+    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
-    favorites = json.loads(open(f"DB/favorites.json", "r").read())
+    favorites = json.loads(open(favoritesFile, "r").read())
     if id in favorites:
         del favorites[id]
-        open(f"DB/favorites.json", "w").write(json.dumps(favorites))
+        open(favoritesFile, "w").write(json.dumps(favorites))
         return jsonify({
             "status": "ok",
             "message": "Movie removed from favorites"
@@ -231,13 +236,13 @@ def removeFromFavorites(id):
 @api.route('/isInFavorites/<id>')
 @api.route('/isInFavorites/', defaults={'id': None})
 def isInFavorites(id):
-    if not os.path.exists(f"{DBFolder}/favorites.json"): open(f"{DBFolder}/favorites.json", "w").write("{}")
+    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
-    favorites = json.loads(open(f"DB/favorites.json", "r").read())
+    favorites = json.loads(open(favoritesFile, "r").read())
     if id in favorites:
         return jsonify({
             "status": "ok",
@@ -250,13 +255,13 @@ def isInFavorites(id):
 
 @api.route('/clearPosterCache/')
 def clearPosterCache():
-    fileCount = len(os.listdir(f"{cacheFolder}/posters"))
+    fileCount = len(os.listdir(postersFolder))
     if fileCount == 0: return jsonify({
         'status': 'error',
         'message': 'No posters found'
     })
-    shutil.rmtree(f"{cacheFolder}/posters")
-    os.makedirs(f"{cacheFolder}/posters")
+    shutil.rmtree(postersFolder)
+    os.makedirs(postersFolder)
     return jsonify({
         "status": "ok",
         "message": "Poster cache cleared",
@@ -265,13 +270,13 @@ def clearPosterCache():
 
 @api.route('/clearCache/')
 def clearCache():
-    fileCount = len(os.listdir(f"{cacheFolder}"))
+    fileCount = len(os.listdir(CACHE_FOLDER))
     if fileCount == 0: return jsonify({
         'status': 'error',
         'message': 'No files / folders found'
     })
-    shutil.rmtree(f"{cacheFolder}")
-    os.makedirs(f"{cacheFolder}")
+    shutil.rmtree(CACHE_FOLDER)
+    os.makedirs(CACHE_FOLDER)
     return jsonify({
         "status": "ok",
         "message": "Cache cleared",
@@ -280,4 +285,77 @@ def clearCache():
 
 @api.route('/proxy/<path:url>')
 def proxy(url):
-    return requests.get(url).content
+    #return requests.get(url).content
+    r = requests.get(url, stream=True)
+    return Response(r.iter_content(chunk_size=10*1024),
+                    content_type=r.headers['Content-Type'])
+
+@api.route('/playlist/')
+def playlist():
+    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    return json.loads(open(playlistFile, "r").read())
+
+@api.route('/addToPlaylist/<id>')
+@api.route('/addToPlaylist/', defaults={'id': None})
+def addToPlaylist(id):
+    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    movie = imdb.getMovieInfo(id)
+    playlist = json.loads(open(playlistFile, "r").read())
+    playlist[id] = {
+        "title": movie['title'],
+        "year": movie['year'],
+        "poster": movie["full-size cover url"],
+        "id": f"tt{id}"
+    }
+    open(playlistFile, "w").write(json.dumps(playlist))
+    return jsonify({
+        "status": "ok",
+        "message": "Movie added to playlist"
+    })
+
+@api.route('/removeFromPlaylist/<id>')
+@api.route('/removeFromPlaylist/', defaults={'id': None})
+def removeFromPlaylist(id):
+    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    playlist = json.loads(open(playlistFile, "r").read())
+    if id in playlist:
+        del playlist[id]
+        open(playlistFile, "w").write(json.dumps(playlist))
+        return jsonify({
+            "status": "ok",
+            "message": "Movie removed from playlist"
+        })
+    return jsonify({
+        "status": "error",
+        "message": "Movie not found in playlist"
+    })
+
+@api.route('/isInPlaylist/<id>')
+@api.route('/isInPlaylist/', defaults={'id': None})
+def isInPlaylist(id):
+    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    playlist = json.loads(open(playlistFile, "r").read())
+    if id in playlist:
+        return jsonify({
+            "status": "ok",
+            "message": "Movie found in playlist"
+        })
+    return jsonify({
+        "status": "error",
+        "message": "Movie not found in playlist"
+    })
