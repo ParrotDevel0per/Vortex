@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+    <script src="/static/playerjs.js"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
+    <style>
+        @font-face {
+            font-family: 'Chomsky';
+            src: url('/static/fonts/Chomsky.woff') format('woff');
+        }
+        html, body {
+            margin:0px;
+            height:100%;
+            width:100%;
+            background-color: black;
+            text-align: center;
+        }
+        .btn {
+            margin:0 auto;
+            display:block;
+            width: 94%!important;
+            background-color: black;
+            color: white;
+            border: 3px solid white;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 10px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: white;
+            color: black;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 4em;
+            margin-bottom: 10px;
+            margin-top: 0px;
+            font-family: 'Chomsky';
+        }
+        footer {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            padding: 1rem;
+            background-color: black;
+            text-align: center;
+        }
+        footer > p {
+            color: white;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Pirate Player</h1>
+    <a href="/search" class="btn">Search</a>
+    <a href="/favorites" class="btn">Favorites</a>
+    <a href="/top250movies" class="btn">IMDB Top 250 Movies</a>
+    <a href="/bottom100movies" class="btn">IMDB Bottom 100 Movies</a>
+    <a href="/playWithIMDBID" class="btn">Play with IMDB ID</a>
+    <footer>
+        <p>Loading ...</p>
+    </footer>
+    <script>
+        let infoText = document.getElementsByTagName('footer')[0].getElementsByTagName('p')[0];
+        setInterval(function() {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let response = JSON.parse(xhr.responseText);
+                    const version = response["version"];
+                    const systemRAMUsage = response["systemRAMUsage"];
+                    const pythonCPUUsage = response["pythonCPUUsage"];
+                    const cacheSize = response["cache"];
+                    const infoString = `Version ${version} | Python CPU Usage: ${pythonCPUUsage} | System Memory Usage: ${systemRAMUsage} | Cache Size: ${cacheSize}`;
+                    infoText.innerHTML = infoString;
+                }
+            }
+            xhr.open('GET', '/api/sysinfo', true);
+            xhr.send();
+        }, 1000);
+    </script>
+</body>
+</html>
