@@ -1,7 +1,6 @@
 # Settings:
 sleepTime = 30 # Interval of updating token
 expireAfter = 25 * 60 # When unused token will expire, must be bigger than sleepTime
-checkOn = 60 # How ofnet will check for expired tokens
 
 
 import requests

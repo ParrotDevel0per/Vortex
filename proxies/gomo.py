@@ -1,20 +1,11 @@
 import requests
-from flask import request, url_for, Blueprint, Response
+from flask import request, url_for, Blueprint
 from plugins.gomo import grab
 import json
-import time
 import base64
 import re
-import random
-from string import ascii_lowercase, digits
 
 gomo = Blueprint('gomo', __name__)
-
-
-# Settings:
-sleepTime = 30 # Interval of updating token
-expireAfter = 25 * 60 # When unused token will expire, must be bigger than sleepTime
-checkOn = 60 # How ofnet will check for expired tokens
 
 @gomo.route('/play')
 def play():
