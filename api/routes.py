@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, Response, redirect, request, send_from_directory
 from plugins.gomo import resolve as gomoResolve
+from plugins.vidsrc import resolve as vidsrcResolve
 from settings import getSetting
 from utils.logger import log
 import plugins.imdb as imdb
@@ -102,9 +103,17 @@ def resolve(id):
         'message': 'No ID provided'
     })
     if not id.startswith("tt"): id = f"tt{id}"
+    use = getSetting("source")
+    if request.args.get("source"): use = request.args.get("source")
+    baseURL = request.base_url.split("/api")[0]
+    sources = {
+        "gomo": "gomoResolve(baseURL, id)",
+        "vidsrc": "vidsrcResolve(baseURL, id)"
+    }
+    source = eval(sources[use])
     return jsonify({
         "id": id,
-        "url": gomoResolve(f"https://gomo.to/movie/{id}")
+        "url": source
     })
 
 @api.route('/poster/<id>')

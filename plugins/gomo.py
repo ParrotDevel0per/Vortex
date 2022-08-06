@@ -28,7 +28,7 @@ def getSources(url):
     sources = eval(resp.text.replace('\/', '/'))
     return list(set([source for source in sources if "gomo" in source]))
 
-def resolve(url):
+def grab(url):
     sources = getSources(url)
     if useALT:
         url = [source for source in sources if "vid1" in source][0]
@@ -63,3 +63,7 @@ def resolve(url):
             labels.append(f"{firstPart}x{secondPart}")
         else: labels.append(label)
     return mp4Sources[0]
+
+def resolve(baseURL, id):
+    url = f"{baseURL}/proxy/gomo/play?item={id}"
+    return baseURL + requests.get(url).text

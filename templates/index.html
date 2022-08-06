@@ -61,6 +61,12 @@
             color: white;
             font-size: 1.5em;
         }
+        @media screen and (min-width: 781px) and (max-width: 840px) {
+            footer {
+                display: none;
+            }
+        }
+          
     </style>
 </head>
 <body>
@@ -75,6 +81,7 @@
         <p>Loading ...</p>
     </footer>
     <script>
+        var isMobile = navigator.userAgent.toLowerCase().match(/mobile/i);
         let infoText = document.getElementsByTagName('footer')[0].getElementsByTagName('p')[0];
         setInterval(function() {
             let xhr = new XMLHttpRequest();
@@ -89,8 +96,12 @@
                     infoText.innerHTML = infoString;
                 }
             }
-            xhr.open('GET', '/api/sysinfo', true);
-            xhr.send();
+            if (!isMobile) {
+                xhr.open('GET', '/api/sysinfo', true);
+                xhr.send();
+            } else {
+                document.getElementsByTagName('footer')[0].style.display = 'none';
+            }
         }, 1000);
     </script>
 </body>

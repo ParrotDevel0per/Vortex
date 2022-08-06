@@ -10,7 +10,8 @@ default = {
     "port": "5000",
     "debug": "False",
     "adminPassword": "admin",
-    "cachePosters": "True"
+    "cachePosters": "True",
+    "source": "gomo"
 }
 
 def setToDefault():
@@ -23,7 +24,8 @@ settingsKeys = [
     "port",
     "debug",
     "adminPassword",
-    "cachePosters"
+    "cachePosters",
+    "source"
 ]
 
 for key in settingsKeys:
