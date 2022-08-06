@@ -19,6 +19,7 @@ def grab(url):
     path = re.findall(r'var path = "(.*?)"', r.text)[1].replace("//", "https://")
     return hlsurl, path, src
 
-def resolve(baseURL, id):
+def resolve(baseURL, id, episode=""):
     url = f"{baseURL}/proxy/vidsrc/play?item={id}"
+    if episode: url += f"&episode={episode}"
     return baseURL + requests.get(url).text

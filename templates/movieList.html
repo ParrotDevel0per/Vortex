@@ -87,7 +87,11 @@
     {% if count > 0 %}
     <div id="grid">
         {% for item in results %}
+            {% if results[item]['kind'] == 'tv series' %}
+            <div class="item" onclick="window.location.href='/seasons/{{ item }}';">
+            {% else %}
             <div class="item" onclick="window.location.href='/play/tt{{ item }}';">
+            {% endif %}
                 <img src="/api/poster/{{ item }}?do=show" alt="[{{ results[item]['year'] }}] {{ results[item]['title'] }}">
                 <span class="caption">[{{ results[item]['year'] }}] {{ results[item]['title'] }}</span>
             </div>

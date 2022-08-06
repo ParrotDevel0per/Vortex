@@ -1,6 +1,5 @@
 import os
 
-# if system is windows get AppData folder else get home folder
 USERDATA = ""
 FOLDERNAME = "ThePiratePlayer"
 CACHEFOLDERNAME = "cache"

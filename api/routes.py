@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, Response, redirect, request, send_from_dir
 from plugins.gomo import resolve as gomoResolve
 from plugins.vidsrc import resolve as vidsrcResolve
 from settings import getSetting
-from utils.logger import log
 import plugins.imdb as imdb
 import requests
 import shutil
@@ -105,10 +104,11 @@ def resolve(id):
     if not id.startswith("tt"): id = f"tt{id}"
     use = getSetting("source")
     if request.args.get("source"): use = request.args.get("source")
+    episode = str(request.args.get("episode") or "")
     baseURL = request.base_url.split("/api")[0]
     sources = {
-        "gomo": "gomoResolve(baseURL, id)",
-        "vidsrc": "vidsrcResolve(baseURL, id)"
+        "gomo": "gomoResolve(baseURL, id, episode)",
+        "vidsrc": "vidsrcResolve(baseURL, id, episode)"
     }
     source = eval(sources[use])
     return jsonify({
@@ -156,9 +156,62 @@ def search(query):
             "results": results
         })
     print(f"Returning cached search results for \"{query}\"")
-    log(f"Returning cached search results for \"{query}\"")
     return jsonify({
         "query": query,
+        "results": json.loads(cached)
+    })
+
+@api.route('/seasons/<id>')
+@api.route('/seasons/', defaults={'id': None})
+def seasons(id):
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    cached = getCachedItem(f"seasons-{id}.json", "seasons")
+    if cached == None:
+        results = imdb.seasons(id)
+        cacheItem(f"seasons-{id}.json", "seasons", json.dumps(results))
+        return jsonify({
+            "id": id,
+            "results": results
+        })
+    print(f"Returning cached seasons for \"{id}\"")
+    return jsonify({
+        "id": id,
+        "results": json.loads(cached)
+    })
+
+@api.route('/episodes/<id>/<season>')
+@api.route('/episodes/', defaults={'id': None, 'season': None})
+def episodes(id, season):
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if season == None: return jsonify({
+        'status': 'error',
+        'message': 'No season provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    if not season: return jsonify({
+        'status': 'error',
+        'message': 'No season provided'
+    })
+    cached = getCachedItem(f"episodes-{id}-{season}.json", "episodes")
+    if cached == None:
+        results = imdb.episodes(id, season)
+        cacheItem(f"episodes-{id}-{season}.json", "episodes", json.dumps(results))
+        return jsonify({
+            "id": id,
+            "season": season,
+            "results": results
+        })
+    print(f"Returning cached episodes for \"{id}\"")
+    return jsonify({
+        "id": id,
+        "season": season,
         "results": json.loads(cached)
     })
 
@@ -172,7 +225,6 @@ def top250movies():
             "results": results
         })
     print("Returning cached top250movies.json")
-    log("Returning cached top250movies.json")
     return jsonify({
         "results": json.loads(cached)
     })
@@ -187,11 +239,27 @@ def bottom100movies():
             "results": results
         })
     print("Returning cached bottom100movies.json")
-    log("Returning cached bottom100movies.json")
     return jsonify({
         "results": json.loads(cached)
     })
 
+@api.route('/seriesToPlaylist/<id>')
+@api.route('/seriesToPlaylist/', defaults={'id': None})
+def serieasToPlaylist(id):
+    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    #pl = imdb.createPlaylistFromSeries(id)
+    cache = getCachedItem(f"playlist-{id}.json", "playlists")
+    if cache == None:
+        pl = imdb.createPlaylistFromSeries(id)
+        cacheItem(f"playlist-{id}.json", "playlists", json.dumps(pl))
+        return pl
+    print(f"Returning cached playlist for \"{id}\"")
+    return json.loads(cache)
 
 @api.route('/favorites/')
 def favorites():
@@ -213,7 +281,8 @@ def addToFavorites(id):
         "title": movie["title"],
         "year": movie["year"],
         "poster": movie["full-size cover url"],
-        "id": f"tt{id}"
+        "id": f"tt{id}",
+        "kind": movie["kind"]
     }
     open(favoritesFile, "w").write(json.dumps(favorites))
     return jsonify({
@@ -369,3 +438,4 @@ def isInPlaylist(id):
         "status": "error",
         "message": "Movie not found in playlist"
     })
+

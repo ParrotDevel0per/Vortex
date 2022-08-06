@@ -11,7 +11,8 @@ default = {
     "debug": "False",
     "adminPassword": "admin",
     "cachePosters": "True",
-    "source": "gomo"
+    "source": "gomo",
+    "proxifyM3UPosters": "True",
 }
 
 def setToDefault():
@@ -25,7 +26,8 @@ settingsKeys = [
     "debug",
     "adminPassword",
     "cachePosters",
-    "source"
+    "source",
+    "proxifyM3UPosters",
 ]
 
 for key in settingsKeys:

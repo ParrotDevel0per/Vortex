@@ -73,7 +73,7 @@ def playlist():
     headers.update({"Referer": token['referer']})
     r = requests.get(token['url'], headers=headers)
     token = base64.b64encode(json.dumps(token).encode('utf-8')).decode('utf-8')
-    return Response(r.text.replace("http", "/proxy/vidsrc/ts?url=http").replace(".ts", ".ts&wmsAuthSign=%s" % token), mimetype='')
+    return Response(r.text.replace("http", "/proxy/vidsrc/ts?url=http").replace(".ts", ".ts&wmsAuthSign=%s" % token), mimetype='application/x-mpegURL')
 
 @vidsrc.route('/ts')
 def ts():
@@ -85,4 +85,4 @@ def ts():
     headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"}
     headers.update({"Referer": token['referer']})
     r = requests.get(request.args.get("url"), headers=headers)
-    return r.content
+    return Response(r.content, mimetype='video/mp2t')

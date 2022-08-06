@@ -1,5 +1,5 @@
 import requests
-from flask import request, url_for, Blueprint
+from flask import request, url_for, Blueprint, Response
 from plugins.gomo import grab
 import json
 import base64
@@ -11,7 +11,16 @@ gomo = Blueprint('gomo', __name__)
 def play():
     item = request.args.get('item')
     if item is None: return "No item specified"
-    resolved = grab(f"https://gomo.to/movie/{item}")
+    url = f"https://gomo.to/movie/{item}"
+    episode = request.args.get('episode')
+    if episode:
+        episode = episode.split("-")
+        season = episode[0]
+        episode = episode[1]
+        if episode in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]: episode = "0" + episode
+        if season in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]: season = "0" + season
+        url = f"https://gomo.to/show/{item}/{season}-{episode}"
+    resolved = grab(url)
     if resolved.endswith(".mp4"):
         return f"/api/proxy/{resolved}"
     token = {
@@ -34,7 +43,7 @@ def playlist():
         token = {"url": links[i]}
         token = base64.b64encode(json.dumps(token).encode('utf-8')).decode('utf-8')
         resp = resp.replace(links[i], url_for(redirectTo, wmsAuthSign=token))
-    return resp
+    return Response(resp, mimetype='application/x-mpegURL')
         
 
 @gomo.route('/ts')
@@ -42,4 +51,4 @@ def ts():
     token = request.args.get('wmsAuthSign')
     if token is None: return "Forbidden"
     token = json.loads(base64.b64decode(token).decode('utf-8'))
-    return requests.get(token["url"]).content
+    return Response(requests.get(token["url"]).content, mimetype='video/mp2t')

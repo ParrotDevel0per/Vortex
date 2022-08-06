@@ -5,11 +5,52 @@ def search(query):
     movies = ia.search_movie(query)
     response = {}
     for movie in movies:
-        if dict(movie)["kind"] not in ["video movie", "movie"]: continue
+        if dict(movie)["kind"] not in ["video movie", "movie", "tv series"]: continue
         if "podcast" in dict(movie)["title"].lower(): continue
         response[movie.getID()] = dict(movie)
         response[movie.getID()]["id"] = f"tt{movie.getID()}"
     return response
+
+def seasons(id):
+    series = ia.get_movie(id)
+    ia.update(series, "episodes")
+    result = {}
+    result["title"] = dict(series)["title"]
+    result["poster"] = dict(series)["full-size cover url"]
+    result["seasons"] = len(sorted(series['episodes']))
+    return result
+
+def episodes(id, season):
+    series = ia.get_movie(id)
+    ia.update(series, "episodes")
+    result = {}
+    result["title"] = dict(series)["title"]
+    result["poster"] = dict(series)["full-size cover url"]
+    episodes = series['episodes'][int(season)]
+    for ep in episodes:
+        result[ep] = {
+            "title": episodes[ep]["title"]
+        }
+    return result
+
+def createPlaylistFromSeries(id):
+    series = ia.get_movie(id)
+    ia.update(series, "episodes")
+    result = {}
+    result["title"] = dict(series)["title"]
+    result["id"] = f"tt{id}"
+    result["poster"] = dict(series)["full-size cover url"]
+    se = {}
+    for season in series['episodes']:
+        s = {}
+        for ep in series['episodes'][season]:
+            s[ep] = {
+                "title": series['episodes'][season][ep]["title"],
+                "group": f"Season {season}"
+            }
+        se[season] = s
+    result["seasons"] = se
+    return result
 
 def top250movies():
     movies = ia.get_top250_movies()

@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
     <script src="/static/js/playerjs.js"></script>
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
     <style>
         html, body {
             margin:0px;
@@ -46,6 +47,20 @@
             cursor: pointer;
             background: rgb(46, 46, 46);
         }
+        .footer > input {
+            width: 100%;
+            height: 50%;
+            border: none;
+            background: rgb(17, 17, 17);
+            color: white;
+            font-size: 2em;
+            text-align: center;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            text-decoration: none;
+            border-radius: 25px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -60,13 +75,30 @@
         <button id="playlist">
             Loading Button ...
         </button>
+        <input type="text" id="showPlaylist" name="name" maxlength="0" disabled/>
     </div>
     <script>
         const favs = document.getElementById("favs");
         const playlist = document.getElementById("playlist");
-    
+        const showPlaylist = document.getElementById("showPlaylist");
+        
+        $("#showPlaylist").bind('paste', function(e) {
+            $(this).attr("maxlength","1000")
+        });
+        $("#showPlaylist").on("input",function(){
+           $(this).attr("maxlength","0") 
+        });
+
         // Check if movie is in favourites
         window.addEventListener("load", function() {
+            var url = window.location.href;
+            if (url.includes("-")) {
+                playlist.style.display = "none";
+                showPlaylist.style.display = "block";
+                let id = url.split("/play/")[1].split("/")[0];
+                let showURL = url.split("/play/")[0] + "/show/" + id + ".m3u";
+                showPlaylist.value = showURL;
+            }
             xhr = new XMLHttpRequest();
             xhr.open("GET", "/api/isInFavorites/{{ id }}", true);
             xhr.onreadystatechange = function() {

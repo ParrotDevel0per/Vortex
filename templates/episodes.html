@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/static/js/jquery-3.6.0.min.js" type="text/javascript"></script>
-    <title>Search</title>
+    <title>Episodes</title>
     <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
@@ -83,51 +82,37 @@
     </style>
 </head>
 <body>
+    <h1 class="title">{{ title }}</h1>
     <input type="text" placeholder="Search ...">
-    <div id="grid"></div>
+    {% if count > 0 %}
+    <div id="grid">
+        {% for ep in episodes %}
+            <div class="item" onclick="window.location.href='/play/{{ id }}/{{ season }}-{{ ep }}';">
+                <img src="/api/poster/{{ id }}?do=show" alt="[{{ep}}] {{ episodes[ep]['title'] }}">
+                <span class="caption">[{{ep}}] {{ episodes[ep]['title'] }}</span>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
     <script>
-        const cleargrid = () => {$('#grid').empty();};
-
+        document.querySelector('input').style.display = 'none';
+        document.querySelector('h1').innerHTML = 'No Items Found';
+    </script>
+    {% endif %}
+    <script>
         const search = document.querySelector('input');
         search.addEventListener('keyup', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            if (searchTerm.length < 3) { cleargrid(); return; }
             const items = document.querySelectorAll('.item');
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.onreadystatechange = function() { 
-                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                    var resp = JSON.parse(xmlHttp.responseText);
-                    var resp = resp["results"];
-                    cleargrid();
-                    if (resp == undefined) { return; }
-                    for (const key in resp) {
-                        const year = resp[key]["year"];
-                        const title = resp[key]["title"];
-                        const poster = resp[key]["full-size cover url"];
-                        const fullName = "[" + year + "] " + title;
-                        const v = resp[key];
-                        const item = document.createElement('div');
-                        item.classList.add('item');
-                        let doType = "play";
-                        if (resp[key]["kind"] == "tv series") {
-                            doType = "seasons";
-                        }
-                        item.addEventListener('click', (e) => {
-                            window.location.href = `/${doType}/${v.id}`;
-                        });
-                        const img = document.createElement('img');
-                        img.src = poster;
-                        item.appendChild(img);
-                        const caption = document.createElement('span');
-                        caption.classList.add('caption');
-                        caption.innerHTML = fullName;
-                        item.appendChild(caption);
-                        document.getElementById('grid').appendChild(item);
-                    }
-            }
-            xmlHttp.open("GET", "/api/search/" + searchTerm, true);
-            xmlHttp.setRequestHeader('Accept', 'application/json');
-            xmlHttp.send(null);
+            items.forEach(item => {
+                const caption = item.querySelector('.caption');
+                const title = caption.textContent.toLowerCase();
+                if (title.indexOf(searchTerm) != -1) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         });
     </script>
 </body>

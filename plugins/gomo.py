@@ -64,6 +64,7 @@ def grab(url):
         else: labels.append(label)
     return mp4Sources[0]
 
-def resolve(baseURL, id):
+def resolve(baseURL, id, episode=""):
     url = f"{baseURL}/proxy/gomo/play?item={id}"
+    if episode: url += f"&episode={episode}"
     return baseURL + requests.get(url).text
