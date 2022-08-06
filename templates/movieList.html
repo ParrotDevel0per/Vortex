@@ -79,6 +79,19 @@
                 filter: blur(var(--blur-rate));
             }
         }
+        footer {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            padding: 1rem;
+            background-color: black;
+            text-align: center;
+        }
+        footer > p {
+            color: white;
+            font-size: 1.5em;
+        }
     </style>
 </head>
 <body>
@@ -103,8 +116,25 @@
         document.querySelector('h1').innerHTML = 'No Items Found';
     </script>
     {% endif %}
+    <footer>
+        <p id="m3uURL">Loading ...</p>
+    </footer>
     <script>
         const search = document.querySelector('input');
+        let m3uURL = document.getElementById('m3uURL');
+        var isMobile = navigator.userAgent.toLowerCase().match(/mobile/i);
+
+        window.addEventListener('load', () => {
+            let url = window.location.href;
+            if (url.includes('playlist')) {
+                let showURL = url.split("/playlist")[0] + "/playlist.m3u";
+                m3uURL.innerHTML = showURL;
+                if (isMobile) {
+                    m3uURL.style.fontSize = '1em';
+                }
+            }
+        });
+
         search.addEventListener('keyup', (e) => {
             const searchTerm = e.target.value.toLowerCase();
             const items = document.querySelectorAll('.item');

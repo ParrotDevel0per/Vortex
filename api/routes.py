@@ -439,3 +439,12 @@ def isInPlaylist(id):
         "message": "Movie not found in playlist"
     })
 
+@api.route('/mergeShows.m3u')
+def mergeShowM3Us():
+    baseURL = request.base_url.split("/api")[0]
+    items = request.args.get("ids")
+    if "|" in items: items = items.split("|")
+    else: items = [items]
+    m3u = "#EXTM3U\n"
+    for id in items: m3u += requests.get(f"{baseURL}/show/{id}.m3u").text.replace("#EXTM3U\n", "")
+    return Response(m3u, mimetype="audio/x-mpegurl")

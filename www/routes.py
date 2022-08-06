@@ -2,11 +2,23 @@ from flask import Blueprint, request, render_template, send_from_directory, redi
 from utils.paths import DB_FOLDER
 from settings import getSetting
 import requests
+#import random
 import json
 import os
 
 www = Blueprint('www', __name__)
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
+
+def getPreloader():
+    images = [
+        "1.png",
+        "2.jpg",
+        "3.jpg",
+        "4.jpg",
+        "5.jpg",
+    ]
+    return f"/static/img/preloader/{images[0]}"
+
 
 @www.route('/')
 def index():
@@ -17,9 +29,9 @@ def index():
 def play(id, episode):
     url = f"{request.base_url.split('/play')[0]}/api/resolve/{id}"
     if episode: url += f"?episode={episode}"
-    try: resolved = requests.get(url).json()["url"]
-    except: resolved = ""
-    return render_template('play.html', url=resolved, id=id)
+    #try: resolved = requests.get(url).json()["url"]
+    #except: resolved = ""
+    return render_template('play.html', url=url, id=id, preloader=getPreloader())
 
 @www.route('/play/<id>.m3u8')
 def play_m3u8(id):
@@ -111,3 +123,7 @@ def showm3u(id):
             group = resp["seasons"][season][episode]["group"]
             m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}" group-title="{group}", {title}\n{baseURL}/play/{id}/{season}-{episode}.m3u8\n'
     return m3u
+
+@www.route('/mergeShowM3Us')
+def mergeShowM3Us():
+    return render_template('mergeShowPlaylists.html')

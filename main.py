@@ -6,8 +6,9 @@ from proxies.gomo import gomo
 from settings import getSetting
 import os
 
-os.system("git fetch")
-os.system("git merge")
+if bool(getSetting("checkForUpdates")):
+    os.system("git fetch")
+    os.system("git merge")
 
 app = Flask(__name__)
 app.register_blueprint(api, url_prefix='/api')

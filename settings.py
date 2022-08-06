@@ -13,6 +13,7 @@ default = {
     "cachePosters": "True",
     "source": "gomo",
     "proxifyM3UPosters": "True",
+    "checkForUpdates": "True",
 }
 
 def setToDefault():
@@ -28,6 +29,7 @@ settingsKeys = [
     "cachePosters",
     "source",
     "proxifyM3UPosters",
+    "checkForUpdates",
 ]
 
 for key in settingsKeys:

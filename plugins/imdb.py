@@ -46,7 +46,7 @@ def createPlaylistFromSeries(id):
         for ep in series['episodes'][season]:
             s[ep] = {
                 "title": series['episodes'][season][ep]["title"],
-                "group": f"Season {season}"
+                "group": f"{result['title']} - Season {season}"
             }
         se[season] = s
     result["seasons"] = se
