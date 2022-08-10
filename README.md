@@ -68,7 +68,7 @@ You can contribute to this script at any time, idc
 
 ## Legal
 For legal reasons:
-- I'm not associated with gomo.to / vidsrc.me / imdb.com / .. in ANY WAY
+- I'm not associated with gomo.to / vidsrc.me / imdb.com / .. in ANY WAY \
 - Script works by proxying these sites to get stream url
 - I CANNOT SHUT DOWN vidsrc / gomo I DONT OWN THEM
 - Address any legal shit to them, I can't do anything
