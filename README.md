@@ -29,22 +29,22 @@ python3 main.py
 Then open ```http://ip:port/```
 
 ### M3U
-This shit also has m3u support, you can create m3u by adding movies to playlist in /play/id.
+This shit also has m3u support, you can create m3u by adding movies to playlist in /play/id.  
 ```
 http://ip:port/playlist.m3u
 ```
 
-TV Shows have theire own m3u's which can be merged together.
+TV Shows have theire own m3u's which can be merged together.  
 ```
 http://ip:port/show/tt7286456.m3u
 ```
 
 ### Cache / Data
-This shit stores cache and data in different directories based on os
-- Linux: ```$home/.ThePiratePlayer```
-- Win$hit: ```%appdata%\ThePiratePlayer```
+This shit stores cache and data in different directories based on os  
+- Linux: ```$home/.ThePiratePlayer```  
+- Win$hit: ```%appdata%\ThePiratePlayer```  
 ## API Reference
-Yeah, this also has api which can be accessed at /api/.
+Yeah, this also has api which can be accessed at /api/.  
 Here are some examples of best things it can do:
 
 #### Resolve Item
