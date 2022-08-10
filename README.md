@@ -67,16 +67,16 @@ Here are some examples of best things it can do:
 You can contribute to this script at any time, idc
 
 ## Legal
-For legal reasons:
-- I'm not associated with gomo.to / vidsrc.me / imdb.com / .. in ANY WAY \
-- Script works by proxying these sites to get stream url
-- I CANNOT SHUT DOWN vidsrc / gomo I DONT OWN THEM
-- Address any legal shit to them, I can't do anything
-- I cannot be held responsible for piracy of gomo.to / vidsrc.me
-- I don't make any profits from this script nor do i track any data
-- I'm not responsible for any illegal usage of this script!
-- Script made for educational / documentational purposes only!
-- Do not share this script without appropriate credits
-- For IMDB API I use Cinemagoer
-- If you need more explaining how it works u can DM me here if it works or create issue
-- For any takedown requests create Issue
+For legal reasons:  
+- I'm not associated with gomo.to / vidsrc.me / imdb.com / .. in ANY WAY  
+- Script works by proxying these sites to get stream url  
+- I CANNOT SHUT DOWN vidsrc / gomo I DONT OWN THEM  
+- Address any legal shit to them, I can't do anything  
+- I cannot be held responsible for piracy of gomo.to / vidsrc.me  
+- I don't make any profits from this script nor do i track any data  
+- I'm not responsible for any illegal usage of this script!  
+- Script made for educational / documentational purposes only!  
+- Do not share this script without appropriate credits  
+- For IMDB API I use Cinemagoer  
+- If you need more explaining how it works u can DM me here if it works or create issue  
+- For any takedown requests create Issue  
