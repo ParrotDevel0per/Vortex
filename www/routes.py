@@ -29,7 +29,8 @@ def play(id, episode):
     if episode: movieInfoURL += f"{baseURL}/api/getEpisodeInfo/{id}/{episode}"
     else: movieInfoURL += f"{baseURL}/api/getMovieInfo/{id}"
     metadata = requests.get(movieInfoURL).json()
-    return render_template('play.html', url=url, id=id, preloader=getPreloader(), metadata=metadata)
+    resolved = requests.get(url).json()["url"]
+    return render_template('play.html', url=url, id=id, preloader=getPreloader(), metadata=metadata, resolved=resolved)
 
 @www.route('/play/<id>.m3u8')
 def play_m3u8(id):

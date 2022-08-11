@@ -31,6 +31,12 @@
         <div class="col-md-8" style="margin-top: 30px;padding-left:0px;">
 			<div class="postmain" style="padding-bottom: 20px;">
                 <div id="player"></div>
+                <script>
+                var player = new Playerjs({
+                    id:"player",
+                    file:"{{ resolved }}"
+                });
+                </script>
             </div>
             <div class="postmain-no-margin-no-padding" style="padding-bottom: 20px;">
                 <i id="favs" class="fa-regular fa-heart icon fav"></i>
@@ -43,23 +49,5 @@
             </div>
         </div>
     </div>
-    <script>
-        // Initialize the player
-        xhr = new XMLHttpRequest();
-        xhr.open('GET', '{{ url }}', true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    var data = JSON.parse(xhr.responseText);
-                    var player = new Playerjs({
-                        id:"player",
-                        file:data.url,
-                        //poster: "{{ preloader }}"
-                    });
-                }
-            }
-        }
-        xhr.send();
-    </script>
 </body>
 </html>
