@@ -3,6 +3,7 @@ from plugins.gomo import resolve as gomoResolve
 from plugins.vidsrc import resolve as vidsrcResolve
 from settings import getSetting
 import plugins.imdb as imdb
+import threading
 import requests
 import shutil
 import psutil
@@ -266,15 +267,7 @@ def favorites():
     if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
     return json.loads(open(favoritesFile, "r").read())
 
-@api.route('/addToFavorites/<id>')
-@api.route('/addToFavorites/', defaults={'id': None})
-def addToFavorites(id):
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
+def addToFavsThread(id):
     movie = imdb.getMovieInfo(id)
     favorites = json.loads(open(favoritesFile, "r").read())
     favorites[id] = {
@@ -285,6 +278,17 @@ def addToFavorites(id):
         "kind": movie["kind"]
     }
     open(favoritesFile, "w").write(json.dumps(favorites))
+
+@api.route('/addToFavorites/<id>')
+@api.route('/addToFavorites/', defaults={'id': None})
+def addToFavorites(id):
+    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    threading.Thread(target=addToFavsThread, args=(id,)).start()
     return jsonify({
         "status": "ok",
         "message": "Movie added to favorites"
@@ -374,15 +378,7 @@ def playlist():
     if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
     return json.loads(open(playlistFile, "r").read())
 
-@api.route('/addToPlaylist/<id>')
-@api.route('/addToPlaylist/', defaults={'id': None})
-def addToPlaylist(id):
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
+def addToPlaylistThread(id):
     movie = imdb.getMovieInfo(id)
     playlist = json.loads(open(playlistFile, "r").read())
     playlist[id] = {
@@ -392,6 +388,17 @@ def addToPlaylist(id):
         "id": f"tt{id}"
     }
     open(playlistFile, "w").write(json.dumps(playlist))
+
+@api.route('/addToPlaylist/<id>')
+@api.route('/addToPlaylist/', defaults={'id': None})
+def addToPlaylist(id):
+    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    threading.Thread(target=addToPlaylistThread, args=(id,)).start()
     return jsonify({
         "status": "ok",
         "message": "Movie added to playlist"
@@ -448,3 +455,58 @@ def mergeShowM3Us():
     m3u = "#EXTM3U\n"
     for id in items: m3u += requests.get(f"{baseURL}/show/{id}.m3u").text.replace("#EXTM3U\n", "")
     return Response(m3u, mimetype="audio/x-mpegurl")
+
+@api.route('/getMovieInfo/<id>')
+@api.route('/getMovieInfo/', defaults={'id': None})
+def getMovieInfo(id):
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    cached = getCachedItem(f"Movie-{id}.json", "MovieInfoCache")
+    if cached == None:
+        movie = imdb.getMovieInfo(id)
+        resp = {}
+        resp["title"] = movie['title']
+        resp["plot"] = movie['plot'][0]
+        resp["poster"] = movie["full-size cover url"]
+        resp["year"] = movie['year']
+        resp["genres"] = ", ".join(movie['genres'])
+        resp["airDate"] = movie['original air date']
+        resp["rating"] = round(float(movie['rating']), 1)
+        try: resp["budget"] = movie["box office"]['Budget']
+        except: resp["budget"] = "N/A"
+        cacheItem(f"Movie-{id}.json", "MovieInfoCache", json.dumps(resp))
+        return jsonify(resp)
+    return json.loads(cached)
+
+@api.route('/getEpisodeInfo/<id>/<season>-<episode>')
+@api.route('/getEpisodeInfo/', defaults={'id': None})
+def getEpisodeInfo(id, season, episode):
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    epID = ""
+    sID = ""
+    if len(episode) == 1: epID = "0" + episode
+    if len(season) == 1: sID = "0" + season
+    cached = getCachedItem(f"Episode-{id}-{sID}-{epID}.json", "EpisodeInfoCache")
+    if cached == None:
+        show, episode = imdb.getEpisodeInfo(id, season, episode)
+        resp = {}
+        resp["title"] = f"S{sID}E{epID} - {episode['title']}"
+        resp["plot"] = episode['plot'].replace("\n", "").replace("    ", "")
+        resp["poster"] = request.base_url.split("/getEpisodeInfo")[0] + f"/poster/{id}?do=show"
+        resp["year"] = episode['year']
+        resp["genres"] = ", ".join(show['genres'])
+        resp["rating"] = round(float(episode['rating']), 1)
+        try: resp["airDate"] = show['original air date']
+        except: resp["airDate"] = "N/A"
+        try: resp["budget"] = show["box office"]['Budget']
+        except: resp["budget"] = "N/A"
+        cacheItem(f"Episode-{id}-{sID}-{epID}.json", "EpisodeInfoCache", json.dumps(resp))
+        return jsonify(resp)
+    return json.loads(cached)

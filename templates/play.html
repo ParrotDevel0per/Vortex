@@ -1,204 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Player</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
-    <script src="/static/js/playerjs.js"></script>
+    <script>var id = "{{ id }}";</script>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/play.css" rel="stylesheet" type="text/css">
+    <script src="/static/js/playerjs16x9.js"></script>
+    <script src="/static/js/play.js" defer></script>
     <script src="/static/js/jquery-3.6.0.min.js"></script>
-    <style>
-        html, body {
-            margin:0px;
-            height:100%;
-            background-color: black;
-        }
-        #player {
-            background:black;
-            height:85%;
-            position:absolute;
-            top:0px;
-            right:0px;
-            bottom:0px;
-            left:0px;
-        }
-        .footer {
-            height: 15%;
-            background: rgb(17, 17, 17);
-            border-radius: 25px;
-        }
-        .footer > button {
-            width: 100%;
-            height: 50%;
-            border: none;
-            background: rgb(17, 17, 17);
-            color: white;
-            font-size: 2em;
-            text-align: center;
-            padding-top: 3px;
-            padding-bottom: 3px;
-            text-decoration: none;
-            border-radius: 25px;
-        }
-        .footer > button:hover {
-            cursor: pointer;
-            background: rgb(46, 46, 46);
-        }
-        .footer > input {
-            width: 100%;
-            height: 50%;
-            border: none;
-            background: rgb(17, 17, 17);
-            color: white;
-            font-size: 2em;
-            text-align: center;
-            padding-top: 3px;
-            padding-bottom: 3px;
-            text-decoration: none;
-            border-radius: 25px;
-            display: none;
-        }
-        #preloader {
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 999;
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-            background: rgb(0, 0, 0) url("{{ preloader }}") no-repeat center center;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div id="preloader"></div>
-    <div id="player"></div>
-    <div class="footer">
-        <button id="favs">
-            Loading Button ...
-        </button>
-        <button id="playlist">
-            Loading Button ...
-        </button>
-        <input type="text" id="showPlaylist" name="name" maxlength="0" disabled/>
+    <div class="headpage" style="background-image:url(/static/img/preloader/4.jpg);">
+        <div class="headpageoverlay">
+            <div class="container">
+                <div class="headpageimage"><img src="{{ metadata['poster'] }}" alt="Poster" height="278px" width="185px" style="display: inline;"></div>
+                <div class="headpageinfo">
+                    <h1 class="product-title">{{ metadata["title"] }} <span class="muted">({{ metadata["year"] }})</span></h1>
+                    <!<ul style="list-style:none;padding: 0px;">
+                        <li><b>Genres:</b> <span itemprop="genre">{{ metadata["genres"] }}</span></li>
+                        <li><b>Air Dare:</b> {{ metadata["airDate"] }}</li>
+                        <li><b>Budget:</b> {{ metadata["budget"] }}</li>
+                        <li><b>Rating:</b> {{ metadata["rating"] }}/10</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="col-md-8" style="margin-top: 30px;padding-left:0px;">
+			<div class="postmain" style="padding-bottom: 20px;">
+                <div id="player"></div>
+            </div>
+            <div class="postmain-no-margin-no-padding" style="padding-bottom: 20px;">
+                <i id="favs" class="fa-regular fa-heart icon fav"></i>
+                <i id="pl" class="fa-regular fa-square-plus icon pl"></i>
+                <p id="showPlaylist" style="display:none;"></p>
+            </div>
+            <div class="postmain">
+                <div class="postmaintitle" style="margin-bottom:0px;"><h3>Plot</h3></div>
+                <div class="postmaindescr"><p itemprop="description">{{ metadata["plot"] }}</p></div>
+            </div>
+        </div>
     </div>
     <script>
-        const favs = document.getElementById("favs");
-        const playlist = document.getElementById("playlist");
-        const showPlaylist = document.getElementById("showPlaylist");
-        var clearences = 0;
-        $("#showPlaylist").bind('paste', function(e) {
-            $(this).attr("maxlength","1000")
-        });
-        $("#showPlaylist").on("input",function(){
-           $(this).attr("maxlength","0") 
-        });
-
-        // Check if movie is in favourites
-        window.addEventListener("load", function() {
-            var url = window.location.href;
-            if (url.includes("-")) {
-                playlist.style.display = "none";
-                showPlaylist.style.display = "block";
-                let id = url.split("/play/")[1].split("/")[0];
-                let showURL = url.split("/play/")[0] + "/show/" + id + ".m3u";
-                showPlaylist.value = showURL;
-            }
-            xhr = new XMLHttpRequest();
-            xhr.open("GET", "/api/isInFavorites/{{ id }}", true);
-            xhr.onreadystatechange = function() {
-                clearences++;
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    if (xhr.responseText.match(/Movie found in favorites/)) {
-                        favs.innerHTML = "Remove from favorites";
-                    } else {
-                        favs.innerHTML = "Add to favorites";
-                    }
+        // Initialize the player
+        xhr = new XMLHttpRequest();
+        xhr.open('GET', '{{ url }}', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var player = new Playerjs({
+                        id:"player",
+                        file:data.url,
+                        poster: "{{ preloader }}"
+                    });
                 }
-            };
-            xhr.send();
-            xhr2 = new XMLHttpRequest();
-            xhr2.open("GET", "/api/isInPlaylist/{{ id }}", true);
-            xhr2.onreadystatechange = function() {
-                if (xhr2.readyState == 4 && xhr2.status == 200) {
-                    if (xhr2.responseText.match(/Movie found in playlist/)) {
-                        playlist.innerHTML = "Remove from playlist";
-                    } else {
-                        playlist.innerHTML = "Add to playlist";
-                    }
-                }
-            };
-            xhr2.send();
-            xhr3 = new XMLHttpRequest();
-            xhr3.open("GET", "{{ url }}", true);
-            xhr3.onreadystatechange = function() {
-                let data = JSON.parse(xhr3.responseText);
-                var player = new Playerjs({id:"player", file:data.url});
-            };
-            xhr3.send();
-        });
-    
-        // Add or remove movie from favorites
-        favs.addEventListener("click", function() {
-            if (favs.innerHTML == "Add to favorites") {
-                favs.innerHTML = "Adding ...";
-                xhr = new XMLHttpRequest();
-                xhr.open("GET", "/api/addToFavorites/{{ id }}", true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        favs.innerHTML = "Remove from favorites";
-                    }
-                };
-                xhr.send();
-            } else if (favs.innerHTML == "Remove from favorites") {
-                favs.innerHTML = "Removing ...";
-                xhr = new XMLHttpRequest();
-                xhr.open("GET", "/api/removeFromFavorites/{{ id }}", true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        favs.innerHTML = "Add to favorites";
-                    }
-                };
-                xhr.send();
-            } else {
-                console.log("Unknown button state");
             }
-        });
-
-        // Add or remove movie from playlist
-        playlist.addEventListener("click", function() {
-            if (playlist.innerHTML == "Add to playlist") {
-                playlist.innerHTML = "Adding ...";
-                xhr = new XMLHttpRequest();
-                xhr.open("GET", "/api/addToPlaylist/{{ id }}", true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        playlist.innerHTML = "Remove from playlist";
-                    }
-                };
-                xhr.send();
-            } else if (playlist.innerHTML == "Remove from playlist") {
-                playlist.innerHTML = "Removing ...";
-                xhr = new XMLHttpRequest();
-                xhr.open("GET", "/api/removeFromPlaylist/{{ id }}", true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        playlist.innerHTML = "Add to playlist";
-                    }
-                };
-                xhr.send();
-            } else {
-                console.log("Unknown button state");
-            }
-        });
-        setInterval(function() {
-            if (clearences >= 2) {
-                document.getElementById("preloader").style.display = "none";
-            }
-        }, 2000);
+        }
+        xhr.send();
     </script>
 </body>
 </html>

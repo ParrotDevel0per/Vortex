@@ -6,10 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home</title>
     <script src="/static/playerjs.js"></script>
+    <link rel="stylesheet" href="/static/css/animate.min.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
     <style>
+        @import url(/static/css/colors.css);
         @font-face {
             font-family: 'Chomsky';
             src: url('/static/fonts/Chomsky.woff') format('woff');
@@ -18,16 +20,16 @@
             margin:0px;
             height:100%;
             width:100%;
-            background-color: black;
+            background-color: var(--bg);
             text-align: center;
         }
         .btn {
             margin:0 auto;
             display:block;
-            width: 94%!important;
-            background-color: black;
+            width: 98%!important;
+            background-color: transparent;
             color: white;
-            border: 3px solid white;
+            border: 3px solid var(--blue);
             border-radius: 20px;
             text-align: center;
             font-size: 2em;
@@ -37,8 +39,9 @@
             text-decoration: none;
         }
         .btn:hover {
-            background-color: white;
-            color: black;
+            background-color: var(--blue);
+            color: var(--bg);
+            width: 98%!important;
         }
         h1 {
             color: white;
@@ -54,31 +57,25 @@
             bottom: 0;
             left: 0;
             padding: 1rem;
-            background-color: black;
+            background-color: var(--bg);
             text-align: center;
         }
         footer > p {
             color: white;
             font-size: 1.5em;
-        }
-        @media screen and (min-width: 781px) and (max-width: 840px) {
-            footer {
-                display: none;
-            }
-        }
-          
+        } 
     </style>
 </head>
 <body>
     <h1>The Pirate Player</h1>
-    <a href="/search" class="btn">Search</a>
-    <a href="/favorites" class="btn">Favorites</a>
-    <a href="/playlist" class="btn">Playlist</a>
-    <a href="/top250movies" class="btn">IMDB Top 250 Movies</a>
-    <a href="/bottom100movies" class="btn">IMDB Bottom 100 Movies</a>
-    <a href="/mergeShowM3Us" class="btn">Merge Show M3U's</a>
+    <a href="/search" class="animate__animated animate__fadeIn btn">Search</a>
+    <a href="/favorites" class="animate__animated animate__fadeIn btn">Favorites</a>
+    <a href="/playlist" class="animate__animated animate__fadeIn btn">Playlist</a>
+    <a href="/top250movies" class="animate__animated animate__fadeIn btn">IMDB Top 250 Movies</a>
+    <a href="/bottom100movies" class="animate__animated animate__fadeIn btn">IMDB Bottom 100 Movies</a>
+    <a href="/mergeShowM3Us" class="animate__animated animate__fadeIn btn">Merge Show M3U's</a>
     <footer>
-        <p>Loading ...</p>
+        <p class="animate__animated animate__tada">Loading ...</p>
     </footer>
     <script>
         var isMobile = navigator.userAgent.toLowerCase().match(/mobile/i);

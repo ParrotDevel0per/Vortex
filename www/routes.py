@@ -10,14 +10,7 @@ www = Blueprint('www', __name__)
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 
 def getPreloader():
-    images = [
-        "1.png",
-        "2.jpg",
-        "3.jpg",
-        "4.jpg",
-        "5.jpg",
-    ]
-    return f"/static/img/preloader/{images[0]}"
+    return f"/static/img/preloader/{getSetting('preloader')}"
 
 
 @www.route('/')
@@ -27,11 +20,16 @@ def index():
 @www.route('/play/<id>/<episode>')
 @www.route('/play/<id>', defaults={'episode': None})
 def play(id, episode):
-    url = f"{request.base_url.split('/play')[0]}/api/resolve/{id}"
+    baseURL = request.base_url.split('/play')[0]
+    url = f"{baseURL}/api/resolve/{id}"
     if episode: url += f"?episode={episode}"
     #try: resolved = requests.get(url).json()["url"]
     #except: resolved = ""
-    return render_template('play.html', url=url, id=id, preloader=getPreloader())
+    movieInfoURL = f""
+    if episode: movieInfoURL += f"{baseURL}/api/getEpisodeInfo/{id}/{episode}"
+    else: movieInfoURL += f"{baseURL}/api/getMovieInfo/{id}"
+    metadata = requests.get(movieInfoURL).json()
+    return render_template('play.html', url=url, id=id, preloader=getPreloader(), metadata=metadata)
 
 @www.route('/play/<id>.m3u8')
 def play_m3u8(id):

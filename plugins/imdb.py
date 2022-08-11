@@ -76,3 +76,8 @@ def IMDBtoPoster(id):
 
 def getMovieInfo(id):
     return dict(ia.get_movie(id))
+
+def getEpisodeInfo(id, season, episode):
+    series = ia.get_movie(id)
+    ia.update(series, "episodes")
+    return dict(series), dict(series['episodes'][int(season)][int(episode)])
