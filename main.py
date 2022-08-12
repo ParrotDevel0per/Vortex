@@ -3,6 +3,7 @@ from api.routes import api
 from www.routes import www
 from proxies.vidsrc import vidsrc
 from proxies.gomo import gomo
+from proxies.vidembed import vidembed
 from settings import getSetting
 import os
 
@@ -15,5 +16,6 @@ app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(www, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
 app.register_blueprint(gomo, url_prefix='/proxy/gomo')
+app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')
 app.config['JSON_SORT_KEYS'] = False
 app.run(host=str(getSetting("ip")), port=int(getSetting("port")), debug=bool(getSetting("debug")))

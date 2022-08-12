@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, Response, redirect, request, send_from_directory
 from plugins.gomo import resolve as gomoResolve
 from plugins.vidsrc import resolve as vidsrcResolve
+from plugins.vidembed import resolve as vidembedResolve
 from settings import getSetting
 import plugins.imdb as imdb
 import threading
@@ -109,7 +110,8 @@ def resolve(id):
     baseURL = request.base_url.split("/api")[0]
     sources = {
         "gomo": "gomoResolve(baseURL, id, episode)",
-        "vidsrc": "vidsrcResolve(baseURL, id, episode)"
+        "vidsrc": "vidsrcResolve(baseURL, id, episode)",
+        "vidembed": "vidembedResolve(baseURL, id, episode)"
     }
     source = eval(sources[use])
     return jsonify({
