@@ -6,7 +6,10 @@ import binascii
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
- 
+def getCurrentVidembedURL():
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"}
+    return requests.get("https://vidembed.io", headers=headers, allow_redirects=False).headers["Location"]
+
 def get_embedurl(host, media_id):
     def makeid(length):
         t = string.ascii_letters + string.digits
