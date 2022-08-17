@@ -18,8 +18,3 @@ def grab(url):
     hlsurl = re.search(r'video.setAttribute\("src" , "(.*?)"\)', r.text).group(1)
     path = re.findall(r'var path = "(.*?)"', r.text)[1].replace("//", "https://")
     return hlsurl, path, src
-
-def resolve(baseURL, id, episode=""):
-    url = f"{baseURL}/proxy/vidsrc/play?item={id}"
-    if episode: url += f"&episode={episode}"
-    return baseURL + requests.get(url).text

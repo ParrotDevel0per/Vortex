@@ -14,7 +14,10 @@ default = {
     "source": "gomo",
     "proxifyM3UPosters": "True",
     "checkForUpdates": "True",
-    "preloader": "1.png"
+    "preloader": "1.png",
+    "language": "en",
+    "history": "True",
+    "historyLimit": "10",
 }
 
 def setToDefault():
@@ -31,7 +34,10 @@ settingsKeys = [
     "source",
     "proxifyM3UPosters",
     "checkForUpdates",
-    "preloader"
+    "preloader",
+    "language",
+    "history",
+    "historyLimit",
 ]
 
 for key in settingsKeys:

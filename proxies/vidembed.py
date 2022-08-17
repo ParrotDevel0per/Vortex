@@ -1,6 +1,7 @@
 import requests
 from flask import request, url_for, Blueprint, Response
-from plugins.vidembed import sbplay
+from plugins.vidembed import resolveVidembed
+from resolvers.sbplay import sbplay
 from plugins.gdriveplayer import resolveGDrivePlayer
 import json
 import base64
@@ -17,7 +18,7 @@ def play():
     if episode:
         episode = episode.split("-")
         url = f"https://series.databasegdriveplayer.co/player.php?type=series&imdb={item}&season={episode[0]}&episode={episode[1]}"
-    resolved, headers = sbplay(resolveGDrivePlayer(url))
+    resolved, headers = sbplay(resolveVidembed(resolveGDrivePlayer(url), 'StreamSB').split("?")[0])
     token = {
         "url": resolved,
         "headers": headers

@@ -1,12 +1,10 @@
 from flask import Blueprint, jsonify, Response, redirect, request, send_from_directory
-from plugins.gomo import resolve as gomoResolve
-from plugins.vidsrc import resolve as vidsrcResolve
-from plugins.vidembed import resolve as vidembedResolve
 from settings import getSetting
 import plugins.imdb as imdb
 import threading
 import requests
 import shutil
+import base64
 import psutil
 import json
 import time
@@ -19,6 +17,7 @@ cacheRegistry = os.path.join(CACHE_FOLDER, "registry.json")
 postersFolder = os.path.join(CACHE_FOLDER, "posters")
 favoritesFile = os.path.join(DB_FOLDER, "favorites.json")
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
+historyFile = os.path.join(DB_FOLDER, "history.json")
 
 def chunkedDownload(url, filename, chunkSize=8192):
     r = requests.get(url, stream=True)
@@ -108,15 +107,11 @@ def resolve(id):
     if request.args.get("source"): use = request.args.get("source")
     episode = str(request.args.get("episode") or "")
     baseURL = request.base_url.split("/api")[0]
-    sources = {
-        "gomo": "gomoResolve(baseURL, id, episode)",
-        "vidsrc": "vidsrcResolve(baseURL, id, episode)",
-        "vidembed": "vidembedResolve(baseURL, id, episode)"
-    }
-    source = eval(sources[use])
+    url = f"{baseURL}/proxy/{use}/play?item={id}"
+    if episode: url += f"&episode={episode}"
     return jsonify({
         "id": id,
-        "url": source
+        "url": requests.get(url).text
     })
 
 @api.route('/poster/<id>')
@@ -338,6 +333,47 @@ def isInFavorites(id):
         "message": "Movie not found in favorites"
     })
 
+@api.route('/history/')
+def history():
+    if not bool(getSetting("history")): return {}
+    if not os.path.exists(historyFile): open(historyFile, "w").write("{}")
+    return json.loads(open(historyFile, "r").read())
+
+@api.route('/addToHistory/<id>')
+@api.route('/addToHistory/', defaults={'id': None})
+def addToHistory(id):
+    if not bool(getSetting("history")): return "History disabled"
+    if not os.path.exists(historyFile): open(historyFile, "w").write("{}")
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    history = json.loads(open(historyFile, "r").read())
+    # if history has more than x items remove the oldest one
+    if len(history) > int(getSetting("historyLimit")): del history[0]
+
+    # if it's already in the history, remove it and add it again at the top
+    if id in history: history.remove(id)
+
+    info = imdb.getMovieInfo(id)
+    history[id] = {
+        "id": f"tt{id}",
+        "title": info["title"],
+        "year": info["year"],
+        "poster": info["full-size cover url"],
+        "kind": info["kind"]
+    }
+    open(historyFile, "w").write(json.dumps(history))
+    return "Added to history"
+    
+@api.route('/clearHistory/')
+def clearHistory():
+    if not bool(getSetting("history")): return "History disabled"
+    if not os.path.exists(historyFile): open(historyFile, "w").write("{}")
+    open(historyFile, "w").write("{}")
+    return "History cleared"
+
 @api.route('/clearPosterCache/')
 def clearPosterCache():
     fileCount = len(os.listdir(postersFolder))
@@ -370,7 +406,8 @@ def clearCache():
 
 @api.route('/proxy/<path:url>')
 def proxy(url):
-    #return requests.get(url).content
+    if url.startswith("base64:"):
+        url = base64.b64decode(url[7:]).decode("utf-8")
     r = requests.get(url, stream=True)
     return Response(r.iter_content(chunk_size=10*1024),
                     content_type=r.headers['Content-Type'])

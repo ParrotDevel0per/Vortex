@@ -75,6 +75,7 @@ def IMDBtoPoster(id):
     except: return None
 
 def getMovieInfo(id):
+    if id.startswith("tt"): id = id.replace("tt", "")
     return dict(ia.get_movie(id))
 
 def getEpisodeInfo(id, season, episode):
