@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, send_from_directory, redirect
 from utils.paths import DB_FOLDER
-from settings import getSetting
+from utils.settings import getSetting
 import requests
 #import random
 import json
@@ -36,21 +36,18 @@ def play(id, episode):
     else: movieInfoURL += f"{baseURL}/api/getMovieInfo/{id}"
     metadata = requests.get(movieInfoURL).json()
     resolved = requests.get(url).json()["url"]
-    requests.get(f"{request.base_url.split('/play')[0]}/api/addToHistory/{id}")
     return render_template('play.html', url=url, id=id, preloader=getPreloader(), metadata=metadata, resolved=resolved, strings=strings())
 
 @www.route('/play/<id>.m3u8')
 def play_m3u8(id):
     try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}").json()["url"]
     except: resolved = ""
-    requests.get(f"{request.base_url.split('/play')[0]}/api/addToHistory/{id}")
     return redirect(resolved, code=302)
 
 @www.route('/play/<id>/<episode>.m3u8')
 def play_m3u8_episode(id, episode):
     try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?episode={episode}").json()["url"]
     except: resolved = ""
-    requests.get(f"{request.base_url.split('/play')[0]}/api/addToHistory/{id}")
     return redirect(resolved, code=302)
 
 @www.route('/search')
@@ -89,11 +86,6 @@ def bottom100movies():
 def favorites():
     results = requests.get(f"{request.base_url.split('/favorites')[0]}/api/favorites/").json()
     return render_template('movieList.html', results=results, title="Favorites", count=len(results), strings=strings())
-
-@www.route('/history')
-def history():
-    results = requests.get(f"{request.base_url.split('/history')[0]}/api/history/").json()
-    return render_template('movieList.html', results=results, title="History", count=len(results), strings=strings())
 
 @www.route('/static/<path:path>')
 def send_static(path):

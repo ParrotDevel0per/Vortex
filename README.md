@@ -10,7 +10,7 @@
 Install The Pirate Player with git
 
 ```bash
-  git clone https://git.weboasis.app/HereIronman7746/ThePiratePlayer.git
+  git clone https://HereIronman7746@bitbucket.org/hereironman7746/thepirateplayer.git
   pip3 install -r requirements.txt
 ```
     
@@ -18,7 +18,9 @@ Install The Pirate Player with git
 
 ### Settings
 ```bash
-python3 settings.py set <key> <value>
+python3 main.py
+Y
+set <key> <value>
 ```
 All keys are in settings.py
 
