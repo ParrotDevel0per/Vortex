@@ -29,7 +29,8 @@ app.config['JSON_SORT_KEYS'] = False
 
 def getLocalIP():
     ip = getSetting('ip')
-    if ip == "0.0.0.0":return socket.gethostbyname(socket.gethostname())
+    hostname = socket.gethostname()
+    if ip == "0.0.0.0":return socket.gethostbyname(hostname)
     return ip
 
 def cls():
@@ -101,6 +102,7 @@ def cli():
             if len(cmd) != 2: print("Invalid argument count")
             else: print(getSetting(cmd[1]))
         elif cmd[0].lower() == "log": print(open(logFile, 'r').read() if open(logFile, 'r').read() != "" else "Log is empty")
+        elif cmd[0].lower() == "": continue
         else: print("Invalid command")
 
 

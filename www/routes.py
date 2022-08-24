@@ -9,19 +9,13 @@ import os
 www = Blueprint('www', __name__)
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 
+
 def getPreloader():
     return f"/static/img/preloader/{getSetting('preloader')}"
 
-def strings():
-    return {}
-    #lan = getSetting('language')
-    #cwd = os.getcwd()
-    #stringsFile = os.path.join(cwd, "languages", f"{lan}.json")
-    #return json.load(open(stringsFile, 'r'))
-
 @www.route('/')
 def index():
-    return render_template('index.html', strings=strings())
+    return render_template('index.html')
 
 @www.route('/play/<id>/<episode>')
 @www.route('/play/<id>', defaults={'episode': None})
@@ -36,7 +30,7 @@ def play(id, episode):
     else: movieInfoURL += f"{baseURL}/api/getMovieInfo/{id}"
     metadata = requests.get(movieInfoURL).json()
     resolved = requests.get(url).json()["url"]
-    return render_template('play.html', url=url, id=id, preloader=getPreloader(), metadata=metadata, resolved=resolved, strings=strings())
+    return render_template('play.html', url=url, id=id, preloader=getPreloader(), metadata=metadata, resolved=resolved)
 
 @www.route('/play/<id>.m3u8')
 def play_m3u8(id):
@@ -52,7 +46,7 @@ def play_m3u8_episode(id, episode):
 
 @www.route('/search')
 def search():
-    return render_template('search.html', strings=strings())
+    return render_template('search.html')
 
 @www.route('/seasons/<id>')
 def seasons(id):
@@ -60,7 +54,7 @@ def seasons(id):
     except: results = []
     title = results["results"]["title"]
     seasons = results["results"]["seasons"]
-    return render_template('seasons.html', id=id, iterator=range(seasons), seasons=seasons, title=title, strings=strings())
+    return render_template('seasons.html', id=id, iterator=range(seasons), seasons=seasons, title=title)
 
 @www.route('/episodes/<id>/<season>')
 def episodes(id, season):
@@ -70,22 +64,22 @@ def episodes(id, season):
     del results["results"]["title"]
     del results["results"]["poster"]
     episodes = results["results"]
-    return render_template('episodes.html', id=id, title=title, episodes=episodes, count=len(episodes), season=season, strings=strings())
+    return render_template('episodes.html', id=id, title=title, episodes=episodes, count=len(episodes), season=season)
 
 @www.route('/top250movies')
 def top250movies():
     results = requests.get(f"{request.base_url.split('/top250movies')[0]}/api/top250movies/").json()["results"]
-    return render_template('movieList.html', results=results, title="Top 250 IMDB Movies", count=len(results), strings=strings())
+    return render_template('movieList.html', results=results, title="Top 250 IMDB Movies", count=len(results))
 
 @www.route('/bottom100movies')
 def bottom100movies():
     results = requests.get(f"{request.base_url.split('/bottom100movies')[0]}/api/bottom100movies/").json()["results"]
-    return render_template('movieList.html', results=results, title="Bottom 100 IMDB Movies", count=len(results), strings=strings())
+    return render_template('movieList.html', results=results, title="Bottom 100 IMDB Movies", count=len(results))
 
 @www.route('/favorites')
 def favorites():
     results = requests.get(f"{request.base_url.split('/favorites')[0]}/api/favorites/").json()
-    return render_template('movieList.html', results=results, title="Favorites", count=len(results), strings=strings())
+    return render_template('movieList.html', results=results, title="Favorites", count=len(results))
 
 @www.route('/static/<path:path>')
 def send_static(path):
@@ -94,7 +88,7 @@ def send_static(path):
 @www.route('/playlist')
 def playlist():
     results = requests.get(f"{request.base_url.split('/playlist')[0]}/api/playlist/").json()
-    return render_template('movieList.html', results=results, title="Playlist", count=len(results), strings=strings())
+    return render_template('movieList.html', results=results, title="Playlist", count=len(results))
 
 @www.route('/playlist.m3u')
 def playlistm3u8():
@@ -131,4 +125,4 @@ def showm3u(id):
 
 @www.route('/mergeShowM3Us')
 def mergeShowM3Us():
-    return render_template('mergeShowPlaylists.html', strings=strings())
+    return render_template('mergeShowPlaylists.html')

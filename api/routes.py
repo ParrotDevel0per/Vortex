@@ -50,7 +50,7 @@ def searchForExpiredItems():
         if reg[key]["expiry"] < time.time():
             removeFromCacheRegistry(reg[key]["filename"], reg[key]["folder"])
             os.remove(os.path.join(CACHE_FOLDER, reg[key]['folder'], reg[key]['filename']))
-            print(f"Removed {reg[key]['filename']} from {reg[key]['folder']}")
+            #print(f"Removed {reg[key]['filename']} from {reg[key]['folder']}")
 
 def cacheItem(filename, folder, data):
     searchForExpiredItems()
@@ -152,7 +152,7 @@ def search(query):
             "query": query,
             "results": results
         })
-    print(f"Returning cached search results for \"{query}\"")
+    #print(f"Returning cached search results for \"{query}\"")
     return jsonify({
         "query": query,
         "results": json.loads(cached)
@@ -174,7 +174,7 @@ def seasons(id):
             "id": id,
             "results": results
         })
-    print(f"Returning cached seasons for \"{id}\"")
+    #print(f"Returning cached seasons for \"{id}\"")
     return jsonify({
         "id": id,
         "results": json.loads(cached)
@@ -205,7 +205,7 @@ def episodes(id, season):
             "season": season,
             "results": results
         })
-    print(f"Returning cached episodes for \"{id}\"")
+    #print(f"Returning cached episodes for \"{id}\"")
     return jsonify({
         "id": id,
         "season": season,
@@ -221,7 +221,7 @@ def top250movies():
         return jsonify({
             "results": results
         })
-    print("Returning cached top250movies.json")
+    #print("Returning cached top250movies.json")
     return jsonify({
         "results": json.loads(cached)
     })
@@ -235,7 +235,7 @@ def bottom100movies():
         return jsonify({
             "results": results
         })
-    print("Returning cached bottom100movies.json")
+    #print("Returning cached bottom100movies.json")
     return jsonify({
         "results": json.loads(cached)
     })
@@ -255,7 +255,7 @@ def serieasToPlaylist(id):
         pl = imdb.createPlaylistFromSeries(id)
         cacheItem(f"playlist-{id}.json", "playlists", json.dumps(pl))
         return pl
-    print(f"Returning cached playlist for \"{id}\"")
+    #print(f"Returning cached playlist for \"{id}\"")
     return json.loads(cache)
 
 @api.route('/favorites/')

@@ -4,3 +4,7 @@ DB
 settings.json
 test.py
 output/
+compile.bat
+*.spec
+build/
+dist/

@@ -39,12 +39,12 @@ def grab(url):
         resp = requests.get(sources[0]).text
         packed = resp.replace("\n", "").split("<script type='text/javascript'>")[1].split("</script>")[0]
     except Exception as e:
-        print(e)
-        print("Source #1 failed, trying source #2")
+        #print(e)
+        #print("Source #1 failed, trying source #2")
         resp = requests.get(sources[1]).text
         packed = resp.replace("\n", "").split("<script type='text/javascript'>")[1].split("</script>")[0]
     unpacked = unpack(packed)
-    if requests.get(unpacked.split("$.get('")[1].split("'")[0] + "1").text != "1": print("Error might occur")
+    if requests.get(unpacked.split("$.get('")[1].split("'")[0] + "1").text != "1": print("", end="") #print("Error might occur")
     unpacked = unpacked.split("[")[1].split("]")[0]
     try:
         m3u8Source = f'http{re.search(r"http(.*?)m3u8", unpacked).group(1)}m3u8'
