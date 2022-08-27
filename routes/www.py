@@ -2,7 +2,6 @@ from flask import Blueprint, request, render_template, send_from_directory, redi
 from utils.paths import DB_FOLDER
 from utils.settings import getSetting
 import requests
-#import random
 import json
 import os
 
@@ -20,8 +19,10 @@ def index():
 @www.route('/play/<id>/<episode>')
 @www.route('/play/<id>', defaults={'episode': None})
 def play(id, episode):
+    source = getSetting('source')
+    if request.args.get('source'): source = request.args.get('source')
     baseURL = request.base_url.split('/play')[0]
-    url = f"{baseURL}/api/resolve/{id}"
+    url = f"{baseURL}/api/resolve/{id}?source={source}"
     if episode: url += f"?episode={episode}"
     #try: resolved = requests.get(url).json()["url"]
     #except: resolved = ""
@@ -34,13 +35,17 @@ def play(id, episode):
 
 @www.route('/play/<id>.m3u8')
 def play_m3u8(id):
-    try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}").json()["url"]
+    source = getSetting('source')
+    if request.args.get('source'): source = request.args.get('source')
+    try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?source={source}").json()["url"]
     except: resolved = ""
     return redirect(resolved, code=302)
 
 @www.route('/play/<id>/<episode>.m3u8')
 def play_m3u8_episode(id, episode):
-    try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?episode={episode}").json()["url"]
+    source = getSetting('source')
+    if request.args.get('source'): source = request.args.get('source')
+    try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?episode={episode}&source={source}").json()["url"]
     except: resolved = ""
     return redirect(resolved, code=302)
 
@@ -94,6 +99,8 @@ def playlist():
 def playlistm3u8():
     if not os.path.exists(playlistFile):
         return "Playlist file not found"
+    source = getSetting('source')
+    if request.args.get('source'): source = request.args.get('source')
     j = json.load(open(playlistFile))
     baseURL = request.base_url.split('/playlist')[0]
     proxifyPoster = getSetting("proxifyM3UPosters")
@@ -103,13 +110,15 @@ def playlistm3u8():
         id = j[i]["id"]
         poster = j[i]["poster"]
         if proxifyPoster: poster = f"{baseURL}/api/poster/{id}?do=show"
-        m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}", {title}\n{baseURL}/play/{id}.m3u8\n'
+        m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}", {title}\n{baseURL}/play/{id}.m3u8?source={source}\n'
     return m3u
 
 @www.route('/show/<id>.m3u')
 def showm3u(id):
     if not os.path.exists(playlistFile):
         return "Playlist file not found"
+    source = getSetting('source')
+    if request.args.get('source'): source = request.args.get('source')
     baseURL = request.base_url.split('/show')[0]
     resp = requests.get(f"{baseURL}/api/seriesToPlaylist/{id}").json()
     poster = resp["poster"]
@@ -120,7 +129,7 @@ def showm3u(id):
         for episode in resp["seasons"][season]:
             title = resp["seasons"][season][episode]["title"]
             group = resp["seasons"][season][episode]["group"]
-            m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}" group-title="{group}", {title}\n{baseURL}/play/{id}/{season}-{episode}.m3u8\n'
+            m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}" group-title="{group}", {title}\n{baseURL}/play/{id}/{season}-{episode}.m3u8?source={source}\n'
     return m3u
 
 @www.route('/mergeShowM3Us')
