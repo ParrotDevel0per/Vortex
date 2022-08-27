@@ -8,7 +8,6 @@ import os
 www = Blueprint('www', __name__)
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 
-
 def getPreloader():
     return f"/static/img/preloader/{getSetting('preloader')}"
 
@@ -23,7 +22,7 @@ def play(id, episode):
     if request.args.get('source'): source = request.args.get('source')
     baseURL = request.base_url.split('/play')[0]
     url = f"{baseURL}/api/resolve/{id}?source={source}"
-    if episode: url += f"?episode={episode}"
+    if episode: url += f"&episode={episode}"
     #try: resolved = requests.get(url).json()["url"]
     #except: resolved = ""
     movieInfoURL = f""
