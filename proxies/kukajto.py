@@ -1,9 +1,11 @@
-from flask import request, url_for, Blueprint
+from flask import request, Blueprint
 from resolvers.mixdrop import mixdrop
+from resolvers.streamtape import streamtape
 from plugins.csfd import translateItemToCzech
 from plugins.kukajto import search, grab
 import difflib
 import base64
+import json
 
 kukajto = Blueprint('kukajto', __name__)
 
@@ -38,5 +40,11 @@ def play():
         if len(episode) == 1: episode = "0" + episode
         if len(season) == 1: season = "0" + season
         url = f"https://serial.kukaj.io/{id}/S{season}E{episode}"
-    resolved = mixdrop(grab(url), "https://kukaj.io/")
-    return f"/api/proxy/base64:{base64.b64encode(resolved.encode('utf-8')).decode('utf-8')}"
+    resolved = grab(url)
+    headers = None
+    if "mixdrop" in resolved: resolved, headers = mixdrop(resolved, "https://kukaj.io/")
+    else: resolved, headers = streamtape(resolved, "https://kukaj.io/")
+    if not resolved: return "Failed to resolve"
+    resp = f"/api/proxy/base64:{base64.b64encode(resolved.encode('utf-8')).decode('utf-8')}"
+    if headers: resp += f"?headers={base64.b64encode(json.dumps(headers).encode('utf-8')).decode('utf-8')}"
+    return resp

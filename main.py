@@ -1,20 +1,23 @@
 from flask import Flask
-from api.routes import api
-from www.routes import www
+from routes.api import api
+from routes.www import www
 from proxies.vidsrc import vidsrc
 from proxies.gomo import gomo
 from proxies.vidembed import vidembed
+from proxies.r2embed import r2embed
 from proxies.kukajto import kukajto
 from utils.settings import getSetting, setSetting
 from utils.paths import DB_FOLDER
-from colorama import init
-from colorama import Fore, Style
+from colorama import init, Fore
 import requests
 import threading
 import os
+import sys
 import logging
 import socket
 init()
+
+sysArgv = sys.argv[1:]
 
 logFile = os.path.join(DB_FOLDER, "app.log")
 logging.basicConfig(filename=logFile, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
@@ -24,6 +27,7 @@ app.register_blueprint(www, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
 app.register_blueprint(gomo, url_prefix='/proxy/gomo')
 app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')
+app.register_blueprint(r2embed, url_prefix='/proxy/2embed')
 app.register_blueprint(kukajto, url_prefix='/proxy/kukajto')
 app.config['JSON_SORT_KEYS'] = False
 
@@ -113,11 +117,16 @@ def sendFirstRequest():
         try: requests.get(f"http://{getLocalIP()}:{getSetting('port')}", timeout=1); running = True
         except: pass
 
+
 if __name__ == "__main__":
     cls()
     intro()
-    do = input("Do you want to enter admin CLI? [Y/n] ")
-    if do.lower() == "y": cli()
+    if "--cli" in sysArgv: cli()
+    elif "--nocli" in sysArgv: pass
+    else:
+        do = input("Do you want to enter admin CLI? [Y/n] ")
+        if do.lower() == "y": cli()
+        else: pass
 
     threading.Thread(target=sendFirstRequest).start()
-    app.run(host=str(getSetting("ip")), port=int(getSetting("port")), debug=getSetting('debug').lower() == "true")
+    app.run(host=str(getSetting("ip")), port=int(getSetting("port")), debug="--debug" in sysArgv)

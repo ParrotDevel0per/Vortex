@@ -24,11 +24,12 @@ def grab(url):
         try:
             if i.text == "MIX":
                 opts.append("MIX")
-            #if i.text == "TAP":
-            #    opts.append("TAP")
+            if i.text == "TAP":
+                opts.append("TAP")
 
         except:
             pass
+    opts.sort()
     opt = opts[0] # For now, only one option is available
     for i in options:
         if i.text == opt:

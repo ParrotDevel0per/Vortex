@@ -26,13 +26,13 @@ def chunkedDownload(url, filename, chunkSize=8192):
                 f.write(chunk)
     return filename
 
-def addToCacheRegistry(filename, folder):
+def addToCacheRegistry(filename, folder, expiry):
     if not os.path.exists(cacheRegistry): open(cacheRegistry, 'w').write("{}")
     reg = json.load(open(cacheRegistry, 'r'))
     reg[f"{folder}-{filename}"] = {
         "filename": filename,
         "folder": folder,
-        "expiry": time.time() + (24 * 60 * 60)
+        "expiry": time.time() + expiry
     }
     open(cacheRegistry, 'w').write(json.dumps(reg))
 
@@ -52,9 +52,9 @@ def searchForExpiredItems():
             os.remove(os.path.join(CACHE_FOLDER, reg[key]['folder'], reg[key]['filename']))
             #print(f"Removed {reg[key]['filename']} from {reg[key]['folder']}")
 
-def cacheItem(filename, folder, data):
+def cacheItem(filename, folder, data, expiry=(24 * 60 * 60)):
     searchForExpiredItems()
-    addToCacheRegistry(filename, folder)
+    addToCacheRegistry(filename, folder, expiry)
     if not os.path.exists(os.path.join(CACHE_FOLDER, folder)): os.makedirs(os.path.join(CACHE_FOLDER, folder))
     with open(os.path.join(CACHE_FOLDER, folder, filename), 'w') as f:
         f.write(data)
@@ -65,10 +65,6 @@ def getCachedItem(filename, folder):
         with open(os.path.join(CACHE_FOLDER, folder, filename), 'r') as f:
             return f.read()
     return None
-
-def getRAMUsage(): return f"{psutil.virtual_memory().percent}%"
-
-def getCPUUsage(): return f"{psutil.cpu_percent()}%"
 
 def getCacheSize():
     used = 0
@@ -88,8 +84,8 @@ def index():
 def sysinfo():
     return jsonify({
         'status': 'ok',
-        'systemRAMUsage': getRAMUsage(),
-        'pythonCPUUsage': getCPUUsage(),
+        'systemRAMUsage': f"{psutil.virtual_memory().percent}%",
+        'pythonCPUUsage': f"{psutil.cpu_percent()}%",
         'cache': getCacheSize(),
         'version': open('VERSION', 'r').read()
     })
@@ -253,7 +249,7 @@ def serieasToPlaylist(id):
     cache = getCachedItem(f"playlist-{id}.json", "playlists")
     if cache == None:
         pl = imdb.createPlaylistFromSeries(id)
-        cacheItem(f"playlist-{id}.json", "playlists", json.dumps(pl))
+        cacheItem(f"playlist-{id}.json", "playlists", json.dumps(pl), expiry=(24 * 60 * 60 * 7))
         return pl
     #print(f"Returning cached playlist for \"{id}\"")
     return json.loads(cache)
@@ -365,11 +361,11 @@ def clearCache():
 
 @api.route('/proxy/<path:url>')
 def proxy(url):
-    if url.startswith("base64:"):
-        url = base64.b64decode(url[7:]).decode("utf-8")
-    r = requests.get(url, stream=True)
-    return Response(r.iter_content(chunk_size=10*1024),
-                    content_type=r.headers['Content-Type'])
+    if url.startswith("base64:"): url = base64.b64decode(url[7:]).decode("utf-8")
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0"}
+    if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
+    r = requests.get(url, headers=headers, stream=True)
+    return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'])
 
 @api.route('/playlist/')
 def playlist():

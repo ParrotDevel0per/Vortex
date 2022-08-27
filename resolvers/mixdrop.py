@@ -12,5 +12,5 @@ def mixdrop(url, referer=None):
     unpacked = unpack(packed)
     pattern = r"wurl=\"(.*?)\""
     match = re.search(pattern, unpacked)
-    if match: return "https:" + match.group(1)
-    return None
+    if match: return "https:" + match.group(1), headers
+    return None, None
