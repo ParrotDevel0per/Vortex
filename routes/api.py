@@ -52,7 +52,7 @@ def searchForExpiredItems():
             os.remove(os.path.join(CACHE_FOLDER, reg[key]['folder'], reg[key]['filename']))
             #print(f"Removed {reg[key]['filename']} from {reg[key]['folder']}")
 
-def cacheItem(filename, folder, data, expiry=(24 * 60 * 60)):
+def cacheItem(filename, folder, data, expiry=(7 * 24 * 60 * 60)):
     searchForExpiredItems()
     addToCacheRegistry(filename, folder, expiry)
     if not os.path.exists(os.path.join(CACHE_FOLDER, folder)): os.makedirs(os.path.join(CACHE_FOLDER, folder))
@@ -239,6 +239,7 @@ def bottom100movies():
 @api.route('/getMoviesByGenres')
 def getMoviesByGenres():
     genres = request.args.get("genres")
+    MAX_RESULTS = 2
     if not genres: return jsonify({
         "status": "error"
     })
@@ -250,10 +251,10 @@ def getMoviesByGenres():
         results = imdb.getMoviesByGenres(genres)
         cacheItem("-".join(genres) + ".json", "genres", json.dumps(results))
         return jsonify({
-            "results": results
+            "results": dict(list(results.items())[:MAX_RESULTS])
         })
     return jsonify({
-        "results": json.loads(cached)
+        "results": dict(list(json.loads(cached).items())[:MAX_RESULTS])
     })
 
 @api.route('/seriesToPlaylist/<id>')
@@ -490,7 +491,7 @@ def getMovieInfo(id):
         resp["plot"] = movie['plot'][0]
         resp["poster"] = movie["full-size cover url"]
         resp["year"] = movie['year']
-        resp["genres"] = ", ".join(movie['genres'])
+        resp["genres"] = ", ".join(movie['genres'][0:3])
         try: resp["airDate"] = movie['original air date']
         except: resp["airDate"] = "N/A"
         try: resp["rating"] = round(float(movie['rating']), 1)
