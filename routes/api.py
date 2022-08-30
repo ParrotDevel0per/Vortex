@@ -236,6 +236,26 @@ def bottom100movies():
         "results": json.loads(cached)
     })
 
+@api.route('/getMoviesByGenres')
+def getMoviesByGenres():
+    genres = request.args.get("genres")
+    if not genres: return jsonify({
+        "status": "error"
+    })
+    if "|" in genres: genres = genres.split("|")
+    else: genres = [genres]
+
+    cached = getCachedItem("-".join(genres) + ".json", "genres")
+    if cached == None:
+        results = imdb.getMoviesByGenres(genres)
+        cacheItem("-".join(genres) + ".json", "genres", json.dumps(results))
+        return jsonify({
+            "results": results
+        })
+    return jsonify({
+        "results": json.loads(cached)
+    })
+
 @api.route('/seriesToPlaylist/<id>')
 @api.route('/seriesToPlaylist/', defaults={'id': None})
 def serieasToPlaylist(id):
@@ -257,7 +277,9 @@ def serieasToPlaylist(id):
 @api.route('/favorites/')
 def favorites():
     if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
-    return json.loads(open(favoritesFile, "r").read())
+    return jsonify({
+        "results": json.loads(open(favoritesFile, "r").read())
+    })
 
 def addToFavsThread(id):
     movie = imdb.getMovieInfo(id)
@@ -370,7 +392,9 @@ def proxy(url):
 @api.route('/playlist/')
 def playlist():
     if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
-    return json.loads(open(playlistFile, "r").read())
+    return jsonify({
+        "results": json.loads(open(playlistFile, "r").read())
+    })
 
 def addToPlaylistThread(id):
     movie = imdb.getMovieInfo(id)
@@ -467,8 +491,10 @@ def getMovieInfo(id):
         resp["poster"] = movie["full-size cover url"]
         resp["year"] = movie['year']
         resp["genres"] = ", ".join(movie['genres'])
-        resp["airDate"] = movie['original air date']
-        resp["rating"] = round(float(movie['rating']), 1)
+        try: resp["airDate"] = movie['original air date']
+        except: resp["airDate"] = "N/A"
+        try: resp["rating"] = round(float(movie['rating']), 1)
+        except: resp["rating"] = "N/A"
         try: resp["budget"] = movie["box office"]['Budget']
         except: resp["budget"] = "N/A"
         cacheItem(f"Movie-{id}.json", "MovieInfoCache", json.dumps(resp))

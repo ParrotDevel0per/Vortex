@@ -22,6 +22,7 @@ sysArgv = sys.argv[1:]
 logFile = os.path.join(DB_FOLDER, "app.log")
 logging.basicConfig(filename=logFile, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 app = Flask("The Pirate Player")
+app.config['JSON_SORT_KEYS'] = False
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(www, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
@@ -29,7 +30,7 @@ app.register_blueprint(gomo, url_prefix='/proxy/gomo')
 app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')
 app.register_blueprint(r2embed, url_prefix='/proxy/2embed')
 app.register_blueprint(kukajto, url_prefix='/proxy/kukajto')
-app.config['JSON_SORT_KEYS'] = False
+
 
 def getLocalIP():
     ip = getSetting('ip')
@@ -128,5 +129,8 @@ if __name__ == "__main__":
         if do.lower() == "y": cli()
         else: pass
 
+    if "--sveltedebug" in sysArgv: os.system("npm run build")
+
     threading.Thread(target=sendFirstRequest).start()
     app.run(host=str(getSetting("ip")), port=int(getSetting("port")), debug="--debug" in sysArgv)
+

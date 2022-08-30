@@ -2,9 +2,10 @@
 __pycache__
 DB
 settings.json
+test/
 test.py
 output/
-compile.bat
 *.spec
 build/
 dist/
+node_modules

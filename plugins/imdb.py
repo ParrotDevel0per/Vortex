@@ -82,3 +82,15 @@ def getEpisodeInfo(id, season, episode):
     series = ia.get_movie(id)
     ia.update(series, "episodes")
     return dict(series), dict(series['episodes'][int(season)][int(episode)])
+
+def getMoviesByGenres(genres):
+    results = ia.get_top50_movies_by_genres(genres)
+    resp = {}
+    for item in results:
+        resp[item.movieID] = {
+            "title": item["title"],
+            "plot": item["plot"],
+            "full-size cover url": item["full-size cover url"],
+            "id": f"tt{item.movieID}"
+        }
+    return resp
