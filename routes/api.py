@@ -80,6 +80,25 @@ def index():
         'message': 'API Running'
     })
 
+@api.route('/featured')
+def featured():
+    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
+    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    favorites = json.loads(open(favoritesFile, "r").read())
+    playlist = json.loads(open(playlistFile, "r").read())
+    ft = {
+        "img": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.wallpapersden.com%2Fimage%2Fdownload%2Fjoker-2019-movie-poster_66602_2560x1440.jpg&f=1&nofb=1",
+        "title": "JOKER",
+        "line": "SMILE AND PUT ON A HAPPY FACE",
+        "info": "8.4/10\u00A0\u00A02019\u00A0\u00A0Crime, Drama, Thriller\u00A0\u00A02h 20m",
+        "plot": "A socially inept clown for hire - Arthur Fleck aspires to be a stand up comedian among his small job working dressed as a clown holding a sign for advertising. He takes care of his mother- Penny Fleck, and as he learns more about his mental illness, he learns more about his past. Dealing with all the negativity and bullying from society he heads downwards on a spiral, in turn showing how his alter ego \"Joker\", came to be.",
+		"imdbID": "tt7286456",
+		"kind": "movie",
+    }
+    ft["inPlaylist"] = ft["imdbID"].replace("tt", "") in playlist or False
+    ft["inFavorites"] = ft["imdbID"].replace("tt", "") in favorites or False
+    return ft
+
 @api.route('/sysinfo')
 def sysinfo():
     return jsonify({
@@ -240,7 +259,7 @@ def bottom100movies():
 @api.route('/getMoviesByGenres')
 def getMoviesByGenres():
     genres = request.args.get("genres")
-    MAX_RESULTS = 2
+    MAX_RESULTS = 20
     if not genres: return jsonify({
         "status": "error"
     })
@@ -488,8 +507,8 @@ def getMovieInfo(id):
     if id.startswith("tt"): id = id[2:]
     favorites = json.loads(open(favoritesFile, "r").read())
     playlist = json.loads(open(playlistFile, "r").read())
-    response = ""
-    cached = getCachedItem(f"Movie-{id}.json", "MovieInfoCache")
+    rp = "" # response
+    cached = getCachedItem(f"Item-{id}.json", "ItemInfoCache")
     if cached == None:
         movie = imdb.getMovieInfo(id)
         resp = {}
@@ -504,12 +523,19 @@ def getMovieInfo(id):
         except: resp["rating"] = "N/A"
         try: resp["budget"] = movie["box office"]['Budget']
         except: resp["budget"] = "N/A"
-        cacheItem(f"Movie-{id}.json", "MovieInfoCache", json.dumps(resp))
-        response = jsonify(resp)
-    else: response = json.loads(cached)
-    response["inFavorites"] = id in favorites or False
-    response["inPlaylist"] = id in playlist or False
-    return response
+        if "number of seasons" in movie:
+            resp["kind"] = "show"
+            resp["NOS"] = movie["number of seasons"]
+        else: resp["kind"] = "movie"
+        resp["info"] = f"{resp['rating']}/10\u00A0\u00A0{resp['year']}\u00A0\u00A0{resp['genres']}\u00A0\u00A0"
+        if resp["kind"] == "movie": resp["info"] += "0h 0m"
+        elif resp["kind"] == "show": resp["info"] += f"{resp['NOS']} Seasons"
+        cacheItem(f"Item-{id}.json", "ItemInfoCache", json.dumps(resp))
+        rp = resp
+    else: rp = json.loads(cached)
+    rp["inFavorites"] = id in favorites or False
+    rp["inPlaylist"] = id in playlist or False
+    return jsonify(rp)
 
 @api.route('/getEpisodeInfo/<id>/<season>-<episode>')
 @api.route('/getEpisodeInfo/', defaults={'id': None})

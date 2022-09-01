@@ -1,12 +1,11 @@
 <script>
-	import Nav from './Nav.svelte';
+    import Nav from './Nav.svelte';
 	import Featured from './Featured.svelte';
 	import axios from 'axios';
-	export let showG;
-	export let id;
-	export let showFt;
-	export let kind;
 
+    var featuredMetadata = { title: "Loading ...", };
+	let showFt = "false";
+    
 	const random = (length = 8) => {
 		let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 		let str = '';
@@ -17,60 +16,19 @@
 	};
 
 	const menu = {
-		bestActionMovies: {
-			title: "Action",
-			url: "/api/getMoviesByGenres?genres=Action",
+		favorites: {
+			title: "Favorites",
+			url: "/api/favorites/",
 			id: random(10)
 		},
-		bestAdventureMovies: {
-			title: "Adventure",
-			url: "/api/getMoviesByGenres?genres=Adventure",
-			id: random(10)
-		},
-		bestWarMovies: {
-			title: "War",
-			url: "/api/getMoviesByGenres?genres=War",
-			id: random(10)
-		},
-		bestComedyMovies: {
-			title: "Comedy",
-			url: "/api/getMoviesByGenres?genres=Comedy",
+        playlist: {
+			title: "Playlist",
+			url: "/api/playlist/",
 			id: random(10)
 		},
 	}
 
-	var featuredMetadata = {
-		title: "Loading ...",
-	};
-
-	// if id ain't  defined get featured from api
-	if (!id) {
-		axios({
-			method: 'get',
-			url: "/api/featured",
-			transformResponse: (res) => {
-				return JSON.parse(res);
-			},
-			responseType: 'json'
-		}).then(response => {
-			const data = response.data;
-			featuredMetadata = {
-				img: data.img,
-				title: data.title,
-				line: data.line,
-				info: data.info,
-				plot: data.plot,
-				imdbID: data.imdbID,
-				kind: data.kind,
-				inPlaylist: data.inPlaylist,
-				inFavorites: data.inFavorites,
-			}
-			window.scrollTo(0, 0);
-		}).catch(error => {
-			console.log(error);
-		});
-	}
-
+    
 	// view replace's featured with custom item
 	const view = (id, type) => {
 		axios({
@@ -91,6 +49,7 @@
 			featuredMetadata.kind = data.kind;
 			featuredMetadata.inFavorites = data.inFavorites,
 			featuredMetadata.inPlaylist = data.inPlaylist
+            showFt = "true"
 			window.scrollTo(0, 0);
 		}).catch(error => {
 			console.log(error);
@@ -100,29 +59,27 @@
 </script>
 
 <main>
-	<Nav active="home"/>
+	<Nav active="mine"/>
 	{#if showFt == "true"}
 	<Featured {...featuredMetadata} />
 	{/if}
 	<div id="content" class="content">
 		<br style="font-size: 100px;" />
-		{#if showG == "true"}
 			{#each Object.values(menu) as m}
-				<h1>{ m.title }</h1>
-				<div class="outer">
-					{#await axios.get(m.url, {transformResponse: (res) => { return JSON.parse(res).results; }, responseType: 'json'})}
-						{ console.log("Getting Movies ...") }
-					{:then resp}
-						{#each Object.values(resp.data) as d}
-							<img on:click={() => view(d.id, d.kind)} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
-						{/each}
-					{:catch error}
-						{ console.log("Fuck, Error occured: " + error.message) }
-					{/await}
-				</div>
-				<div class="br"></div>
-			{/each}
-		{/if}
+			<h1>{ m.title }</h1>
+			<div class="outer">
+				{#await axios.get(m.url, {transformResponse: (res) => { return JSON.parse(res).results; }, responseType: 'json'})}
+					{ console.log("Getting Movies ...") }
+				{:then resp}
+					{#each Object.values(resp.data) as d}
+						<img on:click={() => view(d.id, d.kind)} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
+					{/each}
+				{:catch error}
+					{ console.log("Fuck, Error occured: " + error.message) }
+				{/await}
+			</div>
+			<div class="br"></div>
+		{/each}
 	</div>
 </main>
 

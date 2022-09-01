@@ -1,4 +1,5 @@
-<script defer>
+<script>
+  export let active;
 </script>
 
 <nav class="navbar navbar-expand-lg fixed-top">
@@ -9,13 +10,25 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
+          {#if active == "home"}
           <a class="nav-link active" href="/">Home</a>
+          {:else}
+          <a class="nav-link" href="/">Home</a>
+          {/if}
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/?tab=favs">Favorites</a>
+          {#if active == "search"}
+          <a class="nav-link active" href="/?tab=search">Search</a>
+          {:else}
+          <a class="nav-link" href="/?tab=search">Search</a>
+          {/if}
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/?tab=playlist">Playlist</a>
+          {#if active == "mine"}
+          <a class="nav-link active" href="/?tab=mine">Mine</a>
+          {:else}
+          <a class="nav-link" href="/?tab=mine">Mine</a>
+          {/if}
         </li>
       </ul>
     </div>

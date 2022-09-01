@@ -1,18 +1,13 @@
 <script>
     import Home from './Home.svelte';
-    import Favorites from './Favorites.svelte';
-    import Playlist from './Playlist.svelte';
+    import Mine from './Mine.svelte';
 </script>
 
 
-{#if tab == "favs"}
-<Favorites />
-{:else if tab == "playlist"}
-<Playlist />
+{#if tab == "search"}
+{ console.log("search") }
+{:else if tab == "mine"}
+<Mine />
 {:else}
 <Home id="{ id }" showG="{ showG }" kind="{ kind }" showFt = "{ showFt }"/>
 {/if}
-
-<style>
-
-</style>

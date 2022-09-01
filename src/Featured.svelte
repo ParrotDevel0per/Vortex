@@ -6,12 +6,12 @@
     export let img;
     export let imdbID;
     export let kind;
-    //var inFavorites = false;
-    //var inPlaylist = false;
-    var favsSign = "";
-    var plSign = "";
+    export var inFavorites;
+    export var inPlaylist;
+
     var favsBTN = "";
     var plBTN = "";
+    var playBTN = "";
 
     const handleFavorites = () => {
         const imdbID = favsBTN.dataset.id;
@@ -21,7 +21,7 @@
             let xhr = new XMLHttpRequest();
             xhr.open("GET", "/api/addToFavorites/" + imdbID, true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) { favsSign = "-"; }
+                if (xhr.readyState == 4 && xhr.status == 200) { inFavorites = true; }
             };
             xhr.send();
         } else if (favsBTN.innerText.includes("-")) {
@@ -29,7 +29,7 @@
             let xhr = new XMLHttpRequest();
             xhr.open("GET", "/api/removeFromFavorites/" + imdbID, true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) { favsSign = "+"; }
+                if (xhr.readyState == 4 && xhr.status == 200) { inFavorites = false; }
             };
             xhr.send();
         } else { console.log("Unknown button state"); }
@@ -38,66 +38,29 @@
 
 
     const handlePlaylist = () => {
-        const playlist = document.getElementById("pl");
-        const imdbID = playlist.dataset.id;
+        const imdbID = plBTN.dataset.id;
 
-        if (playlist.innerText.includes("+")) {
+        if (plBTN.innerText.includes("+")) {
             console.log("Adding ...");
             let xhr = new XMLHttpRequest();
             xhr.open("GET", "/api/addToPlaylist/" + imdbID, true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) { plSign = "-"; }
+                if (xhr.readyState == 4 && xhr.status == 200) { inPlaylist = true; }
             };
             xhr.send();
-        } else if (playlist.innerText.includes("-")) {
+        } else if (plBTN.innerText.includes("-")) {
             console.log("Removing ...");
             let xhr = new XMLHttpRequest();
             xhr.open("GET", "/api/removeFromPlaylist/" + imdbID, true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) { plSign = "+"; }
+                if (xhr.readyState == 4 && xhr.status == 200) { inPlaylist = false; }
             };
             xhr.send();
         } else { console.log("Unknown button state"); }
     }
 
-    const onloadFavorites = () => {
-        const favs = document.getElementById("favs");
-        const imdbID = favs.dataset.id;
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/isInFavorites/" + imdbID, true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                if (xhr.responseText.match(/Movie found in favorites/)) {
-                    favsSign = "-"
-                } else {
-                    favsSign = "+"
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    const onloadPlaylist = () => {
-        const playlist = document.getElementById("pl");
-        const imdbID = playlist.dataset.id;
-        let xhr2 = new XMLHttpRequest();
-        xhr2.open("GET", "/api/isInPlaylist/" + imdbID, true);
-        xhr2.onreadystatechange = function() {
-         if (xhr2.readyState == 4 && xhr2.status == 200) {
-                if (xhr2.responseText.match(/Movie found in playlist/)) {
-                    plSign = "-";
-                } else {
-                    plSign = "+";
-                }
-            }
-        };
-        xhr2.send();
-    }
-
     const play = () => {
-        const pb = document.getElementById("playButton")
-        let url = `/play/${pb.dataset.id}/?kind=${pb.dataset.kind}`
-        location = url
+        location = `/play/${playBTN.dataset.id}/?kind=${playBTN.dataset.kind}`
     }
 </script>
 
@@ -119,9 +82,20 @@
             {#if plot}
             <h4>{ plot }</h4>
             {/if}
-            <a data-id="{ imdbID }" id="playButton" class="bgRed" on:click={() => play()}>Play</a>
-            <a bind:this={favsBTN} data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()} use:onloadFavorites>{favsSign} Favorites</a>
-            <a bind:this={plBTN} data-id="{ imdbID }" data-kind="{ kind }" id="pl" on:click={() => handlePlaylist()} use:onloadPlaylist>{plSign} Playlist</a>
+            <a bind:this={playBTN} data-id="{ imdbID }" id="playButton" class="bgRed" on:click={() => play()}>Play</a>
+            {#if inFavorites}
+            <a bind:this={favsBTN} data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()}>- Favorites</a>
+            {:else}
+            <a bind:this={favsBTN} data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()}>+ Favorites</a>
+            {/if}
+
+            {#if kind != "show"}
+                {#if inPlaylist}
+                <a bind:this={plBTN} data-id="{ imdbID }" data-kind="{ kind }" id="pl" on:click={() => handlePlaylist()}>- Playlist</a>
+                {:else}
+                <a bind:this={plBTN} data-id="{ imdbID }" data-kind="{ kind }" id="pl" on:click={() => handlePlaylist()}>+ Playlist</a>
+                {/if}
+            {/if}
         </div>
     </div>
 </div>
