@@ -106,7 +106,8 @@ def resolve(id):
     if episode: url += f"&episode={episode}"
     return jsonify({
         "id": id,
-        "url": requests.get(url).text
+        "url": requests.get(url).text,
+        "poster": "/static/img/preloader/1.png"
     })
 
 @api.route('/poster/<id>')
@@ -478,11 +479,16 @@ def mergeShowM3Us():
 @api.route('/getMovieInfo/<id>')
 @api.route('/getMovieInfo/', defaults={'id': None})
 def getMovieInfo(id):
+    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
+    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
+    favorites = json.loads(open(favoritesFile, "r").read())
+    playlist = json.loads(open(playlistFile, "r").read())
+    response = ""
     cached = getCachedItem(f"Movie-{id}.json", "MovieInfoCache")
     if cached == None:
         movie = imdb.getMovieInfo(id)
@@ -499,8 +505,11 @@ def getMovieInfo(id):
         try: resp["budget"] = movie["box office"]['Budget']
         except: resp["budget"] = "N/A"
         cacheItem(f"Movie-{id}.json", "MovieInfoCache", json.dumps(resp))
-        return jsonify(resp)
-    return json.loads(cached)
+        response = jsonify(resp)
+    else: response = json.loads(cached)
+    response["inFavorites"] = id in favorites or False
+    response["inPlaylist"] = id in playlist or False
+    return response
 
 @api.route('/getEpisodeInfo/<id>/<season>-<episode>')
 @api.route('/getEpisodeInfo/', defaults={'id': None})

@@ -1,5 +1,4 @@
-<script>
-
+<script defer>
 </script>
 
 <nav class="navbar navbar-expand-lg fixed-top">
@@ -22,11 +21,22 @@
     </div>
 </nav>
 
+
 <style>
 @font-face {
   font-family: 'Chomsky';
   src: url('/static/fonts/Chomsky.woff') format('woff');
 }
+
+/*
+.custom {
+  margin-left: 67%!important;
+  width: 20%!important;
+  background-color: black!important;
+  border: 0px;
+  border-bottom: #6d737a 3px solid;
+}
+*/
 
 nav {
   background-color: black;

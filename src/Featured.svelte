@@ -5,29 +5,31 @@
     export let plot;
     export let img;
     export let imdbID;
+    export let kind;
+    //var inFavorites = false;
+    //var inPlaylist = false;
+    var favsSign = "";
+    var plSign = "";
+    var favsBTN = "";
+    var plBTN = "";
 
     const handleFavorites = () => {
-        const favs = document.getElementById("favs");
-        const imdbID = favs.dataset.id;
+        const imdbID = favsBTN.dataset.id;
 
-        if (favs.innerText.includes("+")) {
+        if (favsBTN.innerText.includes("+")) {
             console.log("Adding ...");
             let xhr = new XMLHttpRequest();
             xhr.open("GET", "/api/addToFavorites/" + imdbID, true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    favs.innerText = "- Favorites";
-                }
+                if (xhr.readyState == 4 && xhr.status == 200) { favsSign = "-"; }
             };
             xhr.send();
-        } else if (favs.innerText.includes("-")) {
+        } else if (favsBTN.innerText.includes("-")) {
             console.log("Removing ...");
             let xhr = new XMLHttpRequest();
             xhr.open("GET", "/api/removeFromFavorites/" + imdbID, true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    favs.innerText = "+ Favorites";
-                }
+                if (xhr.readyState == 4 && xhr.status == 200) { favsSign = "+"; }
             };
             xhr.send();
         } else { console.log("Unknown button state"); }
@@ -39,16 +41,12 @@
         const playlist = document.getElementById("pl");
         const imdbID = playlist.dataset.id;
 
-        if (isShow) { return; }
-
         if (playlist.innerText.includes("+")) {
             console.log("Adding ...");
             let xhr = new XMLHttpRequest();
             xhr.open("GET", "/api/addToPlaylist/" + imdbID, true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    playlist.innerText = "- Playlist";
-                }
+                if (xhr.readyState == 4 && xhr.status == 200) { plSign = "-"; }
             };
             xhr.send();
         } else if (playlist.innerText.includes("-")) {
@@ -56,12 +54,50 @@
             let xhr = new XMLHttpRequest();
             xhr.open("GET", "/api/removeFromPlaylist/" + imdbID, true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    playlist.innerText = "+ Playlist";
-                }
+                if (xhr.readyState == 4 && xhr.status == 200) { plSign = "+"; }
             };
             xhr.send();
         } else { console.log("Unknown button state"); }
+    }
+
+    const onloadFavorites = () => {
+        const favs = document.getElementById("favs");
+        const imdbID = favs.dataset.id;
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/isInFavorites/" + imdbID, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                if (xhr.responseText.match(/Movie found in favorites/)) {
+                    favsSign = "-"
+                } else {
+                    favsSign = "+"
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    const onloadPlaylist = () => {
+        const playlist = document.getElementById("pl");
+        const imdbID = playlist.dataset.id;
+        let xhr2 = new XMLHttpRequest();
+        xhr2.open("GET", "/api/isInPlaylist/" + imdbID, true);
+        xhr2.onreadystatechange = function() {
+         if (xhr2.readyState == 4 && xhr2.status == 200) {
+                if (xhr2.responseText.match(/Movie found in playlist/)) {
+                    plSign = "-";
+                } else {
+                    plSign = "+";
+                }
+            }
+        };
+        xhr2.send();
+    }
+
+    const play = () => {
+        const pb = document.getElementById("playButton")
+        let url = `/play/${pb.dataset.id}/?kind=${pb.dataset.kind}`
+        location = url
     }
 </script>
 
@@ -83,48 +119,11 @@
             {#if plot}
             <h4>{ plot }</h4>
             {/if}
-            <a data-id="{ imdbID }" id="play" class="bgRed" on:click={() => console.log("play")}>Play</a>
-            <a data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()}>+ Favorites</a>
-            <a data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>+ Playlist</a>
+            <a data-id="{ imdbID }" id="playButton" class="bgRed" on:click={() => play()}>Play</a>
+            <a bind:this={favsBTN} data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()} use:onloadFavorites>{favsSign} Favorites</a>
+            <a bind:this={plBTN} data-id="{ imdbID }" data-kind="{ kind }" id="pl" on:click={() => handlePlaylist()} use:onloadPlaylist>{plSign} Playlist</a>
         </div>
     </div>
-    <script>
-        
-        
-        const featuredInfo = document.getElementById("featuredInfo");
-        var isShow = false;
-
-
-        // Check if movie is in favourites
-        const checker = () => {
-            xhr = new XMLHttpRequest();
-            xhr.open("GET", "/api/isInFavorites/" + imdbID, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    if (xhr.responseText.match(/Movie found in favorites/)) {
-                        favs.innerText = "- Favorites";
-                    } else {
-                        favs.innerText = "+ Favorites";
-                    }
-                }
-            };
-            xhr.send();
-            xhr2 = new XMLHttpRequest();
-            xhr2.open("GET", "/api/isInPlaylist/" + imdbID, true);
-            xhr2.onreadystatechange = function() {
-                if (xhr2.readyState == 4 && xhr2.status == 200) {
-                    if (xhr2.responseText.match(/Movie found in playlist/)) {
-                        playlist.innerText = "- Playlist";
-                    } else {
-                        playlist.className = "+ Playlist";
-                    }
-                }
-            };
-            xhr2.send();
-        }
-
-
-    </script>
 </div>
 
 <style>
@@ -181,12 +180,12 @@
     .info > a {
         background-color: #212121;
         display: inline;
-        padding-left: 3%;
-        padding-right: 3%;
+        padding-left: 5%;
+        padding-right: 5%;
         text-decoration: none;
         color: white;
-        padding-top: .5%;
-        padding-bottom: .5%;
+        padding-top: .8%;
+        padding-bottom: .8%;
         border-radius: 3px;
     }
     .info > a:hover {
