@@ -131,7 +131,14 @@
 	:root {
         --blur-rate: 3px;
     }
-
+	:global(html, body) {
+		background-color: black;
+		height: 100%;
+		-webkit-user-select: none;  
+        -moz-user-select: none;    
+        -ms-user-select: none;      
+        user-select: none;
+	}
 	.br {
 		width: 100%;
 		height: 10vh;
@@ -152,14 +159,6 @@
 	}
 	main {
 		background-color: black;
-	}
-	:global(html, body) {
-		background-color: black;
-		height: 100%;
-		-webkit-user-select: none;  
-        -moz-user-select: none;    
-        -ms-user-select: none;      
-        user-select: none;
 	}
 	.content > div > img {
 		height: 100%;
