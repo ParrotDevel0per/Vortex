@@ -2,56 +2,26 @@
 <html lang="en-US">
 <head>
     <title>Player</title>
+    <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
     <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
-    <script>var id = "{{ id }}";</script>
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/css/play.css" rel="stylesheet" type="text/css">
     <script src="/static/js/playerjs.js"></script>
-    <script src="/static/js/play.js" defer></script>
-    <script src="/static/js/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        html, body {
+            background-color: black;
+            height: 80vh;
+        }
+    </style>
 </head>
 <body>
-    <div class="headpage" style="background-image:url(/static/img/preloader/4.jpg);">
-        <div class="headpageoverlay">
-            <div class="container">
-                <div class="headpageimage"><img src="{{ metadata['poster'] }}" alt="Poster" height="278px" width="185px" style="display: inline; border-radius: 10px;"></div>
-                <div class="headpageinfo">
-                    <h1 class="product-title">{{ metadata["title"] }} <span class="muted">({{ metadata["year"] }})</span></h1>
-                    <!<ul style="list-style:none;padding: 0px;">
-                        <li><b>Genres:</b> <span itemprop="genre">{{ metadata["genres"] }}</span></li>
-                        <li><b>Air Dare:</b> {{ metadata["airDate"] }}</li>
-                        <li><b>Budget:</b> {{ metadata["budget"] }}</li>
-                        <li><b>Rating:</b> {{ metadata["rating"] }}/10</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="col-md-8" style="margin-top: 30px;padding-left:0px;">
-			<div class="postmain" style="padding-bottom: 20px;">
-                <div id="player"></div>
-                <script>
-                var player = new Playerjs({
-                    id:"player",
-                    file:"{{ resolved }}",
-                    poster:"{{ preloader }}",
-                });
-                </script>
-            </div>
-            <div class="postmain-no-margin-no-padding" style="padding-bottom: 20px;">
-                <i id="favs" class="fa-regular fa-heart icon fav"></i>
-                <i id="pl" class="fa-regular fa-square-plus icon pl"></i>
-                <p id="showPlaylist" style="display:none;"></p>
-            </div>
-            <div class="postmain">
-                <div class="postmaintitle" style="margin-bottom:0px;"><h3>Plot</h3></div>
-                <div class="postmaindescr"><p itemprop="description">{{ metadata["plot"] }}</p></div>
-            </div>
-        </div>
-    </div>
+    <div id="player" style="width:100%;height:100%"></div>
+    <script>
+    var player = new Playerjs({
+        id:"player",
+        file:"{{ resolved }}",
+        poster:"{{ preloader }}",
+    });
+    </script>
 </body>
 </html>

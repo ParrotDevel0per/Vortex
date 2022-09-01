@@ -50,9 +50,11 @@ const view = (id, type) => {
 		featuredMetadata.plot = data.plot;
 		featuredMetadata.imdbID = id;
 		featuredMetadata.kind = data.kind;
-		featuredMetadata.inFavorites = data.inFavorites,
-		featuredMetadata.inPlaylist = data.inPlaylist
-        showFt = "true"
+		featuredMetadata.inFavorites = data.inFavorites;
+		featuredMetadata.inPlaylist = data.inPlaylist;
+    featuredMetadata.NOS = data.NOS;
+    //featuredMetadata.episodeCount = data.episodeCount;
+    showFt = "true"
 		window.scrollTo(0, 0);
 	}).catch(error => {
 		console.log(error);

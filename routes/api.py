@@ -228,6 +228,27 @@ def episodes(id, season):
         "results": json.loads(cached)
     })
 
+@api.route('/episodeCount/<id>')
+@api.route('/episodeCount/', defaults={'id': None})
+def episodeCount(id):
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+    if id.startswith("tt"): id = id[2:]
+    cached = getCachedItem(f"episodeCount-{id}.json", "episodeCounts")
+    if cached == None:
+        results = imdb.allEpisodesCount(id)
+        cacheItem(f"episodeCount-{id}.json", "episodeCounts", json.dumps(results))
+        return jsonify({
+            "id": id,
+            "results": results
+        })
+    return jsonify({
+        "id": id,
+        "results": json.loads(cached)
+    })
+
 @api.route('/top250movies/')
 def top250movies():
     cached = getCachedItem("top250movies.json", "imdbCache")
@@ -498,6 +519,7 @@ def mergeShowM3Us():
 @api.route('/getMovieInfo/<id>')
 @api.route('/getMovieInfo/', defaults={'id': None})
 def getMovieInfo(id):
+    baseURL = request.base_url.split("/api")[0]
     if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
     if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
     if not id: return jsonify({
@@ -528,6 +550,7 @@ def getMovieInfo(id):
             resp["NOS"] = movie["number of seasons"]
         else: resp["kind"] = "movie"
         resp["info"] = f"{resp['rating']}/10\u00A0\u00A0{resp['year']}\u00A0\u00A0{resp['genres']}\u00A0\u00A0"
+        #resp["episodeCount"] = requests.get(f"{baseURL}/api/episodeCount/{id}").json()["results"]
         if resp["kind"] == "movie": resp["info"] += "0h 0m"
         elif resp["kind"] == "show": resp["info"] += f"{resp['NOS']} Seasons"
         cacheItem(f"Item-{id}.json", "ItemInfoCache", json.dumps(resp))

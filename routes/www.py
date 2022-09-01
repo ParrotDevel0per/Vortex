@@ -20,21 +20,18 @@ def index():
     )
 
 @www.route('/play/<id>/<episode>')
+@www.route('/play/<id>/', defaults={'episode': None})
 @www.route('/play/<id>', defaults={'episode': None})
 def play(id, episode):
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
     baseURL = request.base_url.split('/play')[0]
+
     url = f"{baseURL}/api/resolve/{id}?source={source}"
     if episode: url += f"&episode={episode}"
-    #try: resolved = requests.get(url).json()["url"]
-    #except: resolved = ""
-    movieInfoURL = f""
-    if episode: movieInfoURL += f"{baseURL}/api/getEpisodeInfo/{id}/{episode}"
-    else: movieInfoURL += f"{baseURL}/api/getMovieInfo/{id}"
-    metadata = requests.get(movieInfoURL).json()
+
     resolved = requests.get(url).json()["url"]
-    return render_template('play.html', url=url, id=id, resolved=resolved)
+    return render_template('play.html', preloader="/static/img/preloader/1.png", resolved=resolved)
 
 
 @www.route('/static/<path:path>')

@@ -47,15 +47,16 @@
 			featuredMetadata.plot = data.plot;
 			featuredMetadata.imdbID = id;
 			featuredMetadata.kind = data.kind;
-			featuredMetadata.inFavorites = data.inFavorites,
-			featuredMetadata.inPlaylist = data.inPlaylist
+			featuredMetadata.inFavorites = data.inFavorites;
+			featuredMetadata.inPlaylist = data.inPlaylist;
+			//featuredMetadata.episodeCount = data.episodeCount;
+			featuredMetadata.NOS = data.NOS;
             showFt = "true"
 			window.scrollTo(0, 0);
 		}).catch(error => {
 			console.log(error);
 		});
 	}
-	if (id) {view(id, kind)}
 </script>
 
 <main>

@@ -33,6 +33,15 @@ def episodes(id, season):
         }
     return result
 
+def allEpisodesCount(id):
+    series = ia.get_movie(id)
+    ia.update(series, "episodes")
+    result = {}
+    seasons = series['episodes']
+    for season in seasons:
+        result[season] = len(series['episodes'][season])
+    return result
+
 def createPlaylistFromSeries(id):
     series = ia.get_movie(id)
     ia.update(series, "episodes")
