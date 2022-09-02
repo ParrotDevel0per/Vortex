@@ -10,6 +10,7 @@ import json
 import time
 from utils.paths import CACHE_FOLDER, DB_FOLDER
 import os
+from utils.common import randStr
 
 api = Blueprint('api', __name__)
 cachePosters = getSetting('cachePosters').lower() == "true"
@@ -17,6 +18,7 @@ cacheRegistry = os.path.join(CACHE_FOLDER, "registry.json")
 postersFolder = os.path.join(CACHE_FOLDER, "posters")
 favoritesFile = os.path.join(DB_FOLDER, "favorites.json")
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
+homeMenuFile = os.path.join(DB_FOLDER, "homeMenu.json")
 
 def chunkedDownload(url, filename, chunkSize=8192):
     r = requests.get(url, stream=True)
@@ -98,6 +100,32 @@ def featured():
     ft["inPlaylist"] = ft["imdbID"].replace("tt", "") in playlist or False
     ft["inFavorites"] = ft["imdbID"].replace("tt", "") in favorites or False
     return ft
+
+def initHomeMenu():
+    menu = {
+		randStr(10): {
+			"title": "Action",
+			"url": "/api/getMoviesByGenres?genres=Action",
+		},
+		randStr(10): {
+			"title": "Adventure",
+			"url": "/api/getMoviesByGenres?genres=Adventure",
+		},
+		randStr(10): {
+			"title": "War",
+			"url": "/api/getMoviesByGenres?genres=War",
+		},
+		randStr(10): {
+			"title": "Comedy",
+			"url": "/api/getMoviesByGenres?genres=Comedy",
+		},
+	}
+    open(homeMenuFile, "w").write(json.dumps(menu, indent=4))
+
+@api.route('/homeMenu')
+def homeMenu():
+    if not os.path.exists(homeMenuFile): initHomeMenu()
+    return json.load(open(homeMenuFile, 'r'))
 
 @api.route('/sysinfo')
 def sysinfo():
@@ -280,7 +308,7 @@ def bottom100movies():
 @api.route('/getMoviesByGenres')
 def getMoviesByGenres():
     genres = request.args.get("genres")
-    MAX_RESULTS = 20
+    MAX_RESULTS = 30
     if not genres: return jsonify({
         "status": "error"
     })

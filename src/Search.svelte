@@ -1,13 +1,9 @@
 <script>
 import Nav from "./Nav.svelte";
-import Featured from "./Featured.svelte";
-import axios from 'axios';
 
 var grid = "";
 var search = "";
-let showFt = "false";
 var results = {};
-var featuredMetadata = { title: "Loading ...", };
 
 const cleargrid = () => {
     try { grid.replaceChildren()}
@@ -35,42 +31,11 @@ const searchEngine = () => {
 }
 const view = (id, type) => {
   location = `/?showG=false&id=${id}&kind=${kind}`;
-  return
-	axios({
-		method: 'get',
-		url: "/api/getMovieInfo/" + id,
-		transformResponse: (res) => {
-			return JSON.parse(res);
-		},
-		responseType: 'json'
-	}).then(response => {
-		const data = response.data;
-		featuredMetadata.img = `/api/poster/${id}?do=show`;
-		featuredMetadata.title = data.title;
-		featuredMetadata.line = "";
-		featuredMetadata.info = data.info;
-		featuredMetadata.plot = data.plot;
-		featuredMetadata.imdbID = id;
-		featuredMetadata.kind = data.kind;
-		featuredMetadata.inFavorites = data.inFavorites;
-		featuredMetadata.inPlaylist = data.inPlaylist;
-    featuredMetadata.NOS = data.NOS;
-    //featuredMetadata.episodeCount = data.episodeCount;
-    showFt = "true"
-		window.scrollTo(0, 0);
-	}).catch(error => {
-		console.log(error);
-	});
 }
 </script>
 
 <main>
     <Nav active="search" />
-    <!--
-    {#if showFt == "true"}
-	    <Featured {...featuredMetadata} />
-	  {/if}
-    -->
     <input bind:this={search} on:keyup={searchEngine} type="text" placeholder="Search ...">
     <div bind:this={grid} id="grid">
         {#each Object.values(results) as r}

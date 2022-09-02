@@ -11,13 +11,10 @@ import time
 import base64
 import random
 from string import ascii_lowercase, digits
+from utils.common import randStr
 
 vidsrc = Blueprint('vidsrc', __name__)
 database = {}
-
-def genID():
-    id = ''.join(random.choice(ascii_lowercase + digits) for _ in range(32))
-    return id
 
 def getIP(request):
     xff = request.headers.get('X-Forwarded-For')
@@ -43,7 +40,7 @@ def play():
     url = "https://vidsrc.me/embed/{}/".format(item)
     if episode != None: url += "{}/".format(episode)
     hlsurl, refresher, headers = grab(url)
-    UID = genID()
+    UID = randStr(32)
     requests.get(refresher, headers=headers).text # ! do not remove this line, otherwise everything gets fucked
 
     # create token

@@ -4348,21 +4348,21 @@ var app = (function () {
 
     function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[10] = list[i];
+    	child_ctx[9] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[14] = list[i];
+    	child_ctx[13] = list[i];
     	return child_ctx;
     }
 
-    // (106:1) {#if showFt == "true"}
+    // (95:1) {#if showFt == "true"}
     function create_if_block_1$1(ctx) {
     	let featured;
     	let current;
-    	const featured_spread_levels = [/*featuredMetadata*/ ctx[2]];
+    	const featured_spread_levels = [/*featuredMetadata*/ ctx[3]];
     	let featured_props = {};
 
     	for (let i = 0; i < featured_spread_levels.length; i += 1) {
@@ -4380,8 +4380,8 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			const featured_changes = (dirty & /*featuredMetadata*/ 4)
-    			? get_spread_update(featured_spread_levels, [get_spread_object(/*featuredMetadata*/ ctx[2])])
+    			const featured_changes = (dirty & /*featuredMetadata*/ 8)
+    			? get_spread_update(featured_spread_levels, [get_spread_object(/*featuredMetadata*/ ctx[3])])
     			: {};
 
     			featured.$set(featured_changes);
@@ -4404,17 +4404,17 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(106:1) {#if showFt == \\\"true\\\"}",
+    		source: "(95:1) {#if showFt == \\\"true\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (111:2) {#if showG == "true"}
+    // (100:2) {#if showG == "true"}
     function create_if_block$2(ctx) {
     	let each_1_anchor;
-    	let each_value = Object.values(/*menu*/ ctx[3]);
+    	let each_value = Object.values(/*menu*/ ctx[2]);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -4438,8 +4438,8 @@ var app = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*axios, Object, menu, JSON, console, view*/ 24) {
-    				each_value = Object.values(/*menu*/ ctx[3]);
+    			if (dirty & /*axios, Object, menu, JSON, console, view*/ 20) {
+    				each_value = Object.values(/*menu*/ ctx[2]);
     				validate_each_argument(each_value);
     				let i;
 
@@ -4472,16 +4472,16 @@ var app = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(111:2) {#if showG == \\\"true\\\"}",
+    		source: "(100:2) {#if showG == \\\"true\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (121:5) {:catch error}
+    // (110:5) {:catch error}
     function create_catch_block$1(ctx) {
-    	let t_value = console.log("Fuck, Error occured: " + /*error*/ ctx[17].message) + "";
+    	let t_value = console.log("Fuck, Error occured: " + /*error*/ ctx[16].message) + "";
     	let t;
 
     	const block = {
@@ -4491,7 +4491,9 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
     		},
-    		p: noop,
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*menu*/ 4 && t_value !== (t_value = console.log("Fuck, Error occured: " + /*error*/ ctx[16].message) + "")) set_data_dev(t, t_value);
+    		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(t);
     		}
@@ -4501,17 +4503,17 @@ var app = (function () {
     		block,
     		id: create_catch_block$1.name,
     		type: "catch",
-    		source: "(121:5) {:catch error}",
+    		source: "(110:5) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (117:5) {:then resp}
+    // (106:5) {:then resp}
     function create_then_block$1(ctx) {
     	let each_1_anchor;
-    	let each_value_1 = Object.values(/*resp*/ ctx[13].data);
+    	let each_value_1 = Object.values(/*resp*/ ctx[12].data);
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -4535,8 +4537,8 @@ var app = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*Object, axios, menu, JSON, view*/ 24) {
-    				each_value_1 = Object.values(/*resp*/ ctx[13].data);
+    			if (dirty & /*Object, axios, menu, JSON, view*/ 20) {
+    				each_value_1 = Object.values(/*resp*/ ctx[12].data);
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -4569,31 +4571,32 @@ var app = (function () {
     		block,
     		id: create_then_block$1.name,
     		type: "then",
-    		source: "(117:5) {:then resp}",
+    		source: "(106:5) {:then resp}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (118:6) {#each Object.values(resp.data) as d}
+    // (107:6) {#each Object.values(resp.data) as d}
     function create_each_block_1$1(ctx) {
     	let img;
     	let img_src_value;
+    	let img_alt_value;
     	let mounted;
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[8](/*d*/ ctx[14]);
+    		return /*click_handler*/ ctx[8](/*d*/ ctx[13]);
     	}
 
     	const block = {
     		c: function create() {
     			img = element("img");
-    			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[14].id + "?do=show")) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "alt", /*d*/ ctx[14].title);
+    			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[13].id + "?do=show")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", img_alt_value = /*d*/ ctx[13].title);
     			attr_dev(img, "class", "svelte-1n84x8y");
-    			add_location(img, file$2, 118, 7, 2934);
+    			add_location(img, file$2, 107, 7, 2647);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -4605,6 +4608,14 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
+
+    			if (dirty & /*menu*/ 4 && !src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[13].id + "?do=show")) {
+    				attr_dev(img, "src", img_src_value);
+    			}
+
+    			if (dirty & /*menu*/ 4 && img_alt_value !== (img_alt_value = /*d*/ ctx[13].title)) {
+    				attr_dev(img, "alt", img_alt_value);
+    			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(img);
@@ -4617,14 +4628,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1$1.name,
     		type: "each",
-    		source: "(118:6) {#each Object.values(resp.data) as d}",
+    		source: "(107:6) {#each Object.values(resp.data) as d}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (115:119)        { console.log("Getting Movies ...") }
+    // (104:119)        { console.log("Getting Movies ...") }
     function create_pending_block$1(ctx) {
     	let t_value = console.log("Getting Movies ...") + "";
     	let t;
@@ -4646,20 +4657,21 @@ var app = (function () {
     		block,
     		id: create_pending_block$1.name,
     		type: "pending",
-    		source: "(115:119)        { console.log(\\\"Getting Movies ...\\\") }",
+    		source: "(104:119)        { console.log(\\\"Getting Movies ...\\\") }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (112:3) {#each Object.values(menu) as m}
+    // (101:3) {#each Object.values(menu) as m}
     function create_each_block$2(ctx) {
     	let h1;
-    	let t0_value = /*m*/ ctx[10].title + "";
+    	let t0_value = /*m*/ ctx[9].title + "";
     	let t0;
     	let t1;
     	let div0;
+    	let promise;
     	let t2;
     	let div1;
 
@@ -4671,12 +4683,12 @@ var app = (function () {
     		pending: create_pending_block$1,
     		then: create_then_block$1,
     		catch: create_catch_block$1,
-    		value: 13,
-    		error: 17
+    		value: 12,
+    		error: 16
     	};
 
     	handle_promise(
-    		axios.get(/*m*/ ctx[10].url, {
+    		promise = axios.get(/*m*/ ctx[9].url, {
     			transformResponse: /*func*/ ctx[7],
     			responseType: 'json'
     		}),
@@ -4693,11 +4705,11 @@ var app = (function () {
     			t2 = space();
     			div1 = element("div");
     			attr_dev(h1, "class", "svelte-1n84x8y");
-    			add_location(h1, file$2, 112, 4, 2656);
+    			add_location(h1, file$2, 101, 4, 2369);
     			attr_dev(div0, "class", "outer svelte-1n84x8y");
-    			add_location(div0, file$2, 113, 4, 2681);
+    			add_location(div0, file$2, 102, 4, 2394);
     			attr_dev(div1, "class", "br svelte-1n84x8y");
-    			add_location(div1, file$2, 124, 4, 3155);
+    			add_location(div1, file$2, 113, 4, 2868);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
@@ -4712,7 +4724,15 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			update_await_block_branch(info, ctx, dirty);
+    			if (dirty & /*menu*/ 4 && t0_value !== (t0_value = /*m*/ ctx[9].title + "")) set_data_dev(t0, t0_value);
+    			info.ctx = ctx;
+
+    			if (dirty & /*menu*/ 4 && promise !== (promise = axios.get(/*m*/ ctx[9].url, {
+    				transformResponse: /*func*/ ctx[7],
+    				responseType: 'json'
+    			})) && handle_promise(promise, info)) ; else {
+    				update_await_block_branch(info, ctx, dirty);
+    			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h1);
@@ -4730,7 +4750,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(112:3) {#each Object.values(menu) as m}",
+    		source: "(101:3) {#each Object.values(menu) as m}",
     		ctx
     	});
 
@@ -4767,12 +4787,12 @@ var app = (function () {
     			t2 = space();
     			if (if_block1) if_block1.c();
     			set_style(br, "font-size", "100px");
-    			add_location(br, file$2, 109, 2, 2559);
+    			add_location(br, file$2, 98, 2, 2272);
     			attr_dev(div, "id", "content");
     			attr_dev(div, "class", "content svelte-1n84x8y");
-    			add_location(div, file$2, 108, 1, 2522);
+    			add_location(div, file$2, 97, 1, 2235);
     			attr_dev(main, "class", "svelte-1n84x8y");
-    			add_location(main, file$2, 103, 0, 2425);
+    			add_location(main, file$2, 92, 0, 2138);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4863,40 +4883,36 @@ var app = (function () {
     	let { id } = $$props;
     	let { showFt } = $$props;
     	let { kind } = $$props;
+    	var menu = {};
 
-    	const random = (length = 8) => {
-    		let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    		let str = '';
+    	if (showG == "true") {
+    		axios({
+    			method: 'get',
+    			url: "/api/homeMenu",
+    			transformResponse: res => {
+    				return JSON.parse(res);
+    			},
+    			responseType: 'json'
+    		}).then(response => {
+    			const data = response.data;
 
-    		for (let i = 0; i < length; i++) {
-    			str += chars.charAt(Math.floor(Math.random() * chars.length));
-    		}
+    			for (const key in data) {
+    				$$invalidate(
+    					2,
+    					menu[key] = {
+    						title: data[key]["title"],
+    						url: data[key]["url"],
+    						id: key
+    					},
+    					menu
+    				);
+    			}
 
-    		return str;
-    	};
-
-    	const menu = {
-    		bestActionMovies: {
-    			title: "Action",
-    			url: "/api/getMoviesByGenres?genres=Action",
-    			id: random(10)
-    		},
-    		bestAdventureMovies: {
-    			title: "Adventure",
-    			url: "/api/getMoviesByGenres?genres=Adventure",
-    			id: random(10)
-    		},
-    		bestWarMovies: {
-    			title: "War",
-    			url: "/api/getMoviesByGenres?genres=War",
-    			id: random(10)
-    		},
-    		bestComedyMovies: {
-    			title: "Comedy",
-    			url: "/api/getMoviesByGenres?genres=Comedy",
-    			id: random(10)
-    		}
-    	};
+    			window.scrollTo(0, 0);
+    		}).catch(error => {
+    			console.log(error);
+    		});
+    	}
 
     	var featuredMetadata = { title: "Loading ..." };
 
@@ -4912,7 +4928,7 @@ var app = (function () {
     		}).then(response => {
     			const data = response.data;
 
-    			$$invalidate(2, featuredMetadata = {
+    			$$invalidate(3, featuredMetadata = {
     				img: data.img,
     				title: data.title,
     				line: data.line,
@@ -4941,16 +4957,16 @@ var app = (function () {
     			responseType: 'json'
     		}).then(response => {
     			const data = response.data;
-    			$$invalidate(2, featuredMetadata.img = `/api/poster/${id}?do=show`, featuredMetadata);
-    			$$invalidate(2, featuredMetadata.title = data.title, featuredMetadata);
-    			$$invalidate(2, featuredMetadata.line = "", featuredMetadata);
-    			$$invalidate(2, featuredMetadata.info = data.info, featuredMetadata);
-    			$$invalidate(2, featuredMetadata.plot = data.plot, featuredMetadata);
-    			$$invalidate(2, featuredMetadata.imdbID = id, featuredMetadata);
-    			$$invalidate(2, featuredMetadata.kind = data.kind, featuredMetadata);
-    			$$invalidate(2, featuredMetadata.inFavorites = data.inFavorites, featuredMetadata);
-    			$$invalidate(2, featuredMetadata.inPlaylist = data.inPlaylist, featuredMetadata);
-    			$$invalidate(2, featuredMetadata.NOS = data.NOS, featuredMetadata);
+    			$$invalidate(3, featuredMetadata.img = `/api/poster/${id}?do=show`, featuredMetadata);
+    			$$invalidate(3, featuredMetadata.title = data.title, featuredMetadata);
+    			$$invalidate(3, featuredMetadata.line = "", featuredMetadata);
+    			$$invalidate(3, featuredMetadata.info = data.info, featuredMetadata);
+    			$$invalidate(3, featuredMetadata.plot = data.plot, featuredMetadata);
+    			$$invalidate(3, featuredMetadata.imdbID = id, featuredMetadata);
+    			$$invalidate(3, featuredMetadata.kind = data.kind, featuredMetadata);
+    			$$invalidate(3, featuredMetadata.inFavorites = data.inFavorites, featuredMetadata);
+    			$$invalidate(3, featuredMetadata.inPlaylist = data.inPlaylist, featuredMetadata);
+    			$$invalidate(3, featuredMetadata.NOS = data.NOS, featuredMetadata);
 
     			//featuredMetadata.episodeCount = data.episodeCount;
     			window.scrollTo(0, 0);
@@ -4990,7 +5006,6 @@ var app = (function () {
     		id,
     		showFt,
     		kind,
-    		random,
     		menu,
     		featuredMetadata,
     		view
@@ -5001,14 +5016,15 @@ var app = (function () {
     		if ('id' in $$props) $$invalidate(5, id = $$props.id);
     		if ('showFt' in $$props) $$invalidate(1, showFt = $$props.showFt);
     		if ('kind' in $$props) $$invalidate(6, kind = $$props.kind);
-    		if ('featuredMetadata' in $$props) $$invalidate(2, featuredMetadata = $$props.featuredMetadata);
+    		if ('menu' in $$props) $$invalidate(2, menu = $$props.menu);
+    		if ('featuredMetadata' in $$props) $$invalidate(3, featuredMetadata = $$props.featuredMetadata);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [showG, showFt, featuredMetadata, menu, view, id, kind, func, click_handler];
+    	return [showG, showFt, menu, featuredMetadata, view, id, kind, func, click_handler];
     }
 
     class Home extends SvelteComponentDev {
@@ -5665,11 +5681,11 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[11] = list[i];
+    	child_ctx[9] = list[i];
     	return child_ctx;
     }
 
-    // (76:8) {#each Object.values(results) as r}
+    // (41:8) {#each Object.values(results) as r}
     function create_each_block(ctx) {
     	let div;
     	let img;
@@ -5679,7 +5695,7 @@ var app = (function () {
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[6](/*r*/ ctx[11]);
+    		return /*click_handler*/ ctx[6](/*r*/ ctx[9]);
     	}
 
     	const block = {
@@ -5687,12 +5703,12 @@ var app = (function () {
     			div = element("div");
     			img = element("img");
     			t = space();
-    			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*r*/ ctx[11].id + "?do=show")) attr_dev(img, "src", img_src_value);
+    			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*r*/ ctx[9].id + "?do=show")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "Poster");
     			attr_dev(img, "class", "svelte-hn4h12");
-    			add_location(img, file, 77, 12, 2339);
+    			add_location(img, file, 42, 12, 1308);
     			attr_dev(div, "class", "item svelte-hn4h12");
-    			add_location(div, file, 76, 8, 2271);
+    			add_location(div, file, 41, 8, 1240);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -5707,7 +5723,7 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*results*/ 4 && !src_url_equal(img.src, img_src_value = "/api/poster/" + /*r*/ ctx[11].id + "?do=show")) {
+    			if (dirty & /*results*/ 4 && !src_url_equal(img.src, img_src_value = "/api/poster/" + /*r*/ ctx[9].id + "?do=show")) {
     				attr_dev(img, "src", img_src_value);
     			}
     		},
@@ -5722,7 +5738,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(76:8) {#each Object.values(results) as r}",
+    		source: "(41:8) {#each Object.values(results) as r}",
     		ctx
     	});
 
@@ -5769,12 +5785,12 @@ var app = (function () {
     			attr_dev(input, "type", "text");
     			attr_dev(input, "placeholder", "Search ...");
     			attr_dev(input, "class", "svelte-hn4h12");
-    			add_location(input, file, 73, 4, 2091);
+    			add_location(input, file, 38, 4, 1060);
     			attr_dev(div, "id", "grid");
     			attr_dev(div, "class", "svelte-hn4h12");
-    			add_location(div, file, 74, 4, 2184);
+    			add_location(div, file, 39, 4, 1153);
     			attr_dev(main, "class", "svelte-hn4h12");
-    			add_location(main, file, 66, 0, 1952);
+    			add_location(main, file, 36, 0, 1019);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5861,9 +5877,7 @@ var app = (function () {
     	validate_slots('Search', slots, []);
     	var grid = "";
     	var search = "";
-    	let showFt = "false";
     	var results = {};
-    	var featuredMetadata = { title: "Loading ..." };
 
     	const cleargrid = () => {
     		try {
@@ -5902,7 +5916,6 @@ var app = (function () {
 
     	const view = (id, type) => {
     		location = `/?showG=false&id=${id}&kind=${kind}`;
-    		return;
     	};
 
     	const writable_props = [];
@@ -5929,13 +5942,9 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		Nav,
-    		Featured,
-    		axios,
     		grid,
     		search,
-    		showFt,
     		results,
-    		featuredMetadata,
     		cleargrid,
     		searchEngine,
     		view
@@ -5944,9 +5953,7 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('grid' in $$props) $$invalidate(0, grid = $$props.grid);
     		if ('search' in $$props) $$invalidate(1, search = $$props.search);
-    		if ('showFt' in $$props) showFt = $$props.showFt;
     		if ('results' in $$props) $$invalidate(2, results = $$props.results);
-    		if ('featuredMetadata' in $$props) featuredMetadata = $$props.featuredMetadata;
     	};
 
     	if ($$props && "$$inject" in $$props) {

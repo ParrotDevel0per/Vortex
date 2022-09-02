@@ -7,42 +7,31 @@
 	export let showFt;
 	export let kind;
 
-	const random = (length = 8) => {
-		let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		let str = '';
-		for (let i = 0; i < length; i++) {
-			str += chars.charAt(Math.floor(Math.random() * chars.length));
-		}
-		return str;
-	};
+	var menu = {}
+	if (showG == "true") {
+		axios({
+			method: 'get',
+			url: "/api/homeMenu",
+			transformResponse: (res) => { return JSON.parse(res); },
+			responseType: 'json'
+		}).then(response => {
+			const data = response.data;
 
-	const menu = {
-		bestActionMovies: {
-			title: "Action",
-			url: "/api/getMoviesByGenres?genres=Action",
-			id: random(10)
-		},
-		bestAdventureMovies: {
-			title: "Adventure",
-			url: "/api/getMoviesByGenres?genres=Adventure",
-			id: random(10)
-		},
-		bestWarMovies: {
-			title: "War",
-			url: "/api/getMoviesByGenres?genres=War",
-			id: random(10)
-		},
-		bestComedyMovies: {
-			title: "Comedy",
-			url: "/api/getMoviesByGenres?genres=Comedy",
-			id: random(10)
-		},
+			for (const key in data) {
+				menu[key] = {
+					title: data[key]["title"],
+					url: data[key]["url"],
+					id: key
+				}
+			}
+
+			window.scrollTo(0, 0);
+		}).catch(error => {
+			console.log(error);
+		});
 	}
 
-	var featuredMetadata = {
-		title: "Loading ...",
-	};
-
+	var featuredMetadata = { title: "Loading ...", };
 	// if id ain't  defined get featured from api
 	if (!id) {
 		axios({
