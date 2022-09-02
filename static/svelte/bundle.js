@@ -832,7 +832,7 @@ var app = (function () {
     }
 
     // (27:10) {#if active == "mine"}
-    function create_if_block$5(ctx) {
+    function create_if_block$4(ctx) {
     	let a;
 
     	const block = {
@@ -853,7 +853,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$5.name,
+    		id: create_if_block$4.name,
     		type: "if",
     		source: "(27:10) {#if active == \\\"mine\\\"}",
     		ctx
@@ -894,7 +894,7 @@ var app = (function () {
     	let if_block1 = current_block_type_1(ctx);
 
     	function select_block_type_2(ctx, dirty) {
-    		if (/*active*/ ctx[0] == "mine") return create_if_block$5;
+    		if (/*active*/ ctx[0] == "mine") return create_if_block$4;
     		return create_else_block$2;
     	}
 
@@ -1097,7 +1097,7 @@ var app = (function () {
     		c: function create() {
     			h1 = element("h1");
     			t = text(/*title*/ ctx[2]);
-    			attr_dev(h1, "class", "svelte-126v4qw");
+    			attr_dev(h1, "class", "svelte-1r946la");
     			add_location(h1, file$3, 82, 12, 2830);
     		},
     		m: function mount(target, anchor) {
@@ -1132,7 +1132,7 @@ var app = (function () {
     		c: function create() {
     			h1 = element("h1");
     			t = text(/*title*/ ctx[2]);
-    			attr_dev(h1, "class", "jokerFont svelte-126v4qw");
+    			attr_dev(h1, "class", "jokerFont svelte-1r946la");
     			add_location(h1, file$3, 80, 12, 2759);
     		},
     		m: function mount(target, anchor) {
@@ -1167,7 +1167,7 @@ var app = (function () {
     		c: function create() {
     			h2 = element("h2");
     			t = text(/*line*/ ctx[3]);
-    			attr_dev(h2, "class", "svelte-126v4qw");
+    			attr_dev(h2, "class", "svelte-1r946la");
     			add_location(h2, file$3, 85, 12, 2905);
     		},
     		m: function mount(target, anchor) {
@@ -1202,7 +1202,7 @@ var app = (function () {
     		c: function create() {
     			h3 = element("h3");
     			t = text(/*info*/ ctx[4]);
-    			attr_dev(h3, "class", "svelte-126v4qw");
+    			attr_dev(h3, "class", "svelte-1r946la");
     			add_location(h3, file$3, 88, 12, 2979);
     		},
     		m: function mount(target, anchor) {
@@ -1237,7 +1237,7 @@ var app = (function () {
     		c: function create() {
     			h4 = element("h4");
     			t = text(/*plot*/ ctx[5]);
-    			attr_dev(h4, "class", "svelte-126v4qw");
+    			attr_dev(h4, "class", "svelte-1r946la");
     			add_location(h4, file$3, 91, 12, 3053);
     		},
     		m: function mount(target, anchor) {
@@ -1299,12 +1299,12 @@ var app = (function () {
     			add_location(optgroup, file$3, 96, 16, 3213);
     			attr_dev(select, "name", "seasons");
     			attr_dev(select, "id", "seasons");
-    			attr_dev(select, "class", "svelte-126v4qw");
+    			attr_dev(select, "class", "svelte-1r946la");
     			if (/*season*/ ctx[13] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[18].call(select));
     			add_location(select, file$3, 95, 12, 3139);
     			attr_dev(input, "type", "text");
     			attr_dev(input, "placeholder", "1");
-    			attr_dev(input, "class", "svelte-126v4qw");
+    			attr_dev(input, "class", "svelte-1r946la");
     			add_location(input, file$3, 112, 12, 3829);
     		},
     		m: function mount(target, anchor) {
@@ -1430,7 +1430,7 @@ var app = (function () {
     			t = text("+ Favorites");
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "favs");
-    			attr_dev(a, "class", "svelte-126v4qw");
+    			attr_dev(a, "class", "svelte-1r946la");
     			add_location(a, file$3, 119, 12, 4210);
     		},
     		m: function mount(target, anchor) {
@@ -1480,7 +1480,7 @@ var app = (function () {
     			t = text("- Favorites");
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "favs");
-    			attr_dev(a, "class", "svelte-126v4qw");
+    			attr_dev(a, "class", "svelte-1r946la");
     			add_location(a, file$3, 117, 12, 4071);
     		},
     		m: function mount(target, anchor) {
@@ -1518,7 +1518,7 @@ var app = (function () {
     }
 
     // (123:12) {#if kind != "show"}
-    function create_if_block$4(ctx) {
+    function create_if_block$3(ctx) {
     	let if_block_anchor;
 
     	function select_block_type_2(ctx, dirty) {
@@ -1559,7 +1559,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$4.name,
+    		id: create_if_block$3.name,
     		type: "if",
     		source: "(123:12) {#if kind != \\\"show\\\"}",
     		ctx
@@ -1580,10 +1580,9 @@ var app = (function () {
     			a = element("a");
     			t = text("+ Playlist");
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
-    			attr_dev(a, "data-kind", /*kind*/ ctx[8]);
     			attr_dev(a, "id", "pl");
-    			attr_dev(a, "class", "svelte-126v4qw");
-    			add_location(a, file$3, 126, 16, 4583);
+    			attr_dev(a, "class", "svelte-1r946la");
+    			add_location(a, file$3, 126, 16, 4562);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -1598,10 +1597,6 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			if (dirty[0] & /*imdbID*/ 128) {
     				attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
-    			}
-
-    			if (dirty[0] & /*kind*/ 256) {
-    				attr_dev(a, "data-kind", /*kind*/ ctx[8]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -1635,9 +1630,8 @@ var app = (function () {
     			a = element("a");
     			t = text("- Playlist");
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
-    			attr_dev(a, "data-kind", /*kind*/ ctx[8]);
     			attr_dev(a, "id", "pl");
-    			attr_dev(a, "class", "svelte-126v4qw");
+    			attr_dev(a, "class", "svelte-1r946la");
     			add_location(a, file$3, 124, 16, 4421);
     		},
     		m: function mount(target, anchor) {
@@ -1653,10 +1647,6 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			if (dirty[0] & /*imdbID*/ 128) {
     				attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
-    			}
-
-    			if (dirty[0] & /*kind*/ 256) {
-    				attr_dev(a, "data-kind", /*kind*/ ctx[8]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -1716,7 +1706,7 @@ var app = (function () {
 
     	let current_block_type_1 = select_block_type_1(ctx);
     	let if_block5 = current_block_type_1(ctx);
-    	let if_block6 = /*kind*/ ctx[8] != "show" && create_if_block$4(ctx);
+    	let if_block6 = /*kind*/ ctx[8] != "show" && create_if_block$3(ctx);
 
     	const block = {
     		c: function create() {
@@ -1741,19 +1731,19 @@ var app = (function () {
     			if_block5.c();
     			t8 = space();
     			if (if_block6) if_block6.c();
-    			attr_dev(img_1, "class", "featuredIMG svelte-126v4qw");
+    			attr_dev(img_1, "class", "featuredIMG svelte-1r946la");
     			if (!src_url_equal(img_1.src, img_1_src_value = /*img*/ ctx[6])) attr_dev(img_1, "src", img_1_src_value);
     			attr_dev(img_1, "alt", "Featured");
     			add_location(img_1, file$3, 77, 8, 2609);
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "playButton");
-    			attr_dev(a, "class", "bgRed svelte-126v4qw");
+    			attr_dev(a, "class", "bgRed svelte-1r946la");
     			add_location(a, file$3, 115, 12, 3920);
     			attr_dev(div0, "id", "featuredInfo");
-    			attr_dev(div0, "class", "info svelte-126v4qw");
+    			attr_dev(div0, "class", "info svelte-1r946la");
     			add_location(div0, file$3, 78, 8, 2673);
     			attr_dev(div1, "id", "featured");
-    			attr_dev(div1, "class", "featured svelte-126v4qw");
+    			attr_dev(div1, "class", "featured svelte-1r946la");
     			add_location(div1, file$3, 76, 4, 2563);
     			attr_dev(div2, "class", "featuredContainer");
     			add_location(div2, file$3, 75, 0, 2526);
@@ -1879,7 +1869,7 @@ var app = (function () {
     				if (if_block6) {
     					if_block6.p(ctx, dirty);
     				} else {
-    					if_block6 = create_if_block$4(ctx);
+    					if_block6 = create_if_block$3(ctx);
     					if_block6.c();
     					if_block6.m(div0, null);
     				}
@@ -4422,7 +4412,7 @@ var app = (function () {
     }
 
     // (111:2) {#if showG == "true"}
-    function create_if_block$3(ctx) {
+    function create_if_block$2(ctx) {
     	let each_1_anchor;
     	let each_value = Object.values(/*menu*/ ctx[3]);
     	validate_each_argument(each_value);
@@ -4480,7 +4470,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$3.name,
+    		id: create_if_block$2.name,
     		type: "if",
     		source: "(111:2) {#if showG == \\\"true\\\"}",
     		ctx
@@ -4763,7 +4753,7 @@ var app = (function () {
     		});
 
     	let if_block0 = /*showFt*/ ctx[1] == "true" && create_if_block_1$1(ctx);
-    	let if_block1 = /*showG*/ ctx[0] == "true" && create_if_block$3(ctx);
+    	let if_block1 = /*showG*/ ctx[0] == "true" && create_if_block$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -4827,7 +4817,7 @@ var app = (function () {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
-    					if_block1 = create_if_block$3(ctx);
+    					if_block1 = create_if_block$2(ctx);
     					if_block1.c();
     					if_block1.m(div, null);
     				}
@@ -5104,7 +5094,7 @@ var app = (function () {
     }
 
     // (64:1) {#if showFt == "true"}
-    function create_if_block$2(ctx) {
+    function create_if_block$1(ctx) {
     	let featured;
     	let current;
     	const featured_spread_levels = [/*featuredMetadata*/ ctx[0]];
@@ -5147,7 +5137,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$2.name,
+    		id: create_if_block$1.name,
     		type: "if",
     		source: "(64:1) {#if showFt == \\\"true\\\"}",
     		ctx
@@ -5429,7 +5419,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	let if_block = /*showFt*/ ctx[1] == "true" && create_if_block$2(ctx);
+    	let if_block = /*showFt*/ ctx[1] == "true" && create_if_block$1(ctx);
     	let each_value = Object.values(/*menu*/ ctx[2]);
     	validate_each_argument(each_value);
     	let each_blocks = [];
@@ -5489,7 +5479,7 @@ var app = (function () {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$2(ctx);
+    					if_block = create_if_block$1(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(main, t1);
@@ -5679,60 +5669,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (67:4) {#if showFt == "true"}
-    function create_if_block$1(ctx) {
-    	let featured;
-    	let current;
-    	const featured_spread_levels = [/*featuredMetadata*/ ctx[4]];
-    	let featured_props = {};
-
-    	for (let i = 0; i < featured_spread_levels.length; i += 1) {
-    		featured_props = assign(featured_props, featured_spread_levels[i]);
-    	}
-
-    	featured = new Featured({ props: featured_props, $$inline: true });
-
-    	const block = {
-    		c: function create() {
-    			create_component(featured.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(featured, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const featured_changes = (dirty & /*featuredMetadata*/ 16)
-    			? get_spread_update(featured_spread_levels, [get_spread_object(/*featuredMetadata*/ ctx[4])])
-    			: {};
-
-    			featured.$set(featured_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(featured.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(featured.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(featured, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$1.name,
-    		type: "if",
-    		source: "(67:4) {#if showFt == \\\"true\\\"}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (72:8) {#each Object.values(results) as r}
+    // (76:8) {#each Object.values(results) as r}
     function create_each_block(ctx) {
     	let div;
     	let img;
@@ -5742,7 +5679,7 @@ var app = (function () {
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[8](/*r*/ ctx[11]);
+    		return /*click_handler*/ ctx[6](/*r*/ ctx[11]);
     	}
 
     	const block = {
@@ -5752,10 +5689,10 @@ var app = (function () {
     			t = space();
     			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*r*/ ctx[11].id + "?do=show")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "Poster");
-    			attr_dev(img, "class", "svelte-1g0qkae");
-    			add_location(img, file, 73, 12, 2251);
-    			attr_dev(div, "class", "item svelte-1g0qkae");
-    			add_location(div, file, 72, 8, 2183);
+    			attr_dev(img, "class", "svelte-hn4h12");
+    			add_location(img, file, 77, 12, 2339);
+    			attr_dev(div, "class", "item svelte-hn4h12");
+    			add_location(div, file, 76, 8, 2271);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -5770,7 +5707,7 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*results*/ 8 && !src_url_equal(img.src, img_src_value = "/api/poster/" + /*r*/ ctx[11].id + "?do=show")) {
+    			if (dirty & /*results*/ 4 && !src_url_equal(img.src, img_src_value = "/api/poster/" + /*r*/ ctx[11].id + "?do=show")) {
     				attr_dev(img, "src", img_src_value);
     			}
     		},
@@ -5785,7 +5722,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(72:8) {#each Object.values(results) as r}",
+    		source: "(76:8) {#each Object.values(results) as r}",
     		ctx
     	});
 
@@ -5796,9 +5733,8 @@ var app = (function () {
     	let main;
     	let nav;
     	let t0;
-    	let t1;
     	let input;
-    	let t2;
+    	let t1;
     	let div;
     	let current;
     	let mounted;
@@ -5809,8 +5745,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	let if_block = /*showFt*/ ctx[2] == "true" && create_if_block$1(ctx);
-    	let each_value = Object.values(/*results*/ ctx[3]);
+    	let each_value = Object.values(/*results*/ ctx[2]);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -5823,10 +5758,8 @@ var app = (function () {
     			main = element("main");
     			create_component(nav.$$.fragment);
     			t0 = space();
-    			if (if_block) if_block.c();
-    			t1 = space();
     			input = element("input");
-    			t2 = space();
+    			t1 = space();
     			div = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -5835,13 +5768,13 @@ var app = (function () {
 
     			attr_dev(input, "type", "text");
     			attr_dev(input, "placeholder", "Search ...");
-    			attr_dev(input, "class", "svelte-1g0qkae");
-    			add_location(input, file, 69, 4, 2003);
+    			attr_dev(input, "class", "svelte-hn4h12");
+    			add_location(input, file, 73, 4, 2091);
     			attr_dev(div, "id", "grid");
-    			attr_dev(div, "class", "svelte-1g0qkae");
-    			add_location(div, file, 70, 4, 2096);
-    			attr_dev(main, "class", "svelte-1g0qkae");
-    			add_location(main, file, 64, 0, 1889);
+    			attr_dev(div, "class", "svelte-hn4h12");
+    			add_location(div, file, 74, 4, 2184);
+    			attr_dev(main, "class", "svelte-hn4h12");
+    			add_location(main, file, 66, 0, 1952);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5850,51 +5783,26 @@ var app = (function () {
     			insert_dev(target, main, anchor);
     			mount_component(nav, main, null);
     			append_dev(main, t0);
-    			if (if_block) if_block.m(main, null);
-    			append_dev(main, t1);
     			append_dev(main, input);
-    			/*input_binding*/ ctx[7](input);
-    			append_dev(main, t2);
+    			/*input_binding*/ ctx[5](input);
+    			append_dev(main, t1);
     			append_dev(main, div);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div, null);
     			}
 
-    			/*div_binding*/ ctx[9](div);
+    			/*div_binding*/ ctx[7](div);
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "keyup", /*searchEngine*/ ctx[5], false, false, false);
+    				dispose = listen_dev(input, "keyup", /*searchEngine*/ ctx[3], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (/*showFt*/ ctx[2] == "true") {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-
-    					if (dirty & /*showFt*/ 4) {
-    						transition_in(if_block, 1);
-    					}
-    				} else {
-    					if_block = create_if_block$1(ctx);
-    					if_block.c();
-    					transition_in(if_block, 1);
-    					if_block.m(main, t1);
-    				}
-    			} else if (if_block) {
-    				group_outros();
-
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-
-    				check_outros();
-    			}
-
-    			if (dirty & /*view, Object, results*/ 72) {
-    				each_value = Object.values(/*results*/ ctx[3]);
+    			if (dirty & /*view, Object, results*/ 20) {
+    				each_value = Object.values(/*results*/ ctx[2]);
     				validate_each_argument(each_value);
     				let i;
 
@@ -5920,21 +5828,18 @@ var app = (function () {
     		i: function intro(local) {
     			if (current) return;
     			transition_in(nav.$$.fragment, local);
-    			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(nav.$$.fragment, local);
-    			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
     			destroy_component(nav);
-    			if (if_block) if_block.d();
-    			/*input_binding*/ ctx[7](null);
+    			/*input_binding*/ ctx[5](null);
     			destroy_each(each_blocks, detaching);
-    			/*div_binding*/ ctx[9](null);
+    			/*div_binding*/ ctx[7](null);
     			mounted = false;
     			dispose();
     		}
@@ -5983,7 +5888,7 @@ var app = (function () {
     						return;
     					}
 
-    					$$invalidate(3, results = resp);
+    					$$invalidate(2, results = resp);
     				}
     			};
 
@@ -5996,33 +5901,8 @@ var app = (function () {
     	};
 
     	const view = (id, type) => {
-    		axios({
-    			method: 'get',
-    			url: "/api/getMovieInfo/" + id,
-    			transformResponse: res => {
-    				return JSON.parse(res);
-    			},
-    			responseType: 'json'
-    		}).then(response => {
-    			const data = response.data;
-    			$$invalidate(4, featuredMetadata.img = `/api/poster/${id}?do=show`, featuredMetadata);
-    			$$invalidate(4, featuredMetadata.title = data.title, featuredMetadata);
-    			$$invalidate(4, featuredMetadata.line = "", featuredMetadata);
-    			$$invalidate(4, featuredMetadata.info = data.info, featuredMetadata);
-    			$$invalidate(4, featuredMetadata.plot = data.plot, featuredMetadata);
-    			$$invalidate(4, featuredMetadata.imdbID = id, featuredMetadata);
-    			$$invalidate(4, featuredMetadata.kind = data.kind, featuredMetadata);
-    			$$invalidate(4, featuredMetadata.inFavorites = data.inFavorites, featuredMetadata);
-    			$$invalidate(4, featuredMetadata.inPlaylist = data.inPlaylist, featuredMetadata);
-    			$$invalidate(4, featuredMetadata.NOS = data.NOS, featuredMetadata);
-
-    			//featuredMetadata.episodeCount = data.episodeCount;
-    			$$invalidate(2, showFt = "true");
-
-    			window.scrollTo(0, 0);
-    		}).catch(error => {
-    			console.log(error);
-    		});
+    		location = `/?showG=false&id=${id}&kind=${kind}`;
+    		return;
     	};
 
     	const writable_props = [];
@@ -6064,9 +5944,9 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('grid' in $$props) $$invalidate(0, grid = $$props.grid);
     		if ('search' in $$props) $$invalidate(1, search = $$props.search);
-    		if ('showFt' in $$props) $$invalidate(2, showFt = $$props.showFt);
-    		if ('results' in $$props) $$invalidate(3, results = $$props.results);
-    		if ('featuredMetadata' in $$props) $$invalidate(4, featuredMetadata = $$props.featuredMetadata);
+    		if ('showFt' in $$props) showFt = $$props.showFt;
+    		if ('results' in $$props) $$invalidate(2, results = $$props.results);
+    		if ('featuredMetadata' in $$props) featuredMetadata = $$props.featuredMetadata;
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -6076,9 +5956,7 @@ var app = (function () {
     	return [
     		grid,
     		search,
-    		showFt,
     		results,
-    		featuredMetadata,
     		searchEngine,
     		view,
     		input_binding,

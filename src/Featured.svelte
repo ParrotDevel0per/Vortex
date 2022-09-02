@@ -122,9 +122,9 @@
 
             {#if kind != "show"}
                 {#if inPlaylist}
-                <a bind:this={plBTN} data-id="{ imdbID }" data-kind="{ kind }" id="pl" on:click={() => handlePlaylist()}>- Playlist</a>
+                <a bind:this={plBTN} data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>- Playlist</a>
                 {:else}
-                <a bind:this={plBTN} data-id="{ imdbID }" data-kind="{ kind }" id="pl" on:click={() => handlePlaylist()}>+ Playlist</a>
+                <a bind:this={plBTN} data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>+ Playlist</a>
                 {/if}
             {/if}
         </div>
@@ -156,6 +156,9 @@
         padding-right: 0px;
         text-align: center!important;
         width: 10%!important;
+    }
+    input:focus {
+        outline:none !important;
     }
     .featured {
         height: 100vh;

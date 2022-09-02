@@ -28,7 +28,7 @@ app.register_blueprint(www, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
 app.register_blueprint(gomo, url_prefix='/proxy/gomo')
 app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')
-app.register_blueprint(r2embed, url_prefix='/proxy/2embed')
+#app.register_blueprint(r2embed, url_prefix='/proxy/2embed')
 app.register_blueprint(kukajto, url_prefix='/proxy/kukajto')
 
 

@@ -1,6 +1,6 @@
 # Settings:
-sleepTime = 30 # Interval of updating token
-expireAfter = 25 * 60 # When unused token will expire, must be bigger than sleepTime
+sleepTime = 100 # Interval of updating token
+expireAfter = 3 * 60 * 60 # When unused token will expire, must be bigger than sleepTime
 
 
 import requests
@@ -16,7 +16,7 @@ vidsrc = Blueprint('vidsrc', __name__)
 database = {}
 
 def genID():
-    id = ''.join(random.choice(ascii_lowercase + digits) for _ in range(64))
+    id = ''.join(random.choice(ascii_lowercase + digits) for _ in range(32))
     return id
 
 def getIP(request):
@@ -30,12 +30,9 @@ def checkIfExpired():
             del database[key]
 
 def refreshToken(token):
-    headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"}
-    headers.update({"Referer": token["referer"]})
-    r = requests.get(token["refresher"], headers=headers)
+    r = requests.get(token["refresher"], headers=token["headers"])
     global database
     database[token["uid"]]["expire"] = int(time.time()) + sleepTime
-    headers.update({"Referer": token["referer"]})
 
 @vidsrc.route('/play')
 def play():
@@ -45,14 +42,19 @@ def play():
     episode = request.args.get('episode')
     url = "https://vidsrc.me/embed/{}/".format(item)
     if episode != None: url += "{}/".format(episode)
-    hlsurl, refresher, referer = grab(url)
-    token = {"url": hlsurl}
+    hlsurl, refresher, headers = grab(url)
     UID = genID()
-    token.update({"refresher": refresher})
-    token.update({"referer": referer})
-    token.update({"uid": UID})
-    expire = int(time.time()) + sleepTime
+    requests.get(refresher, headers=headers).text # ! do not remove this line, otherwise everything gets fucked
+
+    # create token
+    token = {}
+    token["url"] = hlsurl
+    token["refresher"] = refresher
+    token["headers"] = headers
+    token["uid"] = UID
     token = base64.b64encode(json.dumps(token).encode('utf-8')).decode('utf-8')
+    
+    expire = int(time.time()) + sleepTime
     global database
     database.update({
         UID: {
@@ -69,9 +71,7 @@ def playlist():
     token = json.loads(base64.b64decode(token).decode('utf-8'))
     if token["uid"] not in database: return "Forbidden"
     if database[token["uid"]]["expire"] < int(time.time()): refreshToken(token)
-    headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"}
-    headers.update({"Referer": token['referer']})
-    r = requests.get(token['url'], headers=headers)
+    r = requests.get(token['url'], headers=token["headers"])
     token = base64.b64encode(json.dumps(token).encode('utf-8')).decode('utf-8')
     return Response(r.text.replace("http", "/proxy/vidsrc/ts?url=http").replace(".ts", ".ts&wmsAuthSign=%s" % token), mimetype='application/x-mpegURL')
 
@@ -82,7 +82,5 @@ def ts():
     token = json.loads(base64.b64decode(token).decode('utf-8'))
     if token["uid"] not in database: return "Forbidden"
     if database[token["uid"]]["expire"] < int(time.time()): refreshToken(token)
-    headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"}
-    headers.update({"Referer": token['referer']})
-    r = requests.get(request.args.get("url"), headers=headers)
+    r = requests.get(request.args.get("url"), headers=token["headers"])
     return Response(r.content, mimetype='video/mp2t')

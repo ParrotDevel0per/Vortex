@@ -34,6 +34,8 @@ const searchEngine = () => {
     }
 }
 const view = (id, type) => {
+  location = `/?showG=false&id=${id}&kind=${kind}`;
+  return
 	axios({
 		method: 'get',
 		url: "/api/getMovieInfo/" + id,
@@ -64,9 +66,11 @@ const view = (id, type) => {
 
 <main>
     <Nav active="search" />
+    <!--
     {#if showFt == "true"}
-	<Featured {...featuredMetadata} />
-	{/if}
+	    <Featured {...featuredMetadata} />
+	  {/if}
+    -->
     <input bind:this={search} on:keyup={searchEngine} type="text" placeholder="Search ...">
     <div bind:this={grid} id="grid">
         {#each Object.values(results) as r}
@@ -138,7 +142,7 @@ input {
   z-index: 999;
 }
 input:focus {
-    outline:none !important;
+  outline:none !important;
 }
 @keyframes blur {
   from {
