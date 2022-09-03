@@ -8,15 +8,15 @@ import base64
 import psutil
 import json
 import time
-from utils.paths import CACHE_FOLDER, DB_FOLDER
+import random
+from utils.paths import CACHE_FOLDER, DB_FOLDER, POSTER_FOLDER
 from utils.fakeBrowser import baseHeaders
-import os
 from utils.common import randStr
+import os
 
 api = Blueprint('api', __name__)
 cachePosters = getSetting('cachePosters').lower() == "true"
 cacheRegistry = os.path.join(CACHE_FOLDER, "registry.json")
-postersFolder = os.path.join(CACHE_FOLDER, "posters")
 favoritesFile = os.path.join(DB_FOLDER, "favorites.json")
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 homeMenuFile = os.path.join(DB_FOLDER, "homeMenu.json")
@@ -83,13 +83,8 @@ def index():
         'message': 'API Running'
     })
 
-@api.route('/featured')
-def featured():
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
-    favorites = json.loads(open(favoritesFile, "r").read())
-    playlist = json.loads(open(playlistFile, "r").read())
-    ft = {
+featuredMovies = {
+    "Joker": {
         "img": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.wallpapersden.com%2Fimage%2Fdownload%2Fjoker-2019-movie-poster_66602_2560x1440.jpg&f=1&nofb=1",
         "title": "JOKER",
         "line": "SMILE AND PUT ON A HAPPY FACE",
@@ -97,7 +92,25 @@ def featured():
         "plot": "A socially inept clown for hire - Arthur Fleck aspires to be a stand up comedian among his small job working dressed as a clown holding a sign for advertising. He takes care of his mother- Penny Fleck, and as he learns more about his mental illness, he learns more about his past. Dealing with all the negativity and bullying from society he heads downwards on a spiral, in turn showing how his alter ego \"Joker\", came to be.",
 		"imdbID": "tt7286456",
 		"kind": "movie",
+    },
+    "BatmanTDK": {
+        "img": "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fgetwallpapers.com%2Fwallpaper%2Ffull%2F0%2F1%2F4%2F312259.jpg&f=1&nofb=1",
+        "title": "The Dark Knight",
+        "line": "WHY SO SERIOUS?",
+        "info": "9.0/10\u00A0\u00A02008\u00A0\u00A0Action, Crime, Drama\u00A0\u00A02h 32m",
+        "plot": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+		"imdbID": "tt0468569",
+		"kind": "movie",
     }
+}
+
+@api.route('/featured')
+def featured():
+    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
+    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    favorites = json.loads(open(favoritesFile, "r").read())
+    playlist = json.loads(open(playlistFile, "r").read())
+    ft = random.choice(list(featuredMovies.values()))
     ft["inPlaylist"] = ft["imdbID"].replace("tt", "") in playlist or False
     ft["inFavorites"] = ft["imdbID"].replace("tt", "") in favorites or False
     return ft
@@ -116,9 +129,13 @@ def initHomeMenu():
 			"title": "War",
 			"url": "/api/getMoviesByGenres?genres=War",
 		},
-		randStr(10): {
-			"title": "Comedy",
-			"url": "/api/getMoviesByGenres?genres=Comedy",
+        randStr(10): {
+			"title": "History",
+			"url": "/api/getMoviesByGenres?genres=History",
+		},
+        randStr(10): {
+			"title": "Western",
+			"url": "/api/getMoviesByGenres?genres=Western",
 		},
 	}
     open(homeMenuFile, "w").write(json.dumps(menu, indent=4))
@@ -172,11 +189,11 @@ def poster(id):
     if not posterURL: posterURL = f"{baseURL}/static/img/nopicture.jpg"
     if do == 'redirect': return redirect(posterURL)
     elif do == 'show':
-        if not os.path.exists(postersFolder): os.makedirs(postersFolder)
+        if not os.path.exists(POSTER_FOLDER): os.makedirs(POSTER_FOLDER)
         if not cachePosters or "nopicture" in posterURL: return Response(requests.get(posterURL).content, mimetype="image/jpeg")
-        if f"tt{id}.png" not in os.listdir(postersFolder):
-            chunkedDownload(posterURL, os.path.join(postersFolder, f"tt{id}.png"))
-        return send_from_directory(postersFolder, f"tt{id}.png")
+        if f"tt{id}.png" not in os.listdir(POSTER_FOLDER):
+            chunkedDownload(posterURL, os.path.join(POSTER_FOLDER, f"tt{id}.png"))
+        return send_from_directory(POSTER_FOLDER, f"tt{id}.png")
     return jsonify({
         "id": id,
         "url": posterURL
@@ -424,13 +441,13 @@ def isInFavorites(id):
 
 @api.route('/clearPosterCache/')
 def clearPosterCache():
-    fileCount = len(os.listdir(postersFolder))
+    fileCount = len(os.listdir(POSTER_FOLDER))
     if fileCount == 0: return jsonify({
         'status': 'error',
         'message': 'No posters found'
     })
-    shutil.rmtree(postersFolder)
-    os.makedirs(postersFolder)
+    shutil.rmtree(POSTER_FOLDER)
+    os.makedirs(POSTER_FOLDER)
     return jsonify({
         "status": "ok",
         "message": "Poster cache cleared",
@@ -556,6 +573,7 @@ def getMovieInfo(id):
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
+    if id == "undefined": return "Error"
     favorites = json.loads(open(favoritesFile, "r").read())
     playlist = json.loads(open(playlistFile, "r").read())
     rp = "" # response
@@ -568,20 +586,29 @@ def getMovieInfo(id):
         resp["poster"] = movie["full-size cover url"]
         resp["year"] = movie['year']
         resp["genres"] = ", ".join(movie['genres'][0:3])
+        resp["episodeCount"] = "0"
+
+        # Get info that might / might not be in imdb's database
         try: resp["airDate"] = movie['original air date']
         except: resp["airDate"] = "N/A"
         try: resp["rating"] = round(float(movie['rating']), 1)
         except: resp["rating"] = "N/A"
         try: resp["budget"] = movie["box office"]['Budget']
         except: resp["budget"] = "N/A"
+
+        # Create line with informations about movie, \u00A0 is unicode for space in JS
+        resp["info"] = f"{resp['rating']}/10\u00A0\u00A0{resp['year']}\u00A0\u00A0{resp['genres']}\u00A0\u00A0"
+        
+        # Add data based on if its movie / tv show
         if "number of seasons" in movie:
             resp["kind"] = "show"
             resp["NOS"] = movie["number of seasons"]
-        else: resp["kind"] = "movie"
-        resp["info"] = f"{resp['rating']}/10\u00A0\u00A0{resp['year']}\u00A0\u00A0{resp['genres']}\u00A0\u00A0"
-        #resp["episodeCount"] = requests.get(f"{baseURL}/api/episodeCount/{id}").json()["results"]
-        if resp["kind"] == "movie": resp["info"] += "0h 0m"
-        elif resp["kind"] == "show": resp["info"] += f"{resp['NOS']} Seasons"
+            resp["episodeCount"] = requests.get(f"{baseURL}/api/episodeCount/{id}").json()["results"]
+            resp["info"] += f"{resp['NOS']} Seasons"
+        else: 
+            resp["kind"] = "movie"
+            resp["info"] += "0h 0m"
+
         cacheItem(f"Item-{id}.json", "ItemInfoCache", json.dumps(resp))
         rp = resp
     else: rp = json.loads(cached)

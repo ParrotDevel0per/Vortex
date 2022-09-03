@@ -15,7 +15,6 @@ def index():
         tab=request.args.get("tab") or "",
         id=request.args.get("id") or "",
         showG=request.args.get("showG") or "true",
-        kind = request.args.get("kind") or "",
         showFt = request.args.get("showFt") or "true",
     )
 
@@ -29,14 +28,16 @@ def play(id, episode):
 
     url = f"{baseURL}/api/resolve/{id}?source={source}"
     if episode: url += f"&episode={episode}"
-    ep = "0"
-    se = "0"
+    sec, ep, se, epc = ("0" * 4)
     if episode:
         ep = episode.split("-")[1]
         se = episode.split("-")[0]
+        resp = requests.get(f"{baseURL}/api/episodeCount/{id}").json()
+        epc = resp["results"][se]
+        sec = len(resp["results"])
 
     resolved = requests.get(url).json()["url"]
-    return render_template('play.html', resolved=resolved, ep=ep, id=id, se=se)
+    return render_template('play.html', resolved=resolved, ep=ep, id=id, se=se, epc=epc, sec=sec)
 
 
 @www.route('/static/<path:path>')

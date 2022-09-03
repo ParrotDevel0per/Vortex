@@ -22,7 +22,7 @@ def seasons(id):
 
 def episodes(id, season):
     series = ia.get_movie(id)
-    ia.update(series, "episodes")
+    #ia.update(series, "episodes")
     result = {}
     result["title"] = dict(series)["title"]
     result["poster"] = dict(series)["full-size cover url"]

@@ -29,8 +29,8 @@ const searchEngine = () => {
         cleargrid();
     }
 }
-const view = (id, type) => {
-  location = `/?showG=false&id=${id}&kind=${kind}`;
+const view = (id) => {
+  location = `/?showG=false&id=${id}`;
 }
 </script>
 
@@ -39,7 +39,7 @@ const view = (id, type) => {
     <input bind:this={search} on:keyup={searchEngine} type="text" placeholder="Search ...">
     <div bind:this={grid} id="grid">
         {#each Object.values(results) as r}
-        <div class="item" on:click={() => view(r.id, r.kind)}>
+        <div class="item" on:click={() => view(r.id)}>
             <img src="/api/poster/{ r.id }?do=show" alt="Poster">
         </div>
         {/each}

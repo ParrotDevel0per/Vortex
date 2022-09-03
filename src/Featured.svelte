@@ -9,7 +9,7 @@
     export var inFavorites;
     export var inPlaylist;
     export let NOS;
-    //export var episodeCount;
+    export var episodeCount;
 
     var favsBTN = "";
     var plBTN = "";
@@ -17,7 +17,7 @@
     var season = "1";
     var episode = "1";
 
-    //const getEpisodes = (season) => { return episodeCount[season]; }
+    const getEpisodes = (season) => { return episodeCount[season]; }
 
     const handleFavorites = () => {
         const imdbID = favsBTN.dataset.id;
@@ -68,7 +68,7 @@
     const play = () => {
         let url = `/play/${playBTN.dataset.id}/`
         if (kind == "show") {url += `${season}-${episode}`}
-        url += `?kind=${kind}`
+        // url += `?kind=${kind}`
         location = url
     }
 </script>
@@ -101,7 +101,6 @@
                 </optgroup>
             </select>
 
-            <!--
             <select bind:value={episode} name="episodes" id="episodes">
                 <optgroup label="Episodes">
                 {#each Array(getEpisodes(season)) as _, index (index)}
@@ -109,8 +108,8 @@
                 {/each}
                 </optgroup>
             </select>
-            -->
-            <input bind:value={episode} type="text" placeholder="1">
+
+            <!-- <input bind:value={episode} type="text" placeholder="1"> -->
             {/if}
 
             <a bind:this={playBTN} data-id="{ imdbID }" id="playButton" class="bgRed" on:click={() => play()}>Play</a>
@@ -141,7 +140,7 @@
         font-family: 'Bignoodletitling';
         src: url('/static/fonts/Bignoodletitling.ttf');
     }
-    input,
+    /* input, */
     select {
         background: black;
         border: 0px;
@@ -149,6 +148,7 @@
         padding: 0.8% 5% 0.8% 5%;
         color: red;
     }
+    /*
     input {
         padding-left: 0.5vh;
         padding-bottom: 0.5vh;
@@ -160,6 +160,7 @@
     input:focus {
         outline:none !important;
     }
+    */
     .featured {
         height: 100vh;
         width: 100vw;

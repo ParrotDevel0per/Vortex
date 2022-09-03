@@ -5,7 +5,6 @@
 	export let showG;
 	export let id;
 	export let showFt;
-	export let kind;
 
 	var menu = {}
 	if (showG == "true") {
@@ -53,6 +52,7 @@
 				kind: data.kind,
 				inPlaylist: data.inPlaylist,
 				inFavorites: data.inFavorites,
+				episodeCount: data.episodeCount
 			}
 			window.scrollTo(0, 0);
 		}).catch(error => {
@@ -61,7 +61,7 @@
 	}
 
 	// view replace's featured with custom item
-	const view = (id, type) => {
+	const view = (id) => {
 		axios({
 			method: 'get',
 			url: "/api/getMovieInfo/" + id,
@@ -81,13 +81,13 @@
 			featuredMetadata.inFavorites = data.inFavorites;
 			featuredMetadata.inPlaylist = data.inPlaylist;
 			featuredMetadata.NOS = data.NOS;
-			//featuredMetadata.episodeCount = data.episodeCount;
+			featuredMetadata.episodeCount = data.episodeCount;
 			window.scrollTo(0, 0);
 		}).catch(error => {
 			console.log(error);
 		});
 	}
-	if (id) {view(id, kind)}
+	if (id) {view(id)}
 </script>
 
 <main>
@@ -105,7 +105,7 @@
 						{ console.log("Getting Movies ...") }
 					{:then resp}
 						{#each Object.values(resp.data) as d}
-							<img on:click={() => view(d.id, d.kind)} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
+							<img on:click={() => view(d.id)} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
 						{/each}
 					{:catch error}
 						{ console.log("Fuck, Error occured: " + error.message) }

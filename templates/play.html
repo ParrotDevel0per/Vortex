@@ -35,6 +35,8 @@
     <script>
     var se = parseInt("{{ se }}");
     var ep = parseInt("{{ ep }}");
+    var epc = parseInt("{{ epc }}");
+    var sec = parseInt("{{ sec }}");
     var id = "{{ id }}";
     var ne = document.getElementById("ne");
     var ns = document.getElementById("ns");
@@ -42,22 +44,20 @@
     var player = new Playerjs({
         id:"player",
         file:"{{ resolved }}",
-        //poster:"{{ preloader }}",
         poster: `/api/poster/${id}?do=show`
     });
 
     if (se != 0) {
-        ne.style.display = "block";
-        ns.style.display = "block";
+        // check if this ain't last season / episode
+        if (ep != epc) { ne.style.display = "block"; }
+        if (se != sec) { ns.style.display = "block"; }
     }
 
     const nextEpisode = () => {
-        let ep = parseInt("{{ ep }}");
         location = `/play/${id}/${se}-${ep + 1}?kind=show`;
     }
 
     const nextSeason = () => {
-        let ep = parseInt("{{ ep }}");
         location = `/play/${id}/${se + 1}-1?kind=show`;
     }
     </script>

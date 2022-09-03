@@ -1,5 +1,5 @@
 from flask import Flask
-from routes.api import api
+from routes.api import api, initHomeMenu
 from routes.www import www
 from routes.m3u import m3u
 from proxies.vidsrc import vidsrc
@@ -8,10 +8,11 @@ from proxies.vidembed import vidembed
 from proxies.r2embed import r2embed
 from proxies.kukajto import kukajto
 from utils.settings import getSetting, setSetting
-from utils.paths import DB_FOLDER
+from utils.paths import DB_FOLDER, CACHE_FOLDER, POSTER_FOLDER
 from colorama import init, Fore
 import requests
 import threading
+import shutil
 import os
 import sys
 import logging
@@ -103,12 +104,31 @@ def cli():
             os.system("git fetch")
             os.system("git merge")
         elif cmd[0].lower() == "set":
-            if len(cmd) != 3: print("Invalid argument count")
-            else: print(setSetting(cmd[1], cmd[2]))
+            if len(cmd) != 3: print("Invalid argument count"); continue
+            print(setSetting(cmd[1], cmd[2]))
+
         elif cmd[0].lower() == "get":
-            if len(cmd) != 2: print("Invalid argument count")
-            else: print(getSetting(cmd[1]))
-        elif cmd[0].lower() == "log": print(open(logFile, 'r').read() if open(logFile, 'r').read() != "" else "Log is empty")
+            if len(cmd) != 2: print("Invalid argument count"); continue
+            print(getSetting(cmd[1]))
+
+        elif cmd[0].lower() == "log":
+            print(open(logFile, 'r').read() if open(logFile, 'r').read() != "" else "Log is empty")
+
+        elif cmd[0].lower() == "clear":
+            if len(cmd) != 2: print("Invalid argument count"); continue
+            if cmd[1].lower() == "cache":
+                shutil.rmtree(CACHE_FOLDER)
+                os.makedirs(CACHE_FOLDER)
+            elif cmd[1].lower() == "posters":
+                shutil.rmtree(POSTER_FOLDER)
+                os.makedirs(POSTER_FOLDER)
+            else: print("Invalid second argument")
+
+        elif cmd[0].lower() == "init":
+            if len(cmd) != 2: print("Invalid argument count"); continue
+            if cmd[1].lower() == "home": initHomeMenu(); print("Re-Initialized home")
+            else: print("Invalid second argument")
+     
         elif cmd[0].lower() == "": continue
         else: print("Invalid command")
 

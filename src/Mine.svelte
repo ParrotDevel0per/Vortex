@@ -31,7 +31,7 @@
 
     
 	// view replace's featured with custom item
-	const view = (id, type) => {
+	const view = (id) => {
 		axios({
 			method: 'get',
 			url: "/api/getMovieInfo/" + id,
@@ -50,7 +50,7 @@
 			featuredMetadata.kind = data.kind;
 			featuredMetadata.inFavorites = data.inFavorites;
 			featuredMetadata.inPlaylist = data.inPlaylist;
-			//featuredMetadata.episodeCount = data.episodeCount;
+			featuredMetadata.episodeCount = data.episodeCount;
 			featuredMetadata.NOS = data.NOS;
             showFt = "true"
 			scrollEffect = "true"
@@ -77,7 +77,7 @@
 					{ console.log("Getting Movies ...") }
 				{:then resp}
 					{#each Object.values(resp.data) as d}
-						<img on:click={() => view(d.id, d.kind)} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
+						<img on:click={() => view(d.id)} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
 					{/each}
 				{:catch error}
 					{ console.log("Fuck, Error occured: " + error.message) }

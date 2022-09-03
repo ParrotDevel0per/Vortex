@@ -10,5 +10,5 @@
 {:else if tab == "mine"}
 <Mine />
 {:else}
-<Home id="{ id }" showG="{ showG }" kind="{ kind }" showFt = "{ showFt }"/>
+<Home id="{ id }" showG="{ showG }" showFt = "{ showFt }"/>
 {/if}
