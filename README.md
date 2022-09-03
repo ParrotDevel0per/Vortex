@@ -10,7 +10,7 @@
 Install The Pirate Player with git
 
 ```bash
-  git clone https://HereIronman7746@bitbucket.org/hereironman7746/thepirateplayer.git
+  git clone https://git.weboasis.app/HereIronman7746/ThePiratePlayer.git
   pip3 install -r requirements.txt
 ```
     
