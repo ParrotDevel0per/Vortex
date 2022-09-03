@@ -1,9 +1,10 @@
 from utils.unpacker import unpack
+from utils.fakeBrowser import baseHeaders
 import requests
 import re
 
-def mixdrop(url, referer=None):
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'}
+def mixdrop(url, referer=None, mxr=True):
+    headers = baseHeaders
     headers.update({'Referer': 'https://mixdrop.co/'})
     if referer: headers.update({'Referer': referer})
     html = requests.get(url, headers=headers).text
@@ -12,5 +13,6 @@ def mixdrop(url, referer=None):
     unpacked = unpack(packed)
     pattern = r"wurl=\"(.*?)\""
     match = re.search(pattern, unpacked)
+    if mxr: headers.update({"Referer": "https://mixdrop.co/"})
     if match: return "https:" + match.group(1), headers
     return None, None

@@ -1,10 +1,11 @@
 from flask import Flask
 from routes.api import api
 from routes.www import www
+from routes.m3u import m3u
 from proxies.vidsrc import vidsrc
 from proxies.gomo import gomo
 from proxies.vidembed import vidembed
-from proxies.r2embed import r2embed
+#from proxies.r2embed import r2embed
 from proxies.kukajto import kukajto
 from utils.settings import getSetting, setSetting
 from utils.paths import DB_FOLDER
@@ -25,6 +26,7 @@ app = Flask("The Pirate Player")
 app.config['JSON_SORT_KEYS'] = False
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(www, url_prefix='/')
+app.register_blueprint(m3u, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
 app.register_blueprint(gomo, url_prefix='/proxy/gomo')
 app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')

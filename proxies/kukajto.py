@@ -42,7 +42,7 @@ def play():
         url = f"https://serial.kukaj.io/{id}/S{season}E{episode}"
     resolved = grab(url)
     headers = None
-    if "mixdrop" in resolved: resolved, headers = mixdrop(resolved, "https://kukaj.io/")
+    if "mixdrop" in resolved: resolved, headers = mixdrop(resolved, "https://kukaj.io/", mxr=True)
     else: resolved, headers = streamtape(resolved, "https://kukaj.io/")
     if not resolved: return "Failed to resolve"
     resp = f"/api/proxy/base64:{base64.b64encode(resolved.encode('utf-8')).decode('utf-8')}"

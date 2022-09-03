@@ -9,6 +9,7 @@ import psutil
 import json
 import time
 from utils.paths import CACHE_FOLDER, DB_FOLDER
+from utils.fakeBrowser import baseHeaders
 import os
 from utils.common import randStr
 
@@ -454,7 +455,7 @@ def clearCache():
 @api.route('/proxy/<path:url>')
 def proxy(url):
     if url.startswith("base64:"): url = base64.b64decode(url[7:]).decode("utf-8")
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0"}
+    headers = baseHeaders
     if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
     r = requests.get(url, headers=headers, stream=True)
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'])
