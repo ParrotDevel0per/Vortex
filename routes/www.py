@@ -29,9 +29,14 @@ def play(id, episode):
 
     url = f"{baseURL}/api/resolve/{id}?source={source}"
     if episode: url += f"&episode={episode}"
+    ep = "0"
+    se = "0"
+    if episode:
+        ep = episode.split("-")[1]
+        se = episode.split("-")[0]
 
     resolved = requests.get(url).json()["url"]
-    return render_template('play.html', preloader="/static/img/preloader/1.png", resolved=resolved)
+    return render_template('play.html', resolved=resolved, ep=ep, id=id, se=se)
 
 
 @www.route('/static/<path:path>')

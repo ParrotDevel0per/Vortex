@@ -204,12 +204,12 @@
     .info > a {
         background-color: #212121;
         display: inline;
-        padding-left: 5%;
-        padding-right: 5%;
+        padding-left: 7%;
+        padding-right: 7%;
         text-decoration: none;
         color: white;
-        padding-top: .8%;
-        padding-bottom: .8%;
+        padding-top: 1.2%;
+        padding-bottom: 1.2%;
         border-radius: 3px;
     }
     .info > a:hover {

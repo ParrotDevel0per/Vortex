@@ -1,8 +1,32 @@
 <script>
   export let active;
+  export let scrollEffect = "true";
+  var nav = "";
+
+  window.addEventListener('scroll', () => {
+    if (scrollEffect == "false") { nav.style.backgroundColor = `black`; return; }
+    let y = 1 + (window.scrollY || window.pageYOffset) / 150
+    y = y < 1 ? 1 : y // ensure y is always >= 1 (due to Safari's elastic scroll)
+    //console.log(y); // for debugging
+    if (y < 5.76) {
+      nav.style.backgroundColor = `transparent`;
+    } else {
+      nav.style.backgroundColor = `black`;
+    }
+  })
+
+  $: {
+    try {
+      if (scrollEffect == "false") { nav.style.backgroundColor = `black`; }
+      else { nav.style.backgroundColor = `transparent`; }
+    }
+    catch {
+      console.log("Nav not yet created, :pepesad:")
+    }
+  }
 </script>
 
-<nav class="navbar navbar-expand-lg fixed-top">
+<nav bind:this={nav} class="navbar navbar-expand-lg fixed-top">
     <a class="navbar-brand" href="/">The Pirate Player</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -52,7 +76,7 @@
 */
 
 nav {
-  background-color: black;
+  background-color: transparent;
   width: 100%;
   margin-bottom: 10px;
 }

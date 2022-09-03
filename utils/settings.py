@@ -9,7 +9,7 @@ default = {
     "cachePosters": "True",
     "source": "gomo",
     "proxifyM3UPosters": "True",
-    "preloader": "1.png",
+    #"preloader": "1.png",
     "language": "en",
     "debug": "false"
 }
@@ -26,7 +26,7 @@ settingsKeys = [
     "cachePosters",
     "source",
     "proxifyM3UPosters",
-    "preloader",
+    #"preloader",
     "language",
     "debug"
 ]

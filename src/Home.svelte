@@ -139,7 +139,7 @@
 	}
 
 	h1 {
-		color: #bdc3ca;
+		color: white;
 		font-size: 1.5rem;
 		margin-left: 5px;
 		margin-bottom: 0px!important;

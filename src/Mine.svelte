@@ -5,6 +5,7 @@
 
     var featuredMetadata = { title: "Loading ...", };
 	let showFt = "false";
+	let scrollEffect = "false";
     
 	const random = (length = 8) => {
 		let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -52,6 +53,7 @@
 			//featuredMetadata.episodeCount = data.episodeCount;
 			featuredMetadata.NOS = data.NOS;
             showFt = "true"
+			scrollEffect = "true"
 			window.scrollTo(0, 0);
 		}).catch(error => {
 			console.log(error);
@@ -60,12 +62,14 @@
 </script>
 
 <main>
-	<Nav active="mine"/>
+	<Nav active="mine" scrollEffect="{scrollEffect}"/>
 	{#if showFt == "true"}
 	<Featured {...featuredMetadata} />
+	<br style="font-size: 100px;" />
+	{:else}
+	<br style="font-size: 50px;" />
 	{/if}
 	<div id="content" class="content">
-		<br style="font-size: 100px;" />
 			{#each Object.values(menu) as m}
 			<h1>{ m.title }</h1>
 			<div class="outer">
@@ -99,7 +103,7 @@
 	}
 
 	h1 {
-		color: #bdc3ca;
+		color: white;
 		font-size: 1.5rem;
 		margin-left: 5px;
 		margin-bottom: 0px!important;
