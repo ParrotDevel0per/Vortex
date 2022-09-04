@@ -4,6 +4,7 @@ import string
 import binascii
 import random
 from urllib.parse import urlparse
+from utils.fakeBrowser import baseHeaders
 
 def get_embedurl(host, media_id):
     def makeid(length):
@@ -21,7 +22,7 @@ def sbplay(url, referer=None):
     parsed = urlparse(url)
     host = parsed.netloc
     media_id = parsed.path.replace('/e/', '').replace("/", "")
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'}
+    headers = baseHeaders
     headers.update({'Referer': 'https://{0}/'.format(host)})
     if referer: headers.update({'Referer': referer})
     headers.update({'watchsb': 'streamsb'})

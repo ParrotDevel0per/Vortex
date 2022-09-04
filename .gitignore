@@ -9,3 +9,4 @@ output/
 build/
 dist/
 node_modules
+venv

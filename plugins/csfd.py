@@ -1,11 +1,12 @@
 import requests
 from plugins.imdb import getMovieInfo
+from utils.fakeBrowser import UA
 
 
 def translateItemToCzech(id, isMovie):
     url = "https://www.csfd.cz/api/search/autocomplete/?q=" + getMovieInfo(id)["title"]
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
+        "User-Agent": UA,
         "Accept": "application/json, text/javascript, */*; q=0.01",
         "Accept-Language": "en-US,en;q=0.5",
         "Referer": "https://www.csfd.cz/",

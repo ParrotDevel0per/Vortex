@@ -1,11 +1,11 @@
 import re
 import requests
+from utils.fakeBrowser import baseHeaders
 
 def streamtape(web_url, referer=None):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
-        'Referer': referer
-    }
+    headers = baseHeaders
+    if referer: headers.update({'Referer': referer})
+    
     r = requests.get(web_url, headers=headers).text
     src = re.findall(r'''ById\('.+?=\s*(["']//[^;<]+)''', r)
     if src:

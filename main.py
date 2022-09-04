@@ -5,7 +5,7 @@ from routes.m3u import m3u
 from proxies.vidsrc import vidsrc
 from proxies.gomo import gomo
 from proxies.vidembed import vidembed
-from proxies.r2embed import r2embed
+#from proxies.r2embed import r2embed
 from proxies.kukajto import kukajto
 from utils.settings import getSetting, setSetting
 from utils.paths import DB_FOLDER, CACHE_FOLDER, POSTER_FOLDER
@@ -31,7 +31,7 @@ app.register_blueprint(m3u, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
 app.register_blueprint(gomo, url_prefix='/proxy/gomo')
 app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')
-app.register_blueprint(r2embed, url_prefix='/proxy/2embed')
+#app.register_blueprint(r2embed, url_prefix='/proxy/2embed')
 app.register_blueprint(kukajto, url_prefix='/proxy/kukajto')
 
 

@@ -1,11 +1,12 @@
 import requests
 import re
 from utils.unpacker import unpack
+from utils.fakeBrowser import baseHeaders
 
 useALT = False
 
 def getParts(url):
-    html = requests.get(url).text
+    html = requests.get(url, headers=baseHeaders).text
     try:
         tc = re.findall(r"var tc = '(.*?)';", html)[0]
     except:
@@ -21,7 +22,7 @@ def fuckToken(token, matches, slices):
 
 def getSources(url):
     tc, _token, matches, slices = getParts(url)
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"}
+    headers = baseHeaders
     headers.update({"x-token": fuckToken(tc, matches, slices)})
     data = {"tokenCode": tc, "_token": _token}
     resp = requests.post("https://gomo.to/decoding_v3.php", headers=headers, data=data, allow_redirects=True)

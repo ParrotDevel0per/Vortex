@@ -3,14 +3,15 @@ from cloudscraper import CloudScraper
 from bs4 import BeautifulSoup
 import base64
 import re
+from utils.fakeBrowser import baseHeaders
 
 def search(query):
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"}
+    headers = baseHeaders
     headers.update({"Referer": "https://kukaj.io/"})
     return requests.get(f"https://kukaj.io/search/json?q={query.replace(' ', '+')}", headers=headers).json()
 
 def grab(url):
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'}
+    headers = baseHeaders
     scraper = CloudScraper()
     scraper.headers.update(headers)
     cookies = scraper.get(url).cookies.get_dict()
