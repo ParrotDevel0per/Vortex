@@ -1,80 +1,24 @@
 from flask import Blueprint, jsonify, Response, redirect, request, send_from_directory
 from utils.settings import getSetting
 import plugins.imdb as imdb
-import threading
 import requests
 import shutil
 import base64
 import psutil
 import json
-import time
 import random
-from utils.paths import CACHE_FOLDER, DB_FOLDER, POSTER_FOLDER
+from utils.paths import DB_FOLDER, POSTER_FOLDER
+from utils.cache import getCachedItem, cacheItem, getCacheSize, clearCache
 from utils.fakeBrowser import baseHeaders
-from utils.common import randStr
+from utils.common import randStr, chunkedDownload
 import os
 
 api = Blueprint('api', __name__)
 cachePosters = getSetting('cachePosters').lower() == "true"
-cacheRegistry = os.path.join(CACHE_FOLDER, "registry.json")
 favoritesFile = os.path.join(DB_FOLDER, "favorites.json")
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 homeMenuFile = os.path.join(DB_FOLDER, "homeMenu.json")
 
-def chunkedDownload(url, filename, chunkSize=8192):
-    r = requests.get(url, stream=True)
-    with open(filename, 'wb') as f:
-        for chunk in r.iter_content(chunkSize):
-            if chunk:
-                f.write(chunk)
-    return filename
-
-def addToCacheRegistry(filename, folder, expiry):
-    if not os.path.exists(cacheRegistry): open(cacheRegistry, 'w').write("{}")
-    reg = json.load(open(cacheRegistry, 'r'))
-    reg[f"{folder}-{filename}"] = {
-        "filename": filename,
-        "folder": folder,
-        "expiry": time.time() + expiry
-    }
-    open(cacheRegistry, 'w').write(json.dumps(reg))
-
-def removeFromCacheRegistry(filename, folder):
-    if not os.path.exists(cacheRegistry): open(cacheRegistry, 'w').write("{}")
-    reg = json.load(open(cacheRegistry, 'r'))
-    if f"{folder}-{filename}" in reg:
-        del reg[f"{folder}-{filename}"]
-    open(cacheRegistry, 'w').write(json.dumps(reg))
-
-def searchForExpiredItems():
-    if not os.path.exists(cacheRegistry): open(cacheRegistry, 'w').write("{}")
-    reg = json.load(open(cacheRegistry, 'r'))
-    for key in reg:
-        if reg[key]["expiry"] < time.time():
-            removeFromCacheRegistry(reg[key]["filename"], reg[key]["folder"])
-            os.remove(os.path.join(CACHE_FOLDER, reg[key]['folder'], reg[key]['filename']))
-            #print(f"Removed {reg[key]['filename']} from {reg[key]['folder']}")
-
-def cacheItem(filename, folder, data, expiry=(7 * 24 * 60 * 60)):
-    searchForExpiredItems()
-    addToCacheRegistry(filename, folder, expiry)
-    if not os.path.exists(os.path.join(CACHE_FOLDER, folder)): os.makedirs(os.path.join(CACHE_FOLDER, folder))
-    with open(os.path.join(CACHE_FOLDER, folder, filename), 'w') as f:
-        f.write(data)
-
-def getCachedItem(filename, folder):
-    searchForExpiredItems()
-    if os.path.exists(os.path.join(CACHE_FOLDER, folder, filename)):
-        with open(os.path.join(CACHE_FOLDER, folder, filename), 'r') as f:
-            return f.read()
-    return None
-
-def getCacheSize():
-    used = 0
-    for folder, subfolders, filenames in os.walk(CACHE_FOLDER):
-        for filename in filenames:
-            used += os.path.getsize(os.path.join(folder, filename))
-    return f"{round(used / (1024 * 1024), 2)}MB"
 
 @api.route('/')
 def index():
@@ -93,15 +37,15 @@ featuredMovies = {
 		"imdbID": "tt7286456",
 		"kind": "movie",
     },
-    "BatmanTDK": {
-        "img": "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fgetwallpapers.com%2Fwallpaper%2Ffull%2F0%2F1%2F4%2F312259.jpg&f=1&nofb=1",
-        "title": "The Dark Knight",
-        "line": "WHY SO SERIOUS?",
-        "info": "9.0/10\u00A0\u00A02008\u00A0\u00A0Action, Crime, Drama\u00A0\u00A02h 32m",
-        "plot": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
-		"imdbID": "tt0468569",
-		"kind": "movie",
-    }
+    #"BatmanTDK": {
+    #    "img": "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fgetwallpapers.com%2Fwallpaper%2Ffull%2F0%2F1%2F4%2F312259.jpg&f=1&nofb=1",
+    #    "title": "The Dark Knight",
+    #    "line": "WHY SO SERIOUS?",
+    #    "info": "9.0/10\u00A0\u00A02008\u00A0\u00A0Action, Crime, Drama\u00A0\u00A02h 32m",
+    #    "plot": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+    #    "imdbID": "tt0468569",
+	#	"kind": "movie",
+    #}
 }
 
 @api.route('/featured')
@@ -174,6 +118,41 @@ def resolve(id):
         "url": requests.get(url).text,
         "poster": "/static/img/preloader/1.png"
     })
+
+@api.route('/sources/<id>')
+@api.route('/sources/', defaults={'id': None})
+def sources(id):
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
+    })
+
+    tp = request.args.get("type")
+    if not tp: return jsonify({
+        'status': 'error',
+        'message': 'No Type provided'
+    })
+    ep = request.args.get("ep")
+    sources = [
+        "gomo",
+        "vidsrc",
+        "vidembed",
+        "kukajto"
+    ]
+
+    default = getSetting("source")
+    if request.args.get("default"): default = request.args.get("default")
+    sources.insert(0, sources.pop(sources.index(default)))
+
+    response = []
+    for src in sources:
+        j = {"title": src,}
+        j["file"] = f"/play/{id}/{ep}.m3u8" if tp == "show" else f"/play/{id}.m3u8"
+        j["file"] += f"?source={src}"
+        response.append(j)
+    return response
+
+
 
 @api.route('/poster/<id>')
 @api.route('/poster/', defaults={'id': None})
@@ -344,101 +323,6 @@ def getMoviesByGenres():
         "results": dict(list(json.loads(cached).items())[:MAX_RESULTS])
     })
 
-@api.route('/seriesToPlaylist/<id>')
-@api.route('/seriesToPlaylist/', defaults={'id': None})
-def serieasToPlaylist(id):
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    #pl = imdb.createPlaylistFromSeries(id)
-    cache = getCachedItem(f"playlist-{id}.json", "playlists")
-    if cache == None:
-        pl = imdb.createPlaylistFromSeries(id)
-        cacheItem(f"playlist-{id}.json", "playlists", json.dumps(pl), expiry=(24 * 60 * 60 * 7))
-        return pl
-    #print(f"Returning cached playlist for \"{id}\"")
-    return json.loads(cache)
-
-@api.route('/favorites/')
-def favorites():
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
-    return jsonify({
-        "results": json.loads(open(favoritesFile, "r").read())
-    })
-
-def addToFavsThread(id):
-    movie = imdb.getMovieInfo(id)
-    favorites = json.loads(open(favoritesFile, "r").read())
-    favorites[id] = {
-        "title": movie["title"],
-        "year": movie["year"],
-        "poster": movie["full-size cover url"],
-        "id": f"tt{id}",
-        "kind": movie["kind"]
-    }
-    open(favoritesFile, "w").write(json.dumps(favorites))
-
-@api.route('/addToFavorites/<id>')
-@api.route('/addToFavorites/', defaults={'id': None})
-def addToFavorites(id):
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    threading.Thread(target=addToFavsThread, args=(id,)).start()
-    return jsonify({
-        "status": "ok",
-        "message": "Movie added to favorites"
-    })
-
-@api.route('/removeFromFavorites/<id>')
-@api.route('/removeFromFavorites/', defaults={'id': None})
-def removeFromFavorites(id):
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    favorites = json.loads(open(favoritesFile, "r").read())
-    if id in favorites:
-        del favorites[id]
-        open(favoritesFile, "w").write(json.dumps(favorites))
-        return jsonify({
-            "status": "ok",
-            "message": "Movie removed from favorites"
-        })
-    return jsonify({
-        "status": "error",
-        "message": "Movie not found in favorites"
-    })
-
-@api.route('/isInFavorites/<id>')
-@api.route('/isInFavorites/', defaults={'id': None})
-def isInFavorites(id):
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    favorites = json.loads(open(favoritesFile, "r").read())
-    if id in favorites:
-        return jsonify({
-            "status": "ok",
-            "message": "Movie found in favorites"
-        })
-    return jsonify({
-        "status": "error",
-        "message": "Movie not found in favorites"
-    })
-
-
 @api.route('/clearPosterCache/')
 def clearPosterCache():
     fileCount = len(os.listdir(POSTER_FOLDER))
@@ -455,14 +339,12 @@ def clearPosterCache():
     })
 
 @api.route('/clearCache/')
-def clearCache():
-    fileCount = len(os.listdir(CACHE_FOLDER))
+def clearCache_():
+    fileCount = clearCache()
     if fileCount == 0: return jsonify({
         'status': 'error',
         'message': 'No files / folders found'
     })
-    shutil.rmtree(CACHE_FOLDER)
-    os.makedirs(CACHE_FOLDER)
     return jsonify({
         "status": "ok",
         "message": "Cache cleared",
@@ -476,81 +358,6 @@ def proxy(url):
     if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
     r = requests.get(url, headers=headers, stream=True)
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'])
-
-@api.route('/playlist/')
-def playlist():
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
-    return jsonify({
-        "results": json.loads(open(playlistFile, "r").read())
-    })
-
-def addToPlaylistThread(id):
-    movie = imdb.getMovieInfo(id)
-    playlist = json.loads(open(playlistFile, "r").read())
-    playlist[id] = {
-        "title": movie['title'],
-        "year": movie['year'],
-        "poster": movie["full-size cover url"],
-        "id": f"tt{id}"
-    }
-    open(playlistFile, "w").write(json.dumps(playlist))
-
-@api.route('/addToPlaylist/<id>')
-@api.route('/addToPlaylist/', defaults={'id': None})
-def addToPlaylist(id):
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    threading.Thread(target=addToPlaylistThread, args=(id,)).start()
-    return jsonify({
-        "status": "ok",
-        "message": "Movie added to playlist"
-    })
-
-@api.route('/removeFromPlaylist/<id>')
-@api.route('/removeFromPlaylist/', defaults={'id': None})
-def removeFromPlaylist(id):
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    playlist = json.loads(open(playlistFile, "r").read())
-    if id in playlist:
-        del playlist[id]
-        open(playlistFile, "w").write(json.dumps(playlist))
-        return jsonify({
-            "status": "ok",
-            "message": "Movie removed from playlist"
-        })
-    return jsonify({
-        "status": "error",
-        "message": "Movie not found in playlist"
-    })
-
-@api.route('/isInPlaylist/<id>')
-@api.route('/isInPlaylist/', defaults={'id': None})
-def isInPlaylist(id):
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    playlist = json.loads(open(playlistFile, "r").read())
-    if id in playlist:
-        return jsonify({
-            "status": "ok",
-            "message": "Movie found in playlist"
-        })
-    return jsonify({
-        "status": "error",
-        "message": "Movie not found in playlist"
-    })
 
 @api.route('/mergeShows.m3u')
 def mergeShowM3Us():

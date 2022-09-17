@@ -1,5 +1,8 @@
 from flask import Flask
-from routes.api import api, initHomeMenu
+from routes.api.api import api, initHomeMenu
+from routes.api.favorites import favoritesRT
+from routes.api.playlist import playlistRT
+
 from routes.www import www
 from routes.m3u import m3u
 from proxies.vidsrc import vidsrc
@@ -26,6 +29,8 @@ logging.basicConfig(filename=logFile, format=f'%(asctime)s %(levelname)s %(name)
 app = Flask("The Pirate Player")
 app.config['JSON_SORT_KEYS'] = False
 app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(favoritesRT, url_prefix='/api')
+app.register_blueprint(playlistRT, url_prefix='/api')
 app.register_blueprint(www, url_prefix='/')
 app.register_blueprint(m3u, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')

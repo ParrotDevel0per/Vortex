@@ -1,3 +1,4 @@
+from email.policy import default
 from flask import Blueprint, request, render_template, send_from_directory
 from utils.paths import DB_FOLDER
 from utils.settings import getSetting
@@ -24,20 +25,22 @@ def index():
 def play(id, episode):
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
+
     baseURL = request.base_url.split('/play')[0]
 
-    url = f"{baseURL}/api/resolve/{id}?source={source}"
-    if episode: url += f"&episode={episode}"
+    sourcesURL = "/api/sources/" + id
+
     sec, ep, se, epc = ("0" * 4)
     if episode:
-        ep = episode.split("-")[1]
-        se = episode.split("-")[0]
+        ep = episode.split("-")[1] # Episode
+        se = episode.split("-")[0] # Season
         resp = requests.get(f"{baseURL}/api/episodeCount/{id}").json()
-        epc = resp["results"][se]
-        sec = len(resp["results"])
+        epc = resp["results"][se] # Episode Count
+        sec = len(resp["results"]) # Season Count
+        sourcesURL += f"?type=show&default{source}&ep={episode}"
+    else: sourcesURL += f"?type=movie"
 
-    resolved = requests.get(url).json()["url"]
-    return render_template('play.html', resolved=resolved, ep=ep, id=id, se=se, epc=epc, sec=sec)
+    return render_template('play.html', ep=ep, id=id, se=se, epc=epc, sec=sec, sourcesURL=sourcesURL)
 
 
 @www.route('/static/<path:path>')

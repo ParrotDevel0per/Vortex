@@ -33,6 +33,29 @@
     <button style="display: none;" onclick="nextEpisode()" class="btn" id="ne">Next Episode</button>
     <button style="display: none;" onclick="nextSeason()" class="btn" id="ns">Next Season</button>
     <script>
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "{{ sourcesURL }}", true);
+        xhr.onload = (e) => {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                console.log(data);
+                var player = new Playerjs({
+                    id:"player",
+                    file:data
+                });
+            } else {
+                console.error(xhr.statusText);
+            }
+        }
+        };
+        xhr.onerror = (e) => {
+        console.error(xhr.statusText);
+        };
+        xhr.send(null);
+    </script>
+
+    <script>
     var se = parseInt("{{ se }}");
     var ep = parseInt("{{ ep }}");
     var epc = parseInt("{{ epc }}");
@@ -40,12 +63,6 @@
     var id = "{{ id }}";
     var ne = document.getElementById("ne");
     var ns = document.getElementById("ns");
-
-    var player = new Playerjs({
-        id:"player",
-        file:"{{ resolved }}",
-        poster: `/api/poster/${id}?do=show`
-    });
 
     if (se != 0) {
         // check if this ain't last season / episode
