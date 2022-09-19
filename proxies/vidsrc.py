@@ -6,11 +6,10 @@ expireAfter = 3 * 60 * 60 # When unused token will expire, must be bigger than s
 import requests
 from flask import request, url_for, Blueprint, Response
 from plugins.vidsrc import grab
+from utils.users import verify, reqToToken
 import json
 import time
 import base64
-import random
-from string import ascii_lowercase, digits
 from utils.common import randStr
 
 vidsrc = Blueprint('vidsrc', __name__)
@@ -33,6 +32,8 @@ def refreshToken(token):
 
 @vidsrc.route('/play')
 def play():
+    if verify(request) == False: return "Forbidden", 403
+
     checkIfExpired()
     item = request.args.get('item')
     if item is None: return "No item specified"
@@ -63,6 +64,8 @@ def play():
 
 @vidsrc.route('/playlist.m3u8')
 def playlist():
+    if verify(request) == False: return "Forbidden", 403
+
     token = request.args.get('wmsAuthSign')
     if token is None: return "Forbidden"
     token = json.loads(base64.b64decode(token).decode('utf-8'))
@@ -70,10 +73,12 @@ def playlist():
     if database[token["uid"]]["expire"] < int(time.time()): refreshToken(token)
     r = requests.get(token['url'], headers=token["headers"])
     token = base64.b64encode(json.dumps(token).encode('utf-8')).decode('utf-8')
-    return Response(r.text.replace("http", "/proxy/vidsrc/ts?url=http").replace(".ts", ".ts&wmsAuthSign=%s" % token), mimetype='application/x-mpegURL')
+    return Response(r.text.replace("http", f"/proxy/vidsrc/ts?url=http").replace(".ts", f".ts&wmsAuthSign={token}&token={reqToToken(request)}"), mimetype='application/x-mpegURL')
 
 @vidsrc.route('/ts')
 def ts():
+    if verify(request) == False: return "Forbidden", 403
+
     token = request.args.get('wmsAuthSign')
     if token is None: return "Forbidden"
     token = json.loads(base64.b64decode(token).decode('utf-8'))

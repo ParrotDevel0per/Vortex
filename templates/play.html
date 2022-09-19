@@ -34,7 +34,7 @@
     <button style="display: none;" onclick="nextSeason()" class="btn" id="ns">Next Season</button>
     <script>
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", "{{ sourcesURL }}", true);
+        xhr.open("GET", atob("{{ sourcesURL }}"), true);
         xhr.onload = (e) => {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {

@@ -1,16 +1,23 @@
 from flask import Flask
-from routes.api.api import api, initHomeMenu
+
+# App routes
+from routes.api.api import api
 from routes.api.favorites import favoritesRT
 from routes.api.playlist import playlistRT
-
+from routes.auth import auth
 from routes.www import www
 from routes.m3u import m3u
+from routes.admin import admin
+
+# Proxies
 from proxies.vidsrc import vidsrc
 from proxies.gomo import gomo
 from proxies.vidembed import vidembed
-#from proxies.r2embed import r2embed
 from proxies.kukajto import kukajto
+
+# Rest
 from utils.settings import getSetting, setSetting
+from utils.users import createUser
 from utils.paths import DB_FOLDER, CACHE_FOLDER, POSTER_FOLDER
 from colorama import init, Fore
 import requests
@@ -31,12 +38,13 @@ app.config['JSON_SORT_KEYS'] = False
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(favoritesRT, url_prefix='/api')
 app.register_blueprint(playlistRT, url_prefix='/api')
+app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(www, url_prefix='/')
 app.register_blueprint(m3u, url_prefix='/')
+app.register_blueprint(auth, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
 app.register_blueprint(gomo, url_prefix='/proxy/gomo')
 app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')
-#app.register_blueprint(r2embed, url_prefix='/proxy/2embed')
 app.register_blueprint(kukajto, url_prefix='/proxy/kukajto')
 
 
@@ -129,10 +137,21 @@ def cli():
                 os.makedirs(POSTER_FOLDER)
             else: print("Invalid second argument")
 
-        elif cmd[0].lower() == "init":
-            if len(cmd) != 2: print("Invalid argument count"); continue
-            if cmd[1].lower() == "home": initHomeMenu(); print("Re-Initialized home")
+        elif cmd[0].lower() == "user":
+            if len(cmd) < 2: print("Invalid argument count"); continue
+            if cmd[1].lower() == "create":
+                if len(cmd) < 4: print("Invalid argument count"); continue
+
+                r = createUser(
+                    username=cmd[2],
+                    password=cmd[3],
+                    email="" if len(cmd) != 5 else cmd[4],
+                    admin=False if len(cmd) != 6 else cmd[5] == 'true',
+                )
+                print("Username already exists" if "already" in r else "User created")
             else: print("Invalid second argument")
+
+
      
         elif cmd[0].lower() == "": continue
         else: print("Invalid command")

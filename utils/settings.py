@@ -1,3 +1,4 @@
+from cryptography.fernet import Fernet
 from utils.paths import DB_FOLDER
 import os
 import json
@@ -5,13 +6,13 @@ import json
 default = {
     "ip": "127.0.0.1",
     "port": "5000",
-    "adminPassword": "admin",
     "cachePosters": "True",
     "source": "gomo",
     "proxifyM3UPosters": "True",
     #"preloader": "1.png",
     "language": "en",
-    "debug": "false"
+    "debug": "false",
+    "fernetKey": str(Fernet.generate_key()).replace("b'", "").replace("'", ""),
 }
 
 def setToDefault():
@@ -22,13 +23,13 @@ if not os.path.exists(SETTINGSFILE): setToDefault()
 settingsKeys = [
     "ip",
     "port",
-    "adminPassword",
     "cachePosters",
     "source",
     "proxifyM3UPosters",
     #"preloader",
     "language",
-    "debug"
+    "debug",
+    "fernetKey"
 ]
 
 for key in settingsKeys:

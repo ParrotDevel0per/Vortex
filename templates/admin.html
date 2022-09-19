@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body>
+    <h1>Users</h1>
+    <table id="table">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>IP</th>
+            <th>Admin</th>
+            <th>Banned</th>
+            <th>Promote / Demote</th>
+            <th>Ban / Unban</th>
+            <th>Reset Reset Password</th>
+            <th>Delete Account</th>
+        </tr>
+    </table>
+
+    <button id="createAccountAsk" onclick="createAccount()"">Create Account</button>
+</body>
+<script>
+    let table = document.getElementById("table");
+    const clearTR = () => {
+        while (table.firstChild) {
+            table.removeChild(table.firstChild);
+        }
+        tr = document.createElement("tr");
+
+        tr.innerHTML = `
+        <th>Username</th>
+        <th>Email</th>
+        <th>IP</th>
+        <th>Admin</th>
+        <th>Banned</th>
+        <th>Promote / Demote</th>
+        <th>Ban / Unban</th>
+        <th>Reset Reset Password</th>
+        <th>Delete Account</th>`;
+
+        table.appendChild(tr);
+    }
+
+    setInterval(() => {
+        xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/users", true);
+        xhr.onreadystatechange = function() { 
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                let data = JSON.parse(xhr.responseText);
+                clearTR();
+                for (key in data) {
+                    tr = document.createElement("tr");
+                    const uid = data[key]["UID"];
+
+                    tr.innerHTML = `
+                    <td>${data[key]["username"]}</td>
+                    <td>${data[key]["email"]}</td>
+                    <td>${data[key]["ip"]}</td>
+                    <td>${data[key]["isAdmin"] == true}</td>
+                    <td>${data[key]["isBanned"] == true}</td>
+                    <td><button onclick="sendRequest('/api/promoteDemote/${uid}')">Promote / Demote</button></td>
+                    <td><button onclick="sendRequest('/api/banUnban/${uid}')">Ban / Unban</button></td>
+                    <td><button onclick="resetPassword('${uid}')">Reset Password</button></td>
+                    <td><button onclick="sendRequest('/api/deleteUser/${uid}')">Delete Account</button></td>`;
+
+                    table.appendChild(tr);
+                }
+            }
+        }
+        xhr.send();
+    }, 1500);
+
+
+    const deleteAccount = (username) => {
+        xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/deleteUser/" + username, true);
+        xhr.onreadystatechange = function() { 
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                alert("Successfully deleted account");
+                window.location.reload();
+            }
+        }
+        xhr.send();
+    }
+
+    const createAccount = () => {
+        //let loc = window.location;
+        //let base = loc.split("/admin")[0]
+        Window = window.open("/create", "create", "width=500, height=600");
+
+    }
+
+    const sendRequest = (url) => {
+        xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function() { 
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                alert("Successfully set request");
+                window.location.reload();
+            }
+        }
+        xhr.send();
+    }
+
+    // Credits: https://stackoverflow.com/questions/1497481/javascript-password-generator
+    function generatePassword() {
+        var length = 12,
+            charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            retVal = "";
+        for (var i = 0, n = charset.length; i < length; ++i) {
+            retVal += charset.charAt(Math.floor(Math.random() * n));
+        }
+        return retVal;
+    }
+
+    const resetPassword = (uid) => {
+        let text;
+        let pssw = prompt("Enter new password:", generatePassword());
+        if (pssw == null || pssw == "") { return; }
+
+        sendRequest(`/api/changePassword/${uid}/${pssw}`);
+    }
+</script>
+</html>

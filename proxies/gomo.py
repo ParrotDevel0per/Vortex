@@ -1,6 +1,7 @@
 import requests
 from flask import request, url_for, Blueprint, Response
 from plugins.gomo import grab
+from utils.users import verify, reqToToken
 import json
 import base64
 import re
@@ -9,6 +10,8 @@ gomo = Blueprint('gomo', __name__)
 
 @gomo.route('/play')
 def play():
+    if verify(request) == False: return "Forbidden", 403
+
     item = request.args.get('item')
     if item is None: return "No item specified"
     url = f"https://gomo.to/movie/{item}"
@@ -27,10 +30,12 @@ def play():
         "url": resolved
     }
     token = base64.b64encode(json.dumps(token).encode('utf-8')).decode('utf-8')
-    return url_for('gomo.playlist', wmsAuthSign=token)
+    return url_for('gomo.playlist', wmsAuthSign=token, token=reqToToken(request))
 
 @gomo.route('/playlist.m3u8')
 def playlist():
+    if verify(request) == False: return "Forbidden", 403
+
     token = request.args.get('wmsAuthSign')
     if token is None: return "Forbidden"
     token = json.loads(base64.b64decode(token).decode('utf-8'))
@@ -42,12 +47,14 @@ def playlist():
     for i in range(len(links)):
         token = {"url": links[i]}
         token = base64.b64encode(json.dumps(token).encode('utf-8')).decode('utf-8')
-        resp = resp.replace(links[i], url_for(redirectTo, wmsAuthSign=token))
+        resp = resp.replace(links[i], url_for(redirectTo, wmsAuthSign=token, token=reqToToken(request)))
     return Response(resp, mimetype='application/x-mpegURL')
         
 
 @gomo.route('/ts')
 def ts():
+    if verify(request) == False: return "Forbidden", 403
+    
     token = request.args.get('wmsAuthSign')
     if token is None: return "Forbidden"
     token = json.loads(base64.b64decode(token).decode('utf-8'))

@@ -1,4 +1,6 @@
 <script>
+  import axios from 'axios';
+
   export let active;
   export let scrollEffect = "true";
   var nav = "";
@@ -54,6 +56,24 @@
           <a class="nav-link" href="/?tab=mine">Mine</a>
           {/if}
         </li>
+        {#await axios.get("/api/userInfo", {transformResponse: (res) => { return JSON.parse(res); }, responseType: 'json'})}
+						{ console.log("Getting User Info ...") }
+				{:then resp}
+						{#if resp.data.isAdmin}
+            <li class="nav-item">
+              <a class="nav-link" style="margin-left: 72vw;" href="/admin">Admin CP</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            {:else}
+            <li class="nav-item">
+              <a class="nav-link" style="margin-left: 76vw;" href="/logout">Logout</a>
+            </li>
+            {/if}
+				{:catch error}
+						{ console.log("Fuck, Error occured: " + error.message) }
+				{/await}
       </ul>
     </div>
 </nav>

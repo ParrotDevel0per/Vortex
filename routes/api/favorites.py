@@ -1,23 +1,22 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 import plugins.imdb as imdb
 import threading
 import json
-from utils.paths import DB_FOLDER
-import os
+from utils.users import verify, userdata, changeValue, reqToUID
 
 favoritesRT = Blueprint('favorites', __name__)
-favoritesFile = os.path.join(DB_FOLDER, "favorites.json")
 
 @favoritesRT.route('/favorites/')
 def favorites():
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
+    if verify(request) == False: return "Forbidden", 403
+
     return jsonify({
-        "results": json.loads(open(favoritesFile, "r").read())
+        "results": userdata(reqToUID(request))["favorites"]
     })
 
-def addToFavsThread(id):
+def addToFavsThread(id, uid):
     movie = imdb.getMovieInfo(id)
-    favorites = json.loads(open(favoritesFile, "r").read())
+    favorites = userdata(uid)["favorites"]
     favorites[id] = {
         "title": movie["title"],
         "year": movie["year"],
@@ -25,18 +24,19 @@ def addToFavsThread(id):
         "id": f"tt{id}",
         "kind": movie["kind"]
     }
-    open(favoritesFile, "w").write(json.dumps(favorites))
+    changeValue(uid, "favorites", favorites)
 
 @favoritesRT.route('/addToFavorites/<id>')
 @favoritesRT.route('/addToFavorites/', defaults={'id': None})
 def addToFavorites(id):
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
+    if verify(request) == False: return "Forbidden", 403
+
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
-    threading.Thread(target=addToFavsThread, args=(id,)).start()
+    threading.Thread(target=addToFavsThread, args=(id, reqToUID(request), )).start()
     return jsonify({
         "status": "ok",
         "message": "Movie added to favorites"
@@ -45,16 +45,17 @@ def addToFavorites(id):
 @favoritesRT.route('/removeFromFavorites/<id>')
 @favoritesRT.route('/removeFromFavorites/', defaults={'id': None})
 def removeFromFavorites(id):
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
+    if verify(request) == False: return "Forbidden", 403
+
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
-    favorites = json.loads(open(favoritesFile, "r").read())
+    favorites = userdata(reqToUID(request))["favorites"]
     if id in favorites:
         del favorites[id]
-        open(favoritesFile, "w").write(json.dumps(favorites))
+        changeValue(reqToUID(request), "favorites", favorites)
         return jsonify({
             "status": "ok",
             "message": "Movie removed from favorites"
@@ -67,13 +68,15 @@ def removeFromFavorites(id):
 @favoritesRT.route('/isInFavorites/<id>')
 @favoritesRT.route('/isInFavorites/', defaults={'id': None})
 def isInFavorites(id):
-    if not os.path.exists(favoritesFile): open(favoritesFile, "w").write("{}")
+    if verify(request) == False: return "Forbidden", 403
+    
+
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
-    favorites = json.loads(open(favoritesFile, "r").read())
+    favorites = userdata(reqToUID(request))["favorites"]
     if id in favorites:
         return jsonify({
             "status": "ok",

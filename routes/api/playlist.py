@@ -1,42 +1,42 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 import plugins.imdb as imdb
 import threading
 import json
-from utils.paths import DB_FOLDER
 from utils.cache import getCachedItem, cacheItem
-import os
+from utils.users import verify, userdata, changeValue, reqToUID
 
 playlistRT = Blueprint('playlist', __name__)
-playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 
 @playlistRT.route('/playlist/')
 def playlist():
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if verify(request) == False: return "Forbidden", 403
+
     return jsonify({
-        "results": json.loads(open(playlistFile, "r").read())
+        "results": userdata(reqToUID(request))["playlist"]
     })
 
-def addToPlaylistThread(id):
+def addToPlaylistThread(id, uid):
     movie = imdb.getMovieInfo(id)
-    playlist = json.loads(open(playlistFile, "r").read())
+    playlist = userdata(uid)["playlist"]
     playlist[id] = {
         "title": movie['title'],
         "year": movie['year'],
         "poster": movie["full-size cover url"],
         "id": f"tt{id}"
     }
-    open(playlistFile, "w").write(json.dumps(playlist))
+    changeValue(uid, "playlist", playlist)
 
 @playlistRT.route('/addToPlaylist/<id>')
 @playlistRT.route('/addToPlaylist/', defaults={'id': None})
 def addToPlaylist(id):
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if verify(request) == False: return "Forbidden", 403
+
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
-    threading.Thread(target=addToPlaylistThread, args=(id,)).start()
+    threading.Thread(target=addToPlaylistThread, args=(id, reqToUID(request), )).start()
     return jsonify({
         "status": "ok",
         "message": "Movie added to playlist"
@@ -45,16 +45,17 @@ def addToPlaylist(id):
 @playlistRT.route('/removeFromPlaylist/<id>')
 @playlistRT.route('/removeFromPlaylist/', defaults={'id': None})
 def removeFromPlaylist(id):
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if verify(request) == False: return "Forbidden", 403
+
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
+    playlist = userdata(reqToUID(request))["playlist"]
     if id.startswith("tt"): id = id[2:]
-    playlist = json.loads(open(playlistFile, "r").read())
     if id in playlist:
         del playlist[id]
-        open(playlistFile, "w").write(json.dumps(playlist))
+        changeValue(reqToUID(request), "playlist", playlist)
         return jsonify({
             "status": "ok",
             "message": "Movie removed from playlist"
@@ -67,13 +68,14 @@ def removeFromPlaylist(id):
 @playlistRT.route('/isInPlaylist/<id>')
 @playlistRT.route('/isInPlaylist/', defaults={'id': None})
 def isInPlaylist(id):
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if verify(request) == False: return "Forbidden", 403
+
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
     })
     if id.startswith("tt"): id = id[2:]
-    playlist = json.loads(open(playlistFile, "r").read())
+    playlist = userdata(reqToUID(request))["playlist"]
     if id in playlist:
         return jsonify({
             "status": "ok",
@@ -87,7 +89,8 @@ def isInPlaylist(id):
 @playlistRT.route('/seriesToPlaylist/<id>')
 @playlistRT.route('/seriesToPlaylist/', defaults={'id': None})
 def serieasToPlaylist(id):
-    if not os.path.exists(playlistFile): open(playlistFile, "w").write("{}")
+    if verify(request) == False: return "Forbidden", 403
+    
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'

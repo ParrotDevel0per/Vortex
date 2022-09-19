@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Create Account</title>
+  <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+<div class="login-page">
+  <div class="form">
+    <form method='POST' action='/create' class="login-form">
+      <h1>Create Account</h1>
+      <input name="username" type="text" placeholder="username"/>
+      <input name="password" type="password" placeholder="password"/>
+      <input name="email" type="text" placeholder="email"/>
+      <button>Create Account</button>
+    </form>
+  </div>
+</div>
+<script>
+  const msg = "{{ msg }}";
+  if (msg) {alert(msg);}
+</script>
+</body>
+</html>
