@@ -4,6 +4,7 @@ import json
 from utils.paths import DB_FOLDER
 
 userdata = os.path.join(DB_FOLDER, "userdata.json")
+if not os.path.exists(userdata): open(userdata, 'w').write("{}")
 
 class UserData:
     def checkIfExists(self, userdata):

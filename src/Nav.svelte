@@ -35,40 +35,30 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          {#if active == "home"}
-          <a class="nav-link active" href="/">Home</a>
-          {:else}
-          <a class="nav-link" href="/">Home</a>
-          {/if}
-        </li>
-        <li class="nav-item">
-          {#if active == "search"}
-          <a class="nav-link active" href="/?tab=search">Search</a>
-          {:else}
-          <a class="nav-link" href="/?tab=search">Search</a>
-          {/if}
-        </li>
-        <li class="nav-item">
-          {#if active == "mine"}
-          <a class="nav-link active" href="/?tab=mine">Mine</a>
-          {:else}
-          <a class="nav-link" href="/?tab=mine">Mine</a>
-          {/if}
-        </li>
+
+        <li class="nav-item"><a class="nav-link {active === 'home' ? 'active' : ''}" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link {active === 'search' ? 'active' : ''}" href="/?tab=search">Search</a></li>
+        <li class="nav-item"><a class="nav-link {active === 'mine' ? 'active' : ''}" href="/?tab=mine">Mine</a></li>
+
         {#await axios.get("/api/userInfo", {transformResponse: (res) => { return JSON.parse(res); }, responseType: 'json'})}
 						{ console.log("Getting User Info ...") }
 				{:then resp}
 						{#if resp.data.isAdmin}
             <li class="nav-item">
-              <a class="nav-link" style="margin-left: 72vw;" href="/admin">Admin CP</a>
+              <a class="nav-link" style="margin-left: 67vw;" href="/?tab=settings">Settings</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin">Admin CP</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/logout">Logout</a>
             </li>
             {:else}
             <li class="nav-item">
-              <a class="nav-link" style="margin-left: 76vw;" href="/logout">Logout</a>
+              <a class="nav-link {active === 'settings' ? 'active' : ''}" style="margin-left: 71vw;" href="/?tab=settings">Settings</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
             </li>
             {/if}
 				{:catch error}

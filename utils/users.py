@@ -7,28 +7,24 @@ import time
 UD = UserData()
 
 def defaultHome():
-    return {
-		randStr(10): {
+    return [
+		{
 			"title": "Action",
 			"url": "/api/getMoviesByGenres?genres=Action",
 		},
-		randStr(10): {
-			"title": "Adventure",
-			"url": "/api/getMoviesByGenres?genres=Adventure",
-		},
-		randStr(10): {
+		{
 			"title": "War",
 			"url": "/api/getMoviesByGenres?genres=War",
 		},
-        randStr(10): {
+        {
 			"title": "History",
 			"url": "/api/getMoviesByGenres?genres=History",
 		},
-        randStr(10): {
+        {
 			"title": "Western",
 			"url": "/api/getMoviesByGenres?genres=Western",
 		},
-	}
+    ]
 
 def getIP(req):
     ip = str(req.remote_addr)
@@ -70,6 +66,21 @@ def usernameToUID(username):
         if db[key]["username"] == username:
             return db[key]["UID"]
     return ""
+
+def uids():
+    us = []
+    db = UD.DB()
+    for key in db:us.append(key)
+    return us
+    
+
+def reinitHome():
+    for u in uids():
+        changeValue(
+            u,
+            "home",
+            defaultHome()
+        )
 
 def deleteUser(UID):
     UD.remove(UID)

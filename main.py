@@ -17,7 +17,7 @@ from proxies.kukajto import kukajto
 
 # Rest
 from utils.settings import getSetting, setSetting
-from utils.users import createUser
+from utils.users import createUser, reinitHome
 from utils.paths import DB_FOLDER, CACHE_FOLDER, POSTER_FOLDER
 from colorama import init, Fore
 import requests
@@ -150,6 +150,11 @@ def cli():
                 )
                 print("Username already exists" if "already" in r else "User created")
             else: print("Invalid second argument")
+
+        elif cmd[0].lower() == "fix":
+            reinitHome()
+            print("Everything should work now")
+            
 
 
      

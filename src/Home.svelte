@@ -6,7 +6,7 @@
 	export let id;
 	export let showFt;
 
-	var menu = {}
+	var homeItem = [];
 	if (showG == "true") {
 		axios({
 			method: 'get',
@@ -15,15 +15,7 @@
 			responseType: 'json'
 		}).then(response => {
 			const data = response.data;
-
-			for (const key in data) {
-				menu[key] = {
-					title: data[key]["title"],
-					url: data[key]["url"],
-					id: key
-				}
-			}
-
+			homeItem = data;
 			window.scrollTo(0, 0);
 		}).catch(error => {
 			console.log(error);
@@ -98,7 +90,7 @@
 	<div id="content" class="content">
 		<br style="font-size: 100px;" />
 		{#if showG == "true"}
-			{#each Object.values(menu) as m}
+			{#each homeItem as m}
 				<h1>{ m.title }</h1>
 				<div class="outer">
 					{#await axios.get(m.url, {transformResponse: (res) => { return JSON.parse(res).results; }, responseType: 'json'})}

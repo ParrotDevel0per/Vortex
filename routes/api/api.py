@@ -47,7 +47,21 @@ def featured():
 @api.route('/homeMenu')
 def homeMenu():
     if verify(request) == False: return "Forbidden", 403
-    return userdata(reqToUID(request))['home']
+    return jsonify(
+        userdata(reqToUID(request))['home'],
+    )
+
+@api.route('/updateHomeMenu')
+def updateHomeMenu():
+    if verify(request) == False: return "Forbidden", 403
+    new = request.args.get("new")
+    if not new: return "Error"
+    new = base64.b64decode(new.encode()).decode()
+    new = json.loads(new)
+    
+    changeValue(reqToUID(request), "home", new)
+
+    return "Done"
 
 @api.route('/sysinfo')
 def sysinfo():
