@@ -6,8 +6,7 @@ var search = "";
 var results = {};
 
 const cleargrid = () => {
-    try { grid.replaceChildren()}
-    catch { console.log("Grid is already clear") }
+    grid.innerHTML = "";
 };
 
 const searchEngine = () => {
@@ -25,9 +24,13 @@ const searchEngine = () => {
         xmlHttp.open("GET", "/api/search/" + searchTerm, true);
         xmlHttp.setRequestHeader('Accept', 'application/json');
         xmlHttp.send(null);
-    } else{
-        cleargrid();
+    } else {
+      results = {};
     }
+     //else{
+        //cleargrid();
+        //results = {};
+    //}
 }
 const view = (id) => {
   location = `/?showG=false&id=${id}`;
@@ -36,7 +39,14 @@ const view = (id) => {
 
 <main>
     <Nav active="search" />
-    <input bind:this={search} on:keyup={searchEngine} type="text" placeholder="Search ...">
+    <input
+        bind:this={search}
+        on:keyup={searchEngine}
+        on:keydown={searchEngine}
+        type="text"
+        placeholder="Search ..."
+    >
+
     <div bind:this={grid} id="grid">
         {#each Object.values(results) as r}
         <div class="item" on:click={() => view(r.id)}>

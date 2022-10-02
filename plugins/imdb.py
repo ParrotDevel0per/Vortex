@@ -1,8 +1,21 @@
 import imdb
+from utils.common import sanitize
+
 ia = imdb.Cinemagoer()
 
+def runWhileNotDone(do):
+    MAX = 20
+    attemps = 0
+    while attemps <= MAX:
+        attemps += 1
+
+        resp = eval(do)
+        #print("Attempt " + str(attemps))
+        if resp: return resp
+    return {}
+
 def search(query):
-    movies = ia.search_movie(query)
+    movies = runWhileNotDone(f"ia.search_movie('{sanitize(query)}')")
     response = {}
     for movie in movies:
         if dict(movie)["kind"] not in ["video movie", "movie", "tv series"]: continue

@@ -33,6 +33,7 @@ def searchForExpiredItems():
             #print(f"Removed {reg[key]['filename']} from {reg[key]['folder']}")
 
 def cacheItem(filename, folder, data, expiry=(7 * 24 * 60 * 60)):
+    if not data or data == "{}": return
     searchForExpiredItems()
     addToCacheRegistry(filename, folder, expiry)
     if not os.path.exists(os.path.join(CACHE_FOLDER, folder)): os.makedirs(os.path.join(CACHE_FOLDER, folder))

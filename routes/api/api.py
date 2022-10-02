@@ -11,7 +11,7 @@ from utils.paths import POSTER_FOLDER
 from utils.users import deleteUser, reqToUID, verify, LAH, userdata, UD, changeValue, deleteUser
 from utils.cache import getCachedItem, cacheItem, getCacheSize
 from utils.fakeBrowser import baseHeaders
-from utils.common import chunkedDownload
+from utils.common import chunkedDownload, sanitize
 import os
 
 api = Blueprint('api', __name__)
@@ -256,7 +256,7 @@ def poster(id):
 @api.route('/search/', defaults={'query': None})
 def search(query):
     if verify(request) == False: return "Forbidden", 403
-
+    query = sanitize(query)
     if not query: return jsonify({
         'status': 'error',
         'message': 'No query provided'
