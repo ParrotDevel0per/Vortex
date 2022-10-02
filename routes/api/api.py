@@ -452,7 +452,7 @@ def proxy(url):
     headers = baseHeaders
     if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
     r = requests.get(url, headers=headers, stream=True)
-    return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'])
+    return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'] if 'Content-Type' in r.headers else "")
 
 # No longer maintaned
 """

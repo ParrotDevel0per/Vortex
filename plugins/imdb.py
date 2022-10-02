@@ -111,7 +111,7 @@ def getMoviesByGenres(genres):
     for item in results:
         resp[item.movieID] = {
             "title": item["title"],
-            #"plot": item["plot"], NOTE removed due to cinemagoer update, in no longer grabs plot
+            #"plot": item["plot"], NOTE: removed due to cinemagoer update, in no longer grabs plot 
             "full-size cover url": item["full-size cover url"],
             "id": f"tt{item.movieID}"
         }
