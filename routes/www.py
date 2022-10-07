@@ -1,5 +1,5 @@
-from flask import Blueprint, request, render_template, send_from_directory, redirect
-from utils.users import verify, LAH
+from flask import Blueprint, request, render_template, send_from_directory
+from utils.users import LAH
 from utils.paths import DB_FOLDER
 from utils.settings import getSetting
 import requests
@@ -11,8 +11,6 @@ playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 
 @www.route('/')
 def index():
-    if verify(request) == False: return redirect("/login")
-
     return render_template(
         'index.html',
         tab=request.args.get("tab") or "",
@@ -25,8 +23,6 @@ def index():
 @www.route('/play/<id>/', defaults={'episode': None})
 @www.route('/play/<id>', defaults={'episode': None})
 def play(id, episode):
-    if verify(request) == False: return redirect("/login")
-
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
 
@@ -49,9 +45,5 @@ def play(id, episode):
 
 @www.route('/static/<path:path>')
 def send_static(path):
-    if "svelte" in path: 
-        if verify(request) == False:
-            return "Forbidden", 403
-
     return send_from_directory('static', path)
 

@@ -34,8 +34,6 @@ def login_():
 
 @auth.route("/create", methods=["GET", "POST"])
 def create_():
-    if verify(request, verifyAdmin=True) == False: return "Forbidden", 403
-
     if request.method == "GET":
         return render_template("register.html")
 

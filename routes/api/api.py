@@ -4,12 +4,11 @@ from utils.settings import getSetting
 import plugins.imdb as imdb
 import requests
 import base64
-import psutil
 import json
 import random
 from utils.paths import POSTER_FOLDER
-from utils.users import deleteUser, reqToUID, verify, LAH, userdata, UD, changeValue, deleteUser
-from utils.cache import getCachedItem, cacheItem, getCacheSize
+from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser
+from utils.cache import getCachedItem, cacheItem
 from utils.fakeBrowser import baseHeaders
 from utils.common import chunkedDownload, sanitize
 import os
@@ -46,14 +45,12 @@ def featured():
 
 @api.route('/homeMenu')
 def homeMenu():
-    if verify(request) == False: return "Forbidden", 403
     return jsonify(
         userdata(reqToUID(request))['home'],
     )
 
 @api.route('/updateHomeMenu')
 def updateHomeMenu():
-    if verify(request) == False: return "Forbidden", 403
     new = request.args.get("new")
     if not new: return "Error"
     new = base64.b64decode(new.encode()).decode()
@@ -63,22 +60,8 @@ def updateHomeMenu():
 
     return "Done"
 
-@api.route('/sysinfo')
-def sysinfo():
-    if verify(request) == False: return "Forbidden", 403
-    
-    return jsonify({
-        'status': 'ok',
-        'systemRAMUsage': f"{psutil.virtual_memory().percent}%",
-        'pythonCPUUsage': f"{psutil.cpu_percent()}%",
-        'cache': getCacheSize(),
-        'version': open('VERSION', 'r').read()
-    })
-
 @api.route('/userInfo')
 def userInfo():
-    if verify(request) == False: return {}
-    
     data = userdata(reqToUID(request))
     if request.args.get("all") == 'true': return data
 
@@ -90,8 +73,6 @@ def userInfo():
 
 @api.route('/users')
 def users():
-    if verify(request, verifyAdmin=True) == False: return "Forbidden", 403
-
     resp = {}
     userdata = UD.DB()
     for k, v in userdata.items():
@@ -109,7 +90,6 @@ def users():
 @api.route('/promoteDemote/<uid>')
 @api.route('/promoteDemote', defaults={"uid": None})
 def promoteDemote(uid):
-    if verify(request, verifyAdmin=True) == False: return "Forbidden", 403
     if not uid: return jsonify({
         'status': 'error',
         'message': 'No UID Specified'
@@ -126,7 +106,6 @@ def promoteDemote(uid):
 @api.route('/banUnban/<uid>')
 @api.route('/banUnban', defaults={"uid": None})
 def banUnban(uid):
-    if verify(request, verifyAdmin=True) == False: return "Forbidden", 403
     if not uid: return jsonify({
         'status': 'error',
         'message': 'No UID Specified'
@@ -143,7 +122,6 @@ def banUnban(uid):
 @api.route('/deleteUser/<uid>')
 @api.route('/deleteUser', defaults={"uid": None})
 def deleteUser_(uid):
-    if verify(request, verifyAdmin=True) == False: return "Forbidden", 403
     if not uid: return jsonify({
         'status': 'error',
         'message': 'No UID Specified'
@@ -154,7 +132,6 @@ def deleteUser_(uid):
 @api.route('/changePassword/<uid>/<password>')
 @api.route('/changePassword', defaults={"uid": None, "password": None})
 def changePassword_(uid, password):
-    if verify(request, verifyAdmin=True) == False: return "Forbidden", 403
     if not uid or not password: return jsonify({
         'status': 'error',
         'message': 'No UID or password Specified'
@@ -170,8 +147,6 @@ def changePassword_(uid, password):
 @api.route('/resolve/<id>')
 @api.route('/resolve/', defaults={'id': None})
 def resolve(id):
-    if verify(request) == False: return "Forbidden", 403
-    
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -192,8 +167,6 @@ def resolve(id):
 @api.route('/sources/<id>')
 @api.route('/sources/', defaults={'id': None})
 def sources(id):
-    if verify(request) == False: return "Forbidden", 403
-
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -208,7 +181,6 @@ def sources(id):
     sources = [
         "gomo",
         "vidsrc",
-        "vidembed",
         "kukajto"
     ]
 
@@ -229,8 +201,6 @@ def sources(id):
 @api.route('/poster/<id>')
 @api.route('/poster/', defaults={'id': None})
 def poster(id):
-    #if verify(request) == False: return "Forbidden", 403
-
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -255,7 +225,6 @@ def poster(id):
 @api.route('/search/<query>')
 @api.route('/search/', defaults={'query': None})
 def search(query):
-    if verify(request) == False: return "Forbidden", 403
     query = sanitize(query)
     if not query: return jsonify({
         'status': 'error',
@@ -278,8 +247,6 @@ def search(query):
 @api.route('/seasons/<id>')
 @api.route('/seasons/', defaults={'id': None})
 def seasons(id):
-    if verify(request) == False: return "Forbidden", 403
-
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -302,8 +269,6 @@ def seasons(id):
 @api.route('/episodes/<id>/<season>')
 @api.route('/episodes/', defaults={'id': None, 'season': None})
 def episodes(id, season):
-    if verify(request) == False: return "Forbidden", 403
-
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -336,8 +301,6 @@ def episodes(id, season):
 @api.route('/episodeCount/<id>')
 @api.route('/episodeCount/', defaults={'id': None})
 def episodeCount(id):
-    if verify(request) == False: return "Forbidden", 403
-
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -358,8 +321,6 @@ def episodeCount(id):
 
 @api.route('/top250movies/')
 def top250movies():
-    if verify(request) == False: return "Forbidden", 403
-
     cached = getCachedItem("top250movies.json", "imdbCache")
     if cached == None:
         results = imdb.top250movies()
@@ -374,8 +335,6 @@ def top250movies():
 
 @api.route('/bottom100movies/')
 def bottom100movies():
-    if verify(request) == False: return "Forbidden", 403
-
     cached = getCachedItem("bottom100movies.json", "imdbCache")
     if cached == None:
         results = imdb.bottom100movies()
@@ -390,8 +349,6 @@ def bottom100movies():
 
 @api.route('/getMoviesByGenres')
 def getMoviesByGenres():
-    if verify(request) == False: return "Forbidden", 403
-    
     genres = request.args.get("genres")
     MAX_RESULTS = 30
     if not genres: return jsonify({
@@ -411,67 +368,17 @@ def getMoviesByGenres():
         "results": dict(list(json.loads(cached).items())[:MAX_RESULTS])
     })
 
-# Disabled for security reasons
-"""
-@api.route('/clearPosterCache/')
-def clearPosterCache():
-    if verify(request) == False: return "Forbidden", 403
-
-    fileCount = len(os.listdir(POSTER_FOLDER))
-    if fileCount == 0: return jsonify({
-        'status': 'error',
-        'message': 'No posters found'
-    })
-    shutil.rmtree(POSTER_FOLDER)
-    os.makedirs(POSTER_FOLDER)
-    return jsonify({
-        "status": "ok",
-        "message": "Poster cache cleared",
-        "filesDeleted": fileCount
-    })
-
-@api.route('/clearCache/')
-def clearCache_():
-    fileCount = clearCache()
-    if fileCount == 0: return jsonify({
-        'status': 'error',
-        'message': 'No files / folders found'
-    })
-    return jsonify({
-        "status": "ok",
-        "message": "Cache cleared",
-        "filesDeleted": fileCount
-    })
-"""
-
 @api.route('/proxy/<path:url>')
 def proxy(url):
-    if verify(request) == False: return "Forbidden", 403
-
     if url.startswith("base64:"): url = base64.b64decode(url[7:]).decode("utf-8")
     headers = baseHeaders
     if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
     r = requests.get(url, headers=headers, stream=True)
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'] if 'Content-Type' in r.headers else "")
 
-# No longer maintaned
-"""
-@api.route('/mergeShows.m3u')
-def mergeShowM3Us():
-    baseURL = request.base_url.split("/api")[0]
-    items = request.args.get("ids")
-    if "|" in items: items = items.split("|")
-    else: items = [items]
-    m3u = "#EXTM3U\n"
-    for id in items: m3u += requests.get(f"{baseURL}/show/{id}.m3u").text.replace("#EXTM3U\n", "")
-    return Response(m3u, mimetype="audio/x-mpegurl")
-"""
-
 @api.route('/getMovieInfo/<id>')
 @api.route('/getMovieInfo/', defaults={'id': None})
 def getMovieInfo(id):
-    if verify(request) == False: return "Forbidden", 403
-
     baseURL = request.base_url.split("/api")[0]
     if not id: return jsonify({
         'status': 'error',
@@ -519,36 +426,3 @@ def getMovieInfo(id):
     rp["inPlaylist"] = requests.get(request.base_url.split("/api")[0] + "/api/isInPlaylist/" + id, headers=LAH(request)).json()['status'] == 'ok'
 
     return jsonify(rp)
-
-# Was too slow
-"""
-@api.route('/getEpisodeInfo/<id>/<season>-<episode>')
-@api.route('/getEpisodeInfo/', defaults={'id': None})
-def getEpisodeInfo(id, season, episode):
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    epID = ""
-    sID = ""
-    if len(episode) == 1: epID = "0" + episode
-    if len(season) == 1: sID = "0" + season
-    cached = getCachedItem(f"Episode-{id}-{sID}-{epID}.json", "EpisodeInfoCache")
-    if cached == None:
-        show, episode = imdb.getEpisodeInfo(id, season, episode)
-        resp = {}
-        resp["title"] = f"S{sID}E{epID} - {episode['title']}"
-        resp["plot"] = episode['plot'].replace("\n", "").replace("    ", "")
-        resp["poster"] = request.base_url.split("/getEpisodeInfo")[0] + f"/poster/{id}?do=show"
-        resp["year"] = episode['year']
-        resp["genres"] = ", ".join(show['genres'])
-        resp["rating"] = round(float(episode['rating']), 1)
-        try: resp["airDate"] = show['original air date']
-        except: resp["airDate"] = "N/A"
-        try: resp["budget"] = show["box office"]['Budget']
-        except: resp["budget"] = "N/A"
-        cacheItem(f"Episode-{id}-{sID}-{epID}.json", "EpisodeInfoCache", json.dumps(resp))
-        return jsonify(resp)
-    return json.loads(cached)
-"""

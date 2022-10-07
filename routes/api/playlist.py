@@ -3,14 +3,12 @@ import plugins.imdb as imdb
 import threading
 import json
 from utils.cache import getCachedItem, cacheItem
-from utils.users import verify, userdata, changeValue, reqToUID
+from utils.users import userdata, changeValue, reqToUID
 
 playlistRT = Blueprint('playlist', __name__)
 
 @playlistRT.route('/playlist/')
 def playlist():
-    if verify(request) == False: return "Forbidden", 403
-
     return jsonify({
         "results": userdata(reqToUID(request))["playlist"]
     })
@@ -29,8 +27,6 @@ def addToPlaylistThread(id, uid):
 @playlistRT.route('/addToPlaylist/<id>')
 @playlistRT.route('/addToPlaylist/', defaults={'id': None})
 def addToPlaylist(id):
-    if verify(request) == False: return "Forbidden", 403
-
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -45,8 +41,6 @@ def addToPlaylist(id):
 @playlistRT.route('/removeFromPlaylist/<id>')
 @playlistRT.route('/removeFromPlaylist/', defaults={'id': None})
 def removeFromPlaylist(id):
-    if verify(request) == False: return "Forbidden", 403
-
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -68,8 +62,6 @@ def removeFromPlaylist(id):
 @playlistRT.route('/isInPlaylist/<id>')
 @playlistRT.route('/isInPlaylist/', defaults={'id': None})
 def isInPlaylist(id):
-    if verify(request) == False: return "Forbidden", 403
-
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -89,8 +81,6 @@ def isInPlaylist(id):
 @playlistRT.route('/seriesToPlaylist/<id>')
 @playlistRT.route('/seriesToPlaylist/', defaults={'id': None})
 def serieasToPlaylist(id):
-    if verify(request) == False: return "Forbidden", 403
-    
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'

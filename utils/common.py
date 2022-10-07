@@ -1,6 +1,9 @@
 import random
 import requests
 from string import ascii_lowercase, digits
+from utils.settings import getSetting
+import socket
+import os
 
 symbols = "[@_!#$%^&*()<>?/\|}{~:]\"'"
 exceptions = ["!", ":", "?"]
@@ -22,3 +25,13 @@ def sanitize(text):
         if symbol not in exceptions:
             text = text.replace(symbol, "")
     return text
+
+def getLocalIP():
+    ip = getSetting('ip')
+    hostname = socket.gethostname()
+    if ip == "0.0.0.0":return socket.gethostbyname(hostname)
+    return ip
+
+def cls():
+    if os.name == "nt": os.system("cls")
+    else: os.system("clear")

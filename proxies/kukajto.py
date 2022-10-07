@@ -3,7 +3,7 @@ from resolvers.mixdrop import mixdrop
 from resolvers.streamtape import streamtape
 from plugins.csfd import translateItemToCzech
 from plugins.kukajto import search, grab
-from utils.users import verify, reqToToken
+from utils.users import reqToToken
 import difflib
 import base64
 import json
@@ -12,8 +12,6 @@ kukajto = Blueprint('kukajto', __name__)
 
 @kukajto.route('/play')
 def play():
-    if verify(request) == False: return "Forbidden", 403
-
     item = request.args.get('item')
     if item is None: return "No item specified"
     episode = request.args.get('episode')
@@ -48,7 +46,6 @@ def play():
     if "mixdrop" in resolved: resolved, headers = mixdrop(resolved, "https://kukaj.io/", mxr=True)
     else: resolved, headers = streamtape(resolved, "https://kukaj.io/")
     if not resolved: return "Failed to resolve"
-    resp = f"/api/proxy/base64:{base64.b64encode(resolved.encode('utf-8')).decode('utf-8')}"
-    if headers: resp += f"?headers={base64.b64encode(json.dumps(headers).encode('utf-8')).decode('utf-8')}&token={reqToToken(request)}"
-    else: resp += f"?token={reqToToken(request)}"
+    resp = f"/api/proxy/base64:{base64.b64encode(resolved.encode('utf-8')).decode('utf-8')}?token={reqToToken(request)}"
+    if headers: resp += f"&headers={base64.b64encode(json.dumps(headers).encode('utf-8')).decode('utf-8')}&token={reqToToken(request)}"
     return resp

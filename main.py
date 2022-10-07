@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, redirect
 
 # App routes
 from routes.api.api import api
@@ -12,22 +12,21 @@ from routes.admin import admin
 # Proxies
 from proxies.vidsrc import vidsrc
 from proxies.gomo import gomo
-from proxies.vidembed import vidembed
 from proxies.kukajto import kukajto
 
 # Rest
-from utils.settings import getSetting, setSetting
-from utils.users import createUser, reinitHome
-from utils.paths import DB_FOLDER, CACHE_FOLDER, POSTER_FOLDER
-from colorama import init, Fore
+from utils.settings import getSetting
+from utils.paths import DB_FOLDER
+from utils.cliUI import intro, lenght
+from utils.cli import cli
+from utils.common import cls, getLocalIP
+from utils.users import verify
+from colorama import Fore
 import requests
 import threading
-import shutil
 import os
 import sys
 import logging
-import socket
-init()
 
 sysArgv = sys.argv[1:]
 
@@ -44,37 +43,38 @@ app.register_blueprint(m3u, url_prefix='/')
 app.register_blueprint(auth, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
 app.register_blueprint(gomo, url_prefix='/proxy/gomo')
-app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')
 app.register_blueprint(kukajto, url_prefix='/proxy/kukajto')
 
 
-def getLocalIP():
-    ip = getSetting('ip')
-    hostname = socket.gethostname()
-    if ip == "0.0.0.0":return socket.gethostbyname(hostname)
-    return ip
 
-def cls():
-    if os.name == "nt": os.system("cls")
-    else: os.system("clear")
 
-banner = """
- __ __|  |                 _ \  _)              |               _ \   |                           
-    |    __ \    _ \      |   |  |   __|  _` |  __|   _ \      |   |  |   _` |  |   |   _ \   __| 
-    |    | | |   __/      ___/   |  |    (   |  |     __/      ___/   |  (   |  |   |   __/  |    
-   _|   _| |_| \___|     _|     _| _|   \__,_| \__| \___|     _|     _| \__,_| \__, | \___| _|    
-                                                                               ____/              
-"""
+@app.before_request
+def verifyRequest():
+    endpoint = request.endpoint
+    exceptions = [ # You dont need to be logged in for these endpoints
+        "api.poster",
+        "auth.login_",
+        "static"
+    ]
+    admin = [ # These endpoints require admin rights
+        "auth.create_",
+        "admin.index",
+        "api.users",
+        "api.promoteDemote",
+        "api.banUnban",
+        "api.deleteUser_",
+        "api.changePassword_"
+    ]
 
-lenght = len(banner.split("\n")[1])
-
-def intro():
-    print(
-        Fore.GREEN,
-        banner.center(os.get_terminal_size().columns)
-    )
-    print("=" * lenght)
-
+    if endpoint in admin:
+        #print(endpoint)
+        if verify(request, verifyAdmin=True) == False:
+            return "Forbidden", 403
+    
+    if endpoint not in exceptions:
+        #print(endpoint)
+        if verify(request) == False:
+            return redirect("/login")
 
 @app.before_first_request
 def before_first_request_func():
@@ -84,84 +84,6 @@ def before_first_request_func():
         Fore.GREEN,
         f"Running on: http://{getSetting('ip')}:{getSetting('port')}".center(lenght)
     )
-
-help = [
-    "help - Shows This Message",
-    "exit - Exit CLI and run TPP",
-    "whoami - Shows current user",
-    "ff - Exit CLI and don't run TPP",
-    "update - Checks for updates",
-    "set <key> <value> - Set setting to specific value",
-    "get <key> - Gets value of key",
-    "log - Show log of TPP",
-]
-
-def cli():
-    cls()
-    intro()
-    print(
-        Fore.GREEN,
-        f"Running is paused, write \"exit\" to exit CLI, or write \"ff\" to exit The Pirate Player".center(lenght)
-    )
-    print("\n" * 2)
-    while True:
-        cmd = input(Fore.GREEN + "Admin@ThePiratePlayer$ ")
-        if " " in cmd: cmd = cmd.split(" ")
-        else: cmd = [cmd]
-
-        if cmd[0].lower() == "exit": return
-        elif cmd[0].lower() == "help": print("\n".join(help))
-        elif cmd[0].lower() == "whoami": print("Admin, I guess")
-        elif cmd[0].lower() == "ff": cls(); exit()
-        elif cmd[0].lower() == "update":
-            os.system("git fetch")
-            os.system("git merge")
-        elif cmd[0].lower() == "set":
-            if len(cmd) != 3: print("Invalid argument count"); continue
-            print(setSetting(cmd[1], cmd[2]))
-
-        elif cmd[0].lower() == "get":
-            if len(cmd) != 2: print("Invalid argument count"); continue
-            print(getSetting(cmd[1]))
-
-        elif cmd[0].lower() == "log":
-            print(open(logFile, 'r').read() if open(logFile, 'r').read() != "" else "Log is empty")
-
-        elif cmd[0].lower() == "clear":
-            if len(cmd) != 2: print("Invalid argument count"); continue
-            if cmd[1].lower() == "cache":
-                shutil.rmtree(CACHE_FOLDER)
-                os.makedirs(CACHE_FOLDER)
-            elif cmd[1].lower() == "posters":
-                shutil.rmtree(POSTER_FOLDER)
-                os.makedirs(POSTER_FOLDER)
-            else: print("Invalid second argument")
-
-        elif cmd[0].lower() == "user":
-            if len(cmd) < 2: print("Invalid argument count"); continue
-            if cmd[1].lower() == "create":
-                if len(cmd) < 4: print("Invalid argument count"); continue
-
-                r = createUser(
-                    username=cmd[2],
-                    password=cmd[3],
-                    email="" if len(cmd) != 5 else cmd[4],
-                    admin=False if len(cmd) != 6 else cmd[5] == 'true',
-                )
-                print("Username already exists" if "already" in r else "User created")
-            else: print("Invalid second argument")
-
-        elif cmd[0].lower() == "fix":
-            reinitHome()
-            print("Everything should work now")
-            
-
-
-     
-        elif cmd[0].lower() == "": continue
-        else: print("Invalid command")
-
-
 
 def sendFirstRequest():
     running = False

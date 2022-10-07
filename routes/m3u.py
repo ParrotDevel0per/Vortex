@@ -1,7 +1,7 @@
 from flask import Blueprint, request, redirect
 from utils.settings import getSetting
 from utils.paths import DB_FOLDER
-from utils.users import verify, LAH, reqToToken
+from utils.users import LAH, reqToToken
 import requests
 import os
 
@@ -10,8 +10,6 @@ playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 
 @m3u.route('/play/<id>.m3u8')
 def play_m3u8(id):
-    if verify(request) == False: return "Forbidden", 403
-
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
     try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?source={source}", headers=LAH(request)).json()["url"]
@@ -21,8 +19,6 @@ def play_m3u8(id):
 
 @m3u.route('/play/<id>/<episode>.m3u8')
 def play_m3u8_episode(id, episode):
-    if verify(request) == False: return "Forbidden", 403
-
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
     try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?episode={episode}&source={source}", headers=LAH(request)).json()["url"]
@@ -31,8 +27,6 @@ def play_m3u8_episode(id, episode):
 
 @m3u.route('/playlist.m3u')
 def playlistm3u8():
-    if verify(request) == False: return "Forbidden", 403
-
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
     baseURL = request.base_url.split('/playlist')[0]
@@ -54,8 +48,6 @@ def playlistm3u8():
 
 @m3u.route('/show/<id>.m3u')
 def showm3u(id):
-    if verify(request) == False: return "Forbidden", 403
-
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
     baseURL = request.base_url.split('/show')[0]
