@@ -21,12 +21,10 @@ def play():
     if episode:
         episode = episode.split("-")
         url = f"https://series.databasegdriveplayer.co/player.php?type=series&imdb={item}&season={episode[0]}&episode={episode[1]}"
-    resolved, headers = sbplay(
-        resolveVidembed(
-            resolveGDrivePlayer(url),
-            'StreamSB'
-        ).split("?")[0]
-    )
+    
+    streamSBURL = resolveVidembed(resolveGDrivePlayer(url),'StreamSB').split("?")[0]
+    resolved, headers = sbplay(streamSBURL)
+
     token = {
         "url": resolved,
         "headers": headers

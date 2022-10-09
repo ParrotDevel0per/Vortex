@@ -2,6 +2,7 @@ import requests
 import re
 from utils.unpacker import unpack
 from utils.fakeBrowser import baseHeaders
+from bs4 import BeautifulSoup
 
 useALT = False
 
@@ -30,21 +31,29 @@ def getSources(url):
     return list(set([source for source in sources if "gomo" in source]))
 
 def grab(url):
+    headers = baseHeaders.copy()
     sources = getSources(url)
     if useALT:
         url = [source for source in sources if "vid1" in source][0]
         resp = requests.get(url).text
         mirrorServer = "http:" + re.search(r'<a href="(.*?)"><li>Mirror Server</li></a>', resp).group(1)
         resp = requests.get(mirrorServer).text
-    try:
-        resp = requests.get(sources[0]).text
-        packed = resp.replace("\n", "").split("<script type='text/javascript'>")[1].split("</script>")[0]
-    except Exception as e:
-        #print(e)
-        #print("Source #1 failed, trying source #2")
-        resp = requests.get(sources[1]).text
-        packed = resp.replace("\n", "").split("<script type='text/javascript'>")[1].split("</script>")[0]
-    unpacked = unpack(packed)
+    
+    packages = []
+    for src in sources:
+        try:
+            resp = requests.get(src, headers=headers).text
+            soup = BeautifulSoup(resp, features="lxml")
+            for item in soup.find_all('script'):
+                innerHTML = item.encode_contents().decode("utf-8")
+                if '(p,a,c,k,e,d)' in innerHTML:
+                    packages.append(innerHTML)
+        except Exception as e:
+            pass
+    
+
+    unpacked = unpack(packages[0])
+    print(unpacked)
     if requests.get(unpacked.split("$.get('")[1].split("'")[0] + "1").text != "1": print("", end="") #print("Error might occur")
     unpacked = unpacked.split("[")[1].split("]")[0]
     try:

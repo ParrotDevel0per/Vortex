@@ -182,7 +182,8 @@ def sources(id):
         "gomo",
         "vidsrc",
         "kukajto",
-        "vidembed"
+        "vidembed",
+        "to2embed"
     ]
 
     default = getSetting("source")

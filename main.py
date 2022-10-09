@@ -13,6 +13,7 @@ from routes.admin import admin
 from proxies.vidsrc import vidsrc
 from proxies.gomo import gomo
 from proxies.kukajto import kukajto
+from proxies.to2embed import to2embed
 from proxies.vidembed import vidembed
 
 # Rest
@@ -43,6 +44,7 @@ app.register_blueprint(www, url_prefix='/')
 app.register_blueprint(m3u, url_prefix='/')
 app.register_blueprint(auth, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
+app.register_blueprint(to2embed, url_prefix='/proxy/to2embed')
 app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')
 app.register_blueprint(gomo, url_prefix='/proxy/gomo')
 app.register_blueprint(kukajto, url_prefix='/proxy/kukajto')

@@ -6,50 +6,10 @@ import string
 import requests
 import json
 from utils.fakeBrowser import UA
-from urllib.parse import urlparse, urlencode
+from urllib.parse import urlparse
+from utils.common import girc
 
-def girc(page_data, url, co):
-    """
-    Code adapted from https://github.com/vb6rocod/utils/
-    Copyright (C) 2019 vb6rocod
-    and https://github.com/addon-lab/addon-lab_resolver_Project
-    Copyright (C) 2021 ADDON-LAB, KAR10S
-    """
-    net = requests.session()
-    hdrs = {'User-Agent': UA,
-            'Referer': url}
-    rurl = 'https://www.google.com/recaptcha/api.js'
-    aurl = 'https://www.google.com/recaptcha/api2'
-    key = re.search(r'(?:src="{0}\?.*?render|data-sitekey)="?([^"]+)'.format(rurl), page_data)
-    if key:
-        key = key.group(1)
-        rurl = '{0}?render={1}'.format(rurl, key)
-        page_data1 = net.http_GET(rurl, headers=hdrs).content
-        v = re.findall('releases/([^/]+)', page_data1)[0]
-        rdata = {'ar': 1,
-                 'k': key,
-                 'co': co,
-                 'hl': 'en',
-                 'v': v,
-                 'size': 'invisible',
-                 'cb': '123456789'}
-        page_data2 = net.http_GET('{0}/anchor?{1}'.format(aurl, urlencode(rdata)), headers=hdrs).content
-        rtoken = re.search('recaptcha-token.+?="([^"]+)', page_data2)
-        if rtoken:
-            rtoken = rtoken.group(1)
-        else:
-            return ''
-        pdata = {'v': v,
-                 'reason': 'q',
-                 'k': key,
-                 'c': rtoken,
-                 'sa': '',
-                 'co': co}
-        hdrs.update({'Referer': aurl})
-        page_data3 = net.http_POST('{0}/reload?k={1}'.format(aurl, key), form_data=pdata, headers=hdrs).content
-        gtoken = re.search('rresp","([^"]+)', page_data3)
-        if gtoken:
-            return gtoken.group(1)
+
 
 def cleanse_html(html):
     for match in re.finditer('<!--(.*?)-->', html, re.DOTALL):
@@ -121,6 +81,7 @@ def sbplay(web_url):
     if strurl:
         headers.pop('watchsb')
         return strurl, headers
+    return "", {}
 
     
 
