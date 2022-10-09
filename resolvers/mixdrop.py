@@ -3,7 +3,7 @@ from utils.fakeBrowser import baseHeaders
 import requests
 import re
 
-def mixdrop(url, referer=None, mxr=True):
+def grab(self, url, referer=None, mxr=True):
     headers = baseHeaders
     headers.update({'Referer': 'https://mixdrop.co/'})
     if referer: headers.update({'Referer': referer})
