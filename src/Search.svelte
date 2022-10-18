@@ -1,14 +1,20 @@
 <script>
 import Nav from "./Nav.svelte";
+import axios from 'axios';
+    import { dataset_dev } from "svelte/internal";
 
-var grid = "";
-var search = "";
-var results = {};
+//var search = "";
+//var results = {};
 
-const cleargrid = () => {
-    grid.innerHTML = "";
-};
+var term = "";
 
+function preloadImage(url) {
+		var img=new Image();
+		img.src=url;
+}
+preloadImage("/static/img/loading.gif")
+
+/*
 const searchEngine = () => {
     const searchTerm = search.value.toLowerCase();
     if (searchTerm.length >= 3) {
@@ -27,11 +33,8 @@ const searchEngine = () => {
     } else {
       results = {};
     }
-     //else{
-        //cleargrid();
-        //results = {};
-    //}
 }
+*/
 const view = (id) => {
   location = `/?showG=false&id=${id}`;
 }
@@ -39,6 +42,7 @@ const view = (id) => {
 
 <main>
     <Nav active="search" />
+    <!--
     <input
         bind:this={search}
         on:keyup={searchEngine}
@@ -46,14 +50,37 @@ const view = (id) => {
         type="text"
         placeholder="Search ..."
     >
+    -->
+    <input
+        bind:value={term}
+        type="text"
+        placeholder="Search ..."
+    >
 
-    <div bind:this={grid} id="grid">
-        {#each Object.values(results) as r}
-        <div class="item" on:click={() => view(r.id)}>
-            <img src="/api/poster/{ r.id }?do=show" alt="Poster">
-        </div>
-        {/each}
+    <!--
+    <div id="grid">
+      {#each Object.values(results) as r}
+      <div class="item" on:click={() => view(r.id)}>
+          <img src="/api/poster/{ r.id }?do=show" alt="Poster">
+      </div>
+      {/each}
     </div>
+    -->
+    {#if term}
+      <div id="grid">
+        {#await axios.get("/api/search/" + term, {transformResponse: (res) => { return JSON.parse(res); }, responseType: 'json'})}
+          <p style="display: none;">Loading ...</p>
+        {:then resp}
+          {#each Object.values(resp.data.results) as r}
+          <div class="item" on:click={() => view(r.id)}>
+              <img src="/api/poster/{ r.id }?do=show" alt="Poster">
+          </div>
+          {/each}
+        {:catch error}
+          <p style="display: none;">Error: {error.message}</p>
+        {/await}
+      </div>
+    {/if}
 </main>
 
 <style>
@@ -100,21 +127,20 @@ main {
   background-color: black;
 }
 input {
-  width: 100%;
-  height: 10%;
-  margin-top: 4vh;
-  border: none;
-  background-color: black;
+  width: 75%;
+  height: 7%;
+  background-color: #1d1d1d;
   color: white;
   font-size: 2em;
   text-align: center;
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   text-decoration: none;
-  border-bottom: 3px solid red;
-  margin-bottom: 30px;
   position: relative;
-  z-index: 999;
+  border: none;
+  margin-bottom: 8vh;
+  margin-top: 8vh;
+  margin-left: 12.5%;
 }
 input:focus {
   outline:none !important;

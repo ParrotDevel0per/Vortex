@@ -352,7 +352,7 @@ def bottom100movies():
 @api.route('/getMoviesByGenres')
 def getMoviesByGenres():
     genres = request.args.get("genres")
-    MAX_RESULTS = 30
+    MAX_RESULTS = 20
     if not genres: return jsonify({
         "status": "error"
     })

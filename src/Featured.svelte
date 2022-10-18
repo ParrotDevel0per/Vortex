@@ -228,6 +228,8 @@
     .featuredIMG {
         width: 100%;
         filter: brightness(20%);
+        object-fit: cover;
+        height: 200%;
     }
     @media screen and (max-width: 600px) {
         .featured {

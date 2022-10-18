@@ -52,8 +52,22 @@
 		});
 	}
 
+	function preloadImage(url) {
+		var img=new Image();
+		img.src=url;
+	}
+	preloadImage("/static/img/loading.gif")
+
 	// view replace's featured with custom item
 	const view = (id) => {
+		let item = document.getElementById(id);
+		let before = "";
+
+		if (item) {
+			before = item.src;
+			item.src = "/static/img/loading.gif";
+		}
+		
 		axios({
 			method: 'get',
 			url: "/api/getMovieInfo/" + id,
@@ -75,6 +89,7 @@
 			featuredMetadata.NOS = data.NOS;
 			featuredMetadata.episodeCount = data.episodeCount;
 			window.scrollTo(0, 0);
+			if (item) item.src = before;
 		}).catch(error => {
 			console.log(error);
 		});
@@ -91,19 +106,19 @@
 		<br style="font-size: 100px;" />
 		{#if showG == "true"}
 			{#each homeItem as m}
+				{#await axios.get(m.url, {transformResponse: (res) => { return JSON.parse(res).results; }, responseType: 'json'})}
+					<p style="display: none;">Loading ...</p>
+				{:then resp}
 				<h1>{ m.title }</h1>
 				<div class="outer">
-					{#await axios.get(m.url, {transformResponse: (res) => { return JSON.parse(res).results; }, responseType: 'json'})}
-						{ console.log("Getting Movies ...") }
-					{:then resp}
-						{#each Object.values(resp.data) as d}
-							<img on:click={() => view(d.id)} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
-						{/each}
-					{:catch error}
-						{ console.log("Fuck, Error occured: " + error.message) }
-					{/await}
+					{#each Object.values(resp.data) as d}
+						<img on:click={() => view(d.id)} id={d.id} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
+					{/each}
+					<div class="br"></div>
 				</div>
-				<div class="br"></div>
+				{:catch error}
+					<p style="display: none;">Error: {error.message}</p>
+				{/await}
 			{/each}
 		{/if}
 	</div>
