@@ -1,9 +1,10 @@
 from utils.settings import getSetting, setSetting
 from utils.users import createUser, reinitHome
-from utils.paths import CACHE_FOLDER, POSTER_FOLDER
+from utils.paths import CACHE_FOLDER, POSTER_FOLDER, DB_FOLDER
 from utils.cliUI import intro
 from utils.common import cls
 from colorama import Fore
+from utils.cliUI import lenght
 import shutil
 import os
 
@@ -47,7 +48,7 @@ def cli():
             print(getSetting(cmd[1]))
 
         elif cmd[0].lower() == "log":
-            print(open(logFile, 'r').read() if open(logFile, 'r').read() != "" else "Log is empty")
+            print(open(os.path.join(DB_FOLDER, "app.log"), 'r').read() if open(os.path.join(DB_FOLDER, "app.log"), 'r').read() != "" else "Log is empty")
 
         elif cmd[0].lower() == "clear":
             if len(cmd) != 2: print("Invalid argument count"); continue
