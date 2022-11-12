@@ -1,10 +1,11 @@
 from flask import Blueprint, request, render_template, send_from_directory
-from utils.users import LAH
+from users.users import LAH
 from utils.paths import DB_FOLDER
 from utils.settings import getSetting
 import requests
 import base64
 import os
+import json
 
 www = Blueprint('www', __name__)
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
@@ -19,14 +20,14 @@ def index():
         showFt=request.args.get("showFt") or "true",
     )
 
-@www.route('/play/<id>/<episode>')
-@www.route('/play/<id>/', defaults={'episode': None})
-@www.route('/play/<id>', defaults={'episode': None})
-def play(id, episode):
+@www.route('/watch/<id>/<episode>')
+@www.route('/watch/<id>/', defaults={'episode': None})
+@www.route('/watch/<id>', defaults={'episode': None})
+def watch(id, episode):
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
 
-    baseURL = request.base_url.split('/play')[0]
+    baseURL = request.base_url.split('/watch')[0]
 
     sourcesURL = "/api/sources/" + id
 
@@ -39,8 +40,11 @@ def play(id, episode):
         sec = len(resp["results"]) # Season Count
         sourcesURL += f"?type=show&default{source}&ep={episode}"
     else: sourcesURL += f"?type=movie"
+    sourcesURL += f"&resolve=true"
 
-    return render_template('play.html', ep=ep, id=id, se=se, epc=epc, sec=sec, sourcesURL=base64.b64encode(sourcesURL.encode()).decode())
+    sources=requests.get(baseURL+sourcesURL, headers=LAH(request)).json()
+    sources = json.dumps(sources)
+    return render_template('play.html', ep=ep, id=id, se=se, epc=epc, sec=sec, sources=sources)
 
 
 @www.route('/static/<path:path>')

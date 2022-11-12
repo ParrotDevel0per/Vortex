@@ -3,7 +3,7 @@ import plugins.imdb as imdb
 import threading
 import json
 from utils.cache import getCachedItem, cacheItem
-from utils.users import userdata, changeValue, reqToUID
+from users.users import userdata, changeValue, reqToUID
 
 playlistRT = Blueprint('playlist', __name__)
 

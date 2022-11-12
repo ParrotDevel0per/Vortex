@@ -3246,7 +3246,7 @@ var app = (function () {
     			h1 = element("h1");
     			t = text(/*title*/ ctx[2]);
     			attr_dev(h1, "class", "svelte-1265mlu");
-    			add_location(h1, file$4, 82, 12, 2829);
+    			add_location(h1, file$4, 82, 12, 2830);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
@@ -3281,7 +3281,7 @@ var app = (function () {
     			h1 = element("h1");
     			t = text(/*title*/ ctx[2]);
     			attr_dev(h1, "class", "jokerFont svelte-1265mlu");
-    			add_location(h1, file$4, 80, 12, 2758);
+    			add_location(h1, file$4, 80, 12, 2759);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
@@ -3316,7 +3316,7 @@ var app = (function () {
     			h2 = element("h2");
     			t = text(/*line*/ ctx[3]);
     			attr_dev(h2, "class", "svelte-1265mlu");
-    			add_location(h2, file$4, 85, 12, 2904);
+    			add_location(h2, file$4, 85, 12, 2905);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
@@ -3351,7 +3351,7 @@ var app = (function () {
     			h3 = element("h3");
     			t = text(/*info*/ ctx[4]);
     			attr_dev(h3, "class", "svelte-1265mlu");
-    			add_location(h3, file$4, 88, 12, 2978);
+    			add_location(h3, file$4, 88, 12, 2979);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h3, anchor);
@@ -3386,7 +3386,7 @@ var app = (function () {
     			h4 = element("h4");
     			t = text(/*plot*/ ctx[5]);
     			attr_dev(h4, "class", "svelte-1265mlu");
-    			add_location(h4, file$4, 91, 12, 3052);
+    			add_location(h4, file$4, 91, 12, 3053);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h4, anchor);
@@ -3464,19 +3464,19 @@ var app = (function () {
     			}
 
     			attr_dev(optgroup0, "label", "Season");
-    			add_location(optgroup0, file$4, 96, 16, 3212);
+    			add_location(optgroup0, file$4, 96, 16, 3213);
     			attr_dev(select0, "name", "seasons");
     			attr_dev(select0, "id", "seasons");
     			attr_dev(select0, "class", "svelte-1265mlu");
     			if (/*season*/ ctx[13] === void 0) add_render_callback(() => /*select0_change_handler*/ ctx[20].call(select0));
-    			add_location(select0, file$4, 95, 12, 3138);
+    			add_location(select0, file$4, 95, 12, 3139);
     			attr_dev(optgroup1, "label", "Episodes");
-    			add_location(optgroup1, file$4, 104, 16, 3533);
+    			add_location(optgroup1, file$4, 104, 16, 3534);
     			attr_dev(select1, "name", "episodes");
     			attr_dev(select1, "id", "episodes");
     			attr_dev(select1, "class", "svelte-1265mlu");
     			if (/*episode*/ ctx[14] === void 0) add_render_callback(() => /*select1_change_handler*/ ctx[21].call(select1));
-    			add_location(select1, file$4, 103, 12, 3456);
+    			add_location(select1, file$4, 103, 12, 3457);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, select0, anchor);
@@ -3574,7 +3574,7 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = option_value_value = /*index*/ ctx[34] + 1;
     			option.value = option.__value;
-    			add_location(option, file$4, 98, 20, 3315);
+    			add_location(option, file$4, 98, 20, 3316);
     			this.first = option;
     		},
     		m: function mount(target, anchor) {
@@ -3621,7 +3621,7 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = option_value_value = /*index*/ ctx[34] + 1;
     			option.value = option.__value;
-    			add_location(option, file$4, 106, 20, 3654);
+    			add_location(option, file$4, 106, 20, 3655);
     			this.first = option;
     		},
     		m: function mount(target, anchor) {
@@ -3667,7 +3667,7 @@ var app = (function () {
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "favs");
     			attr_dev(a, "class", "svelte-1265mlu");
-    			add_location(a, file$4, 118, 12, 4185);
+    			add_location(a, file$4, 118, 12, 4186);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -3717,7 +3717,7 @@ var app = (function () {
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "favs");
     			attr_dev(a, "class", "svelte-1265mlu");
-    			add_location(a, file$4, 116, 12, 4046);
+    			add_location(a, file$4, 116, 12, 4047);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -3818,7 +3818,7 @@ var app = (function () {
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "pl");
     			attr_dev(a, "class", "svelte-1265mlu");
-    			add_location(a, file$4, 125, 16, 4537);
+    			add_location(a, file$4, 125, 16, 4538);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -3868,7 +3868,7 @@ var app = (function () {
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "pl");
     			attr_dev(a, "class", "svelte-1265mlu");
-    			add_location(a, file$4, 123, 16, 4396);
+    			add_location(a, file$4, 123, 16, 4397);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -3970,19 +3970,19 @@ var app = (function () {
     			attr_dev(img_1, "class", "featuredIMG svelte-1265mlu");
     			if (!src_url_equal(img_1.src, img_1_src_value = /*img*/ ctx[6])) attr_dev(img_1, "src", img_1_src_value);
     			attr_dev(img_1, "alt", "Featured");
-    			add_location(img_1, file$4, 77, 8, 2608);
+    			add_location(img_1, file$4, 77, 8, 2609);
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "playButton");
     			attr_dev(a, "class", "bgRed svelte-1265mlu");
-    			add_location(a, file$4, 114, 12, 3895);
+    			add_location(a, file$4, 114, 12, 3896);
     			attr_dev(div0, "id", "featuredInfo");
     			attr_dev(div0, "class", "info svelte-1265mlu");
-    			add_location(div0, file$4, 78, 8, 2672);
+    			add_location(div0, file$4, 78, 8, 2673);
     			attr_dev(div1, "id", "featured");
     			attr_dev(div1, "class", "featured svelte-1265mlu");
-    			add_location(div1, file$4, 76, 4, 2562);
+    			add_location(div1, file$4, 76, 4, 2563);
     			attr_dev(div2, "class", "featuredContainer");
-    			add_location(div2, file$4, 75, 0, 2525);
+    			add_location(div2, file$4, 75, 0, 2526);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4231,7 +4231,7 @@ var app = (function () {
     	};
 
     	const play = () => {
-    		let url = `/play/${playBTN.dataset.id}/`;
+    		let url = `/watch/${playBTN.dataset.id}/`;
 
     		if (kind == "show") {
     			url += `${season}-${episode}`;
@@ -5370,7 +5370,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (69:1) {:else}
+    // (70:1) {:else}
     function create_else_block$1(ctx) {
     	let br;
 
@@ -5378,7 +5378,7 @@ var app = (function () {
     		c: function create() {
     			br = element("br");
     			set_style(br, "font-size", "50px");
-    			add_location(br, file$2, 69, 1, 1807);
+    			add_location(br, file$2, 70, 1, 1810);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, br, anchor);
@@ -5395,14 +5395,14 @@ var app = (function () {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(69:1) {:else}",
+    		source: "(70:1) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (66:1) {#if showFt == "true"}
+    // (67:1) {#if showFt == "true"}
     function create_if_block$2(ctx) {
     	let featured;
     	let t;
@@ -5423,7 +5423,7 @@ var app = (function () {
     			t = space();
     			br = element("br");
     			set_style(br, "font-size", "100px");
-    			add_location(br, file$2, 67, 1, 1762);
+    			add_location(br, file$2, 68, 1, 1765);
     		},
     		m: function mount(target, anchor) {
     			mount_component(featured, target, anchor);
@@ -5458,14 +5458,14 @@ var app = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(66:1) {#if showFt == \\\"true\\\"}",
+    		source: "(67:1) {#if showFt == \\\"true\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (82:4) {:catch error}
+    // (83:4) {:catch error}
     function create_catch_block$1(ctx) {
     	let t_value = console.log("Fuck, Error occured: " + /*error*/ ctx[15].message) + "";
     	let t;
@@ -5487,14 +5487,14 @@ var app = (function () {
     		block,
     		id: create_catch_block$1.name,
     		type: "catch",
-    		source: "(82:4) {:catch error}",
+    		source: "(83:4) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (78:4) {:then resp}
+    // (79:4) {:then resp}
     function create_then_block$1(ctx) {
     	let each_1_anchor;
     	let each_value_1 = Object.values(/*resp*/ ctx[11].data);
@@ -5555,14 +5555,14 @@ var app = (function () {
     		block,
     		id: create_then_block$1.name,
     		type: "then",
-    		source: "(78:4) {:then resp}",
+    		source: "(79:4) {:then resp}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (79:5) {#each Object.values(resp.data) as d}
+    // (80:5) {#each Object.values(resp.data) as d}
     function create_each_block_1(ctx) {
     	let img;
     	let img_src_value;
@@ -5579,7 +5579,7 @@ var app = (function () {
     			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[12].id + "?do=show")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", /*d*/ ctx[12].title);
     			attr_dev(img, "class", "svelte-mrd3ws");
-    			add_location(img, file$2, 79, 6, 2203);
+    			add_location(img, file$2, 80, 6, 2206);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -5603,14 +5603,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(79:5) {#each Object.values(resp.data) as d}",
+    		source: "(80:5) {#each Object.values(resp.data) as d}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (76:118)        { console.log("Getting Movies ...") }
+    // (77:118)        { console.log("Getting Movies ...") }
     function create_pending_block$1(ctx) {
     	let t_value = console.log("Getting Movies ...") + "";
     	let t;
@@ -5632,14 +5632,14 @@ var app = (function () {
     		block,
     		id: create_pending_block$1.name,
     		type: "pending",
-    		source: "(76:118)        { console.log(\\\"Getting Movies ...\\\") }",
+    		source: "(77:118)        { console.log(\\\"Getting Movies ...\\\") }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (73:3) {#each Object.values(menu) as m}
+    // (74:3) {#each Object.values(menu) as m}
     function create_each_block$1(ctx) {
     	let h1;
     	let t0_value = /*m*/ ctx[8].title + "";
@@ -5679,11 +5679,11 @@ var app = (function () {
     			t2 = space();
     			div1 = element("div");
     			attr_dev(h1, "class", "svelte-mrd3ws");
-    			add_location(h1, file$2, 73, 3, 1925);
+    			add_location(h1, file$2, 74, 3, 1928);
     			attr_dev(div0, "class", "outer svelte-mrd3ws");
-    			add_location(div0, file$2, 74, 3, 1950);
+    			add_location(div0, file$2, 75, 3, 1953);
     			attr_dev(div1, "class", "br svelte-mrd3ws");
-    			add_location(div1, file$2, 85, 3, 2416);
+    			add_location(div1, file$2, 86, 3, 2419);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
@@ -5716,7 +5716,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(73:3) {#each Object.values(menu) as m}",
+    		source: "(74:3) {#each Object.values(menu) as m}",
     		ctx
     	});
 
@@ -5774,9 +5774,9 @@ var app = (function () {
 
     			attr_dev(div, "id", "content");
     			attr_dev(div, "class", "content svelte-mrd3ws");
-    			add_location(div, file$2, 71, 1, 1849);
+    			add_location(div, file$2, 72, 1, 1852);
     			attr_dev(main, "class", "svelte-mrd3ws");
-    			add_location(main, file$2, 63, 0, 1638);
+    			add_location(main, file$2, 64, 0, 1641);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

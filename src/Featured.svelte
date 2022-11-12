@@ -66,7 +66,7 @@
     }
 
     const play = () => {
-        let url = `/play/${playBTN.dataset.id}/`
+        let url = `/watch/${playBTN.dataset.id}/`
         if (kind == "show") {url += `${season}-${episode}`}
         // url += `?kind=${kind}`
         location = url

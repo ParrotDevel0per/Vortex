@@ -12,7 +12,7 @@ default = {
     #"preloader": "1.png",
     "language": "en",
     "debug": "false",
-    "fernetKey": str(Fernet.generate_key()).replace("b'", "").replace("'", ""),
+    "fernetKey": str(Fernet.generate_key()).replace("b'", "").replace("'", "")
 }
 
 def setToDefault():

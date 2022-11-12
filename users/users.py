@@ -1,5 +1,5 @@
 from utils.common import randStr
-from utils.userdata import UserData
+from users.userdata import UserData
 from utils.crypto import encrypt, decrypt
 import hashlib
 import time

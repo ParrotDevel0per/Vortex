@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, Response, redirect, url_for
-from utils.users import login, verify, createUser
+from users.users import login, verify, createUser
 import time
 
 auth = Blueprint("auth", __name__)

@@ -25,7 +25,8 @@ class UserData:
 
     def read(self, k, ret=""):
         self.checkIfExists(userdata)
-        loaded = json.loads(open(userdata, 'r').read())
+        try: loaded = json.loads(open(userdata, 'r').read())
+        except: print(open(userdata, 'r').read())
         if k in loaded:
             return loaded[k]
         return ret

@@ -7,11 +7,13 @@ import base64
 import json
 import random
 from utils.paths import POSTER_FOLDER
-from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser
+from users.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser
 from utils.cache import getCachedItem, cacheItem
-from utils.fakeBrowser import baseHeaders
+from utils.browser import Firefox
 from utils.common import chunkedDownload, sanitize
 import os
+import threading
+import time
 
 api = Blueprint('api', __name__)
 cachePosters = getSetting('cachePosters').lower() == "true"
@@ -156,7 +158,11 @@ def resolve(id):
     if request.args.get("source"): use = request.args.get("source")
     episode = str(request.args.get("episode") or "")
     baseURL = request.base_url.split("/api")[0]
-    url = f"{baseURL}/proxy/{use}/play?item={id}"
+    url = ""
+    if "vidsrc" in use.lower():
+        url = f"{baseURL}/proxy/vidsrc/play?item={id}"
+    else:
+        url = f"{baseURL}/proxy/universal/openConnection?module={use}&item={id}"
     if episode: url += f"&episode={episode}"
     return jsonify({
         "id": id,
@@ -178,24 +184,53 @@ def sources(id):
         'message': 'No Type provided'
     })
     ep = request.args.get("ep")
-    sources = [
-        "gomo",
-        "vidsrc",
-        "kukajto",
-        "vidembed",
-        "to2embed"
-    ]
+
+    sources = []
+    for file in os.listdir("Resolver/plugins"):
+        if file.startswith("__"): continue
+        sources.append(file.split(".")[0])
 
     default = getSetting("source")
     if request.args.get("default"): default = request.args.get("default")
     sources.insert(0, sources.pop(sources.index(default)))
 
+    n = str(time.time()).split(".")[0]
     response = []
+
+    c = {
+        "vidsrc": "m3u8",
+        "kukajto": "mp4",
+        "n2embed": "mp4"
+    }
+
+    def create_response(t, url,h):
+        f = ""
+        if t in c:
+            f = url.replace("ext", c[t])
+        else:
+            f = requests.get(url+"&view=true", headers=h).text
+
+        response.append({"title": t, "file": f})
+
+    resolve = request.args.get("resolve") == "true"
+    baseURL = request.base_url.split('/api')[0]
+    threads = []
     for src in sources:
         j = {"title": src,}
-        j["file"] = f"/play/{id}/{ep}.m3u8" if tp == "show" else f"/play/{id}.m3u8"
-        j["file"] += f"?source={src}"
-        response.append(j)
+        j["file"] = f"/play/{id}/{ep}.ext" if tp == "show" else f"/play/{id}.ext"
+        j["file"] += f"?source={src}&generated={n}"
+        if resolve:
+            t = threading.Thread(target=create_response, args=(src, baseURL+j["file"], LAH(request),))
+            threads.append(t)
+        else:
+            response.append(j)
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
     return response
 
 
@@ -373,8 +408,11 @@ def getMoviesByGenres():
 @api.route('/proxy/<path:url>')
 def proxy(url):
     if url.startswith("base64:"): url = base64.b64decode(url[7:]).decode("utf-8")
-    headers = baseHeaders
-    if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
+    headers = Firefox().headers
+    try:
+        if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
+    except:
+        pass
     r = requests.get(url, headers=headers, stream=True)
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'] if 'Content-Type' in r.headers else "")
 

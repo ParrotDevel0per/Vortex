@@ -11,19 +11,15 @@ from routes.admin import admin
 
 # Proxies
 from proxies.vidsrc import vidsrc
-from proxies.gomo import gomo
-from proxies.kukajto import kukajto
-from proxies.to2embed import to2embed
-from proxies.vidembed import vidembed
+from proxies.universal import universal
 
 # Rest
 from utils.settings import getSetting
 from utils.paths import DB_FOLDER
-from utils.cliUI import intro, lenght
+from utils.banner import intro, lenght, textColor
 from utils.cli import cli
 from utils.common import cls, getLocalIP
-from utils.users import verify
-from colorama import Fore
+from users.users import verify
 import requests
 import threading
 import os
@@ -44,10 +40,7 @@ app.register_blueprint(www, url_prefix='/')
 app.register_blueprint(m3u, url_prefix='/')
 app.register_blueprint(auth, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
-app.register_blueprint(to2embed, url_prefix='/proxy/to2embed')
-app.register_blueprint(vidembed, url_prefix='/proxy/vidembed')
-app.register_blueprint(gomo, url_prefix='/proxy/gomo')
-app.register_blueprint(kukajto, url_prefix='/proxy/kukajto')
+app.register_blueprint(universal, url_prefix='/proxy/universal')
 
 
 
@@ -55,7 +48,7 @@ app.register_blueprint(kukajto, url_prefix='/proxy/kukajto')
 @app.before_request
 def verifyRequest():
     endpoint = request.endpoint
-    exceptions = [ # You dont need to be logged in for these endpoints
+    public = [ # You dont need to be logged in for these endpoints
         "api.poster",
         "auth.login_",
         "static"
@@ -75,7 +68,7 @@ def verifyRequest():
         if verify(request, verifyAdmin=True) == False:
             return "Forbidden", 403
     
-    if endpoint not in exceptions:
+    if endpoint not in public:
         #print(endpoint)
         if verify(request) == False:
             return redirect("/login")
@@ -84,10 +77,9 @@ def verifyRequest():
 def before_first_request_func():
     cls()
     intro()
-    print(
-        Fore.GREEN,
-        f"Running on: http://{getSetting('ip')}:{getSetting('port')}".center(lenght)
-    )
+    ip = getSetting('ip')
+    if ip == "0.0.0.0": ip = "localhost"
+    print(textColor, f"Running on: http://{ip}:{getSetting('port')}".center(lenght))
 
 def sendFirstRequest():
     running = False
@@ -99,14 +91,17 @@ def sendFirstRequest():
 if __name__ == "__main__":
     cls()
     intro()
-    if "--cli" in sysArgv: cli()
-    elif "--nocli" in sysArgv: pass
+    if "--cli" in sysArgv:
+        cli()
+    elif "--nocli" in sysArgv:
+        pass
     else:
         do = input("Do you want to enter admin CLI? [Y/n] ")
         if do.lower() == "y": cli()
         else: pass
 
-    if "--sveltedebug" in sysArgv: os.system("npm run build")
+    if "--sveltedebug" in sysArgv:
+        os.system("npm run dev")
 
     threading.Thread(target=sendFirstRequest).start()
     app.run(host=str(getSetting("ip")), port=int(getSetting("port")), debug="--debug" in sysArgv)

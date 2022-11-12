@@ -5,12 +5,12 @@ expireAfter = 3 * 60 * 60 # When unused token will expire, must be bigger than s
 
 import requests
 from flask import request, url_for, Blueprint, Response
-from plugins.vidsrc import grab
-from utils.users import reqToToken
+from users.users import reqToToken
 import json
 import time
 import base64
 from utils.common import randStr
+import Resolver
 
 vidsrc = Blueprint('vidsrc', __name__)
 database = {}
@@ -36,9 +36,12 @@ def play():
     item = request.args.get('item')
     if item is None: return "No item specified"
     episode = request.args.get('episode')
-    url = "https://vidsrc.me/embed/{}/".format(item)
-    if episode != None: url += "{}/".format(episode)
-    hlsurl, refresher, headers = grab(url)
+    
+    resolved = Resolver.resolve("VidSrc", item, episode)
+    hlsurl = resolved.url
+    headers = resolved.headers
+    refresher = resolved.refresher["url"]
+
     UID = randStr(32)
     requests.get(refresher, headers=headers).text # ! do not remove this line, otherwise everything gets fucked
 

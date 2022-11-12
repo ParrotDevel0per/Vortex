@@ -11,10 +11,14 @@ banner = """
 """
 
 lenght = len(banner.split("\n")[1])
+textColor = Fore.GREEN
 
 def intro():
+    size = 100
+    try: size = os.get_terminal_size().columns
+    except: pass
     print(
-        Fore.GREEN,
-        banner.center(os.get_terminal_size().columns)
+        textColor,
+        banner.center(size)
     )
     print("=" * lenght)

@@ -11,12 +11,11 @@ class BeautifyM3U8:
             "m3u8ts": r"[\r\n]+^(?!#)^(?!http)((?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)",
         }
 
-    def createProxifiedLink(self, proxyServer, url, headers, cusomFields):
+    def createProxifiedLink(self, proxyServer, url, headers):
         token = {
             "url": url,
             "headers": headers
         }
-        if cusomFields: token.update(cusomFields)
         token = base64.b64encode(json.dumps(token).encode('utf-8'))
         if ".ts" in url:
             return proxyServer + "chunk.ts?token=" + token.decode('utf-8')
@@ -25,7 +24,7 @@ class BeautifyM3U8:
 
 
 
-    def beautify(self, url, headers, proxyServer=None, customFields=None):
+    def beautify(self, url, headers, proxyServer=None):
         response = requests.get(url, headers=headers)
         responseText = response.text
         parsed = urlparse(response.url)
@@ -43,5 +42,5 @@ class BeautifyM3U8:
         
         matches = re.findall(self.patterns["url"], responseText, re.MULTILINE)
         for match in matches:
-            responseText = responseText.replace(match, self.createProxifiedLink(proxyServer, match, headers, customFields))
+            responseText = responseText.replace(match, self.createProxifiedLink(proxyServer, match, headers))
         return responseText

@@ -1,14 +1,86 @@
+import ipaddress
 import random
 import requests
-from string import ascii_lowercase, digits, ascii_uppercase
-from utils.settings import getSetting
 from urllib.parse import urlencode
-import socket
-import os
 import re
 
-symbols = "[@_!#$%^&*()<>?/\|}{~:]\"'"
-exceptions = ["!", ":", "?"]
+CIDRs = {}
+
+CIDRs["us"] = [
+    "68.121.80.248/30",
+    "68.121.80.252/31",
+    "68.121.80.255/32",
+
+    "12.232.30.252/31",
+    "12.232.30.255/32",
+    "12.232.30.248/30",
+
+    "47.189.48.255/32",
+    "47.189.48.254/32",
+    "47.189.48.248/30",
+
+    "24.218.158.128/26",
+    "24.218.158.128/26",
+    "24.218.158.192/27",
+]
+
+CIDRs["sk"] = [
+    "78.98.0.0/16",
+    "78.99.0.0/17",
+    "78.99.128.0/18",
+    "78.99.192.0/19",
+
+    "80.242.32.0/21",
+    "80.242.40.0/22",
+    "80.242.44.0/23",
+    "80.242.46.0/24",
+
+    "178.143.0.0/17",
+    "178.143.128.0/18",
+    "178.143.192.0/19",
+    "178.143.224.0/20",
+
+    "185.1.34.0/25",
+    "185.1.34.128/26",
+    "185.1.34.192/27",
+    "185.1.34.224/28",
+]
+
+CIDRs["cz"] = [
+    "103.119.108.0/25",
+    "103.119.108.128/26",
+    "103.119.108.192/27",
+    "103.119.108.224/28",
+
+    "109.235.0.0/22",
+    "109.235.4.0/23",
+    "109.235.6.0/24",
+    "109.235.7.0/25",
+
+    "130.193.8.0/21",
+    "130.193.16.0/22",
+    "130.193.20.0/23",
+    "130.193.22.0/24",
+
+    "152.89.75.128/26",
+    "152.89.75.192/27",
+    "152.89.75.224/28",
+    "152.89.75.240/29",
+]
+
+def genIP(country):
+    """
+    Args:
+        country (str): Abbr. of country to use, ex. US, CZ, case insensitive
+
+    Returns:
+        ip (str): Result ip is random
+    """
+    
+    CIDR = random.choice(CIDRs[country.lower()])
+    ips = [str(ip) for ip in ipaddress.IPv4Network(CIDR)]
+    return random.choice(ips)
+
 
 def girc(page_data, url, co):
     """
@@ -52,34 +124,5 @@ def girc(page_data, url, co):
         gtoken = re.search('rresp","([^"]+)', page_data3)
         if gtoken:
             return gtoken.group(1)
+
     return ''
-
-def randStr(length = 32, incUpper=False):
-    f = ascii_lowercase + digits
-    if incUpper: f += ascii_uppercase
-    s = ''.join(random.choice(f) for _ in range(length))
-    return s
-
-def chunkedDownload(url, filename, chunkSize=8192):
-    r = requests.get(url, stream=True)
-    with open(filename, 'wb') as f:
-        for chunk in r.iter_content(chunkSize):
-            if chunk:
-                f.write(chunk)
-    return filename
-
-def sanitize(text):
-    for symbol in symbols:
-        if symbol not in exceptions:
-            text = text.replace(symbol, "")
-    return text
-
-def getLocalIP():
-    ip = getSetting('ip')
-    hostname = socket.gethostname()
-    if ip == "0.0.0.0":return socket.gethostbyname(hostname)
-    return ip
-
-def cls():
-    if os.name == "nt": os.system("cls")
-    else: os.system("clear")

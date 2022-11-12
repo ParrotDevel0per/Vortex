@@ -28,6 +28,7 @@
 			id: random(10)
 		},
 	}
+	
 
     
 	// view replace's featured with custom item

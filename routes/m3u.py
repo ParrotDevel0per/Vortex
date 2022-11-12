@@ -1,28 +1,34 @@
-from flask import Blueprint, request, redirect
+from flask import Blueprint, request, redirect, Response
 from utils.settings import getSetting
 from utils.paths import DB_FOLDER
-from utils.users import LAH, reqToToken
+from users.users import LAH, reqToToken
 import requests
 import os
 
 m3u = Blueprint("m3u", __name__)
 playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 
-@m3u.route('/play/<id>.m3u8')
-def play_m3u8(id):
+@m3u.route('/play/<id>.<ext>')
+@m3u.route('/play/<id>', defaults={"ext": "mp4"})
+def play_m3u8(id, ext):
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
     try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?source={source}", headers=LAH(request)).json()["url"]
     except: resolved = ""
     if "/" not in resolved: return "Error"
+    if request.args.get("view") == "true":
+        return resolved
     return redirect(resolved, code=302)
 
-@m3u.route('/play/<id>/<episode>.m3u8')
-def play_m3u8_episode(id, episode):
+@m3u.route('/play/<id>/<episode>.<ext>')
+@m3u.route('/play/<id>/<episode>', defaults={"ext": "mp4"})
+def play_m3u8_episode(id, episode, ext):
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
     try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?episode={episode}&source={source}", headers=LAH(request)).json()["url"]
     except: resolved = ""
+    if request.args.get("view") == "true":
+        return resolved
     return redirect(resolved, code=302)
 
 @m3u.route('/playlist.m3u')
@@ -43,7 +49,7 @@ def playlistm3u8():
         id = j[i]["id"]
         poster = j[i]["poster"]
         if proxifyPoster: poster = f"{baseURL}/api/poster/{id}?do=show{auth}"
-        m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}", {title}\n{baseURL}/play/{id}.m3u8?source={source}{auth}\n'
+        m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}", {title}\n{baseURL}/play/{id}?source={source}{auth}\n'
     return m3u
 
 @m3u.route('/show/<id>.m3u')
@@ -66,5 +72,5 @@ def showm3u(id):
         for episode in resp["seasons"][season]:
             title = resp["seasons"][season][episode]["title"]
             group = resp["seasons"][season][episode]["group"]
-            m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}" group-title="{group}", {title}\n{baseURL}/play/{id}/{season}-{episode}.m3u8?source={source}{auth}\n'
+            m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}" group-title="{group}", {title}\n{baseURL}/play/{id}/{season}-{episode}?source={source}{auth}\n'
     return m3u

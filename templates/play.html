@@ -33,26 +33,10 @@
     <button style="display: none;" onclick="nextEpisode()" class="btn" id="ne">Next Episode</button>
     <button style="display: none;" onclick="nextSeason()" class="btn" id="ns">Next Season</button>
     <script>
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", atob("{{ sourcesURL }}"), true);
-        xhr.onload = (e) => {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                const data = JSON.parse(xhr.responseText);
-                console.log(data);
-                var player = new Playerjs({
-                    id:"player",
-                    file:data
-                });
-            } else {
-                console.error(xhr.statusText);
-            }
-        }
-        };
-        xhr.onerror = (e) => {
-        console.error(xhr.statusText);
-        };
-        xhr.send(null);
+        var player = new Playerjs({
+            id:"player",
+            file: JSON.parse("{{ sources }}".replaceAll('&#34;', '"').replaceAll('&amp;', '&'))
+        });
     </script>
 
     <script>
@@ -60,7 +44,6 @@
     var ep = parseInt("{{ ep }}");
     var epc = parseInt("{{ epc }}");
     var sec = parseInt("{{ sec }}");
-    var id = "{{ id }}";
     var ne = document.getElementById("ne");
     var ns = document.getElementById("ns");
 
@@ -71,12 +54,12 @@
     }
 
     const nextEpisode = () => {
-        location = `/play/${id}/${se}-${ep + 1}?kind=show`;
-    }
+        location = `/play/{{ id }}/${se}-${ep + 1}?kind=show`;
+    };
 
     const nextSeason = () => {
-        location = `/play/${id}/${se + 1}-1?kind=show`;
-    }
+        location = `/play/{{ id }}/${se + 1}-1?kind=show`;
+    };
     </script>
 </body>
 </html>
