@@ -8,43 +8,34 @@
     <link rel="stylesheet" href="/static/css/admin.css">
 </head>
 <body>
-    <h1>Users</h1>
-    <table id="table">
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>IP</th>
-            <th>Admin</th>
-            <th>Banned</th>
-            <th>Promote / Demote</th>
-            <th>Ban / Unban</th>
-            <th>Reset Reset Password</th>
-            <th>Delete Account</th>
-        </tr>
-    </table>
+    <div class="container">
+        <table id="table">
+            <thead id="thead">
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>IP</th>
+                    <th>Admin</th>
+                    <th>Banned</th>
+                    <th>Promote / Demote</th>
+                    <th>Ban / Unban</th>
+                    <th>Reset Reset Password</th>
+                    <th>Delete Account</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
 
-    <button id="createAccountAsk" onclick="createAccount()"">Create Account</button>
+        <button id="createAccountAsk" onclick="createAccount()"">Create Account</button>
+    </div>
 </body>
 <script>
-    let table = document.getElementById("table");
+    let thead = document.getElementById("thead");
+    let tbody = document.getElementById("tbody");
     const clearTR = () => {
-        while (table.firstChild) {
-            table.removeChild(table.firstChild);
+        while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
         }
-        tr = document.createElement("tr");
-
-        tr.innerHTML = `
-        <th>Username</th>
-        <th>Email</th>
-        <th>IP</th>
-        <th>Admin</th>
-        <th>Banned</th>
-        <th>Promote / Demote</th>
-        <th>Ban / Unban</th>
-        <th>Reset Reset Password</th>
-        <th>Delete Account</th>`;
-
-        table.appendChild(tr);
     }
 
     setInterval(() => {
@@ -57,10 +48,12 @@
                 for (key in data) {
                     tr = document.createElement("tr");
                     const uid = data[key]["UID"];
+                    let em = data[key]["email"];
+                    if (!em) em = "-"
 
                     tr.innerHTML = `
                     <td>${data[key]["username"]}</td>
-                    <td>${data[key]["email"]}</td>
+                    <td>${em}</td>
                     <td>${data[key]["ip"]}</td>
                     <td>${data[key]["isAdmin"] == true}</td>
                     <td>${data[key]["isBanned"] == true}</td>
@@ -69,7 +62,7 @@
                     <td><button onclick="resetPassword('${uid}')">Reset Password</button></td>
                     <td><button onclick="sendRequest('/api/deleteUser/${uid}')">Delete Account</button></td>`;
 
-                    table.appendChild(tr);
+                    tbody.appendChild(tr);
                 }
             }
         }
