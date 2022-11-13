@@ -178,12 +178,12 @@ def sources(id):
         'message': 'No ID provided'
     })
 
-    tp = request.args.get("type")
-    if not tp: return jsonify({
+    kind = request.args.get("kind")
+    if not kind: return jsonify({
         'status': 'error',
         'message': 'No Type provided'
     })
-    ep = request.args.get("ep")
+
 
     sources = []
     for file in os.listdir("Resolver/plugins"):
@@ -191,46 +191,59 @@ def sources(id):
         sources.append(file.split(".")[0])
 
     default = getSetting("source")
-    if request.args.get("default"): default = request.args.get("default")
     sources.insert(0, sources.pop(sources.index(default)))
 
-    n = str(time.time()).split(".")[0]
-    response = []
+    now = str(time.time()).split(".")[0]
 
-    c = {
+    extensions = {
         "vidsrc": "m3u8",
         "kukajto": "mp4",
         "n2embed": "mp4"
     }
 
-    def create_response(t, url,h):
-        f = ""
-        if t in c:
-            f = url.replace("ext", c[t])
-        else:
-            f = requests.get(url+"&view=true", headers=h).text
 
-        response.append({"title": t, "file": f})
+    response = []
 
-    resolve = request.args.get("resolve") == "true"
-    baseURL = request.base_url.split('/api')[0]
-    threads = []
+    if kind == "show":
+        NOS = request.args.get("NOS", 0, type=int)
+        EC = request.args.get("EC", "")
+        EC = json.loads(base64.b64decode(EC.encode()).decode())
+
+        for i in range(NOS):
+            i += 1
+
+            episodes = []
+            for j in range(int(EC[str(i)])):
+                j += 1
+
+                sources_ = []
+                for src in sources:
+                    file = f"/play/{id}/{i}-{j}.ext?source={src}"
+                    if src in extensions: file = file.replace("ext", extensions[src])
+                    else: file = file.replace(".ext", "")
+
+                    sources_.append({
+                        "title": src,
+                        "file": file
+                    })
+
+                episodes.append({
+                    "title": f"Episode {j}",
+                    "folder": sources_
+                })
+
+            response.append({
+                "title": f"Season {i}",
+                "folder": episodes
+            })
+        return response
+
     for src in sources:
         j = {"title": src,}
-        j["file"] = f"/play/{id}/{ep}.ext" if tp == "show" else f"/play/{id}.ext"
-        j["file"] += f"?source={src}&generated={n}"
-        if resolve:
-            t = threading.Thread(target=create_response, args=(src, baseURL+j["file"], LAH(request),))
-            threads.append(t)
-        else:
-            response.append(j)
-
-    for thread in threads:
-        thread.start()
-
-    for thread in threads:
-        thread.join()
-
+        j["file"] = f"/play/{id}.ext"
+        j["file"] += f"?source={src}&generated={now}"
+        j["file"] = j["file"].replace("ext", extensions[src]) if src in extensions else j["file"]
+        response.append(j)
     return response
 
 

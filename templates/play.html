@@ -9,57 +9,13 @@
     <script src="/static/js/playerjs.js"></script>
     <style>
         html, body {
-            background-color: black;
+            background-color: black!important;
             height: 80vh;
-        }
-        .btn { 
-            height: 6vh;
-            width: 100%;
-            display: block;
-            background-color: rgb(0, 0, 0);
-            border: rgb(59, 59, 59) 2px solid;
-            color: azure;
-            border-radius: 25px;
-            margin-top: 9px;
-        }
-        .btn:hover {
-            background-color: rgb(59, 59, 59);
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div id="player" style="width:100%;height:100%"></div>
-    <button style="display: none;" onclick="nextEpisode()" class="btn" id="ne">Next Episode</button>
-    <button style="display: none;" onclick="nextSeason()" class="btn" id="ns">Next Season</button>
-    <script>
-        var player = new Playerjs({
-            id:"player",
-            file: JSON.parse("{{ sources }}".replaceAll('&#34;', '"').replaceAll('&amp;', '&'))
-        });
-    </script>
-
-    <script>
-    var se = parseInt("{{ se }}");
-    var ep = parseInt("{{ ep }}");
-    var epc = parseInt("{{ epc }}");
-    var sec = parseInt("{{ sec }}");
-    var ne = document.getElementById("ne");
-    var ns = document.getElementById("ns");
-
-    if (se != 0) {
-        // check if this ain't last season / episode
-        if (ep != epc) { ne.style.display = "block"; }
-        if (se != sec) { ns.style.display = "block"; }
-    }
-
-    const nextEpisode = () => {
-        location = `/play/{{ id }}/${se}-${ep + 1}?kind=show`;
-    };
-
-    const nextSeason = () => {
-        location = `/play/{{ id }}/${se + 1}-1?kind=show`;
-    };
-    </script>
+    <script>var player = new Playerjs({id:"player",file: JSON.parse("{{ sources }}".replaceAll('&#34;', '"').replaceAll('&amp;', '&'))});</script>
 </body>
 </html>

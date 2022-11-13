@@ -95,20 +95,6 @@ var app = (function () {
             node.style.setProperty(key, value, important ? 'important' : '');
         }
     }
-    function select_option(select, value) {
-        for (let i = 0; i < select.options.length; i += 1) {
-            const option = select.options[i];
-            if (option.__value === value) {
-                option.selected = true;
-                return;
-            }
-        }
-        select.selectedIndex = -1; // no option should be selected
-    }
-    function select_value(select) {
-        const selected_option = select.querySelector(':checked') || select.options[0];
-        return selected_option && selected_option.__value;
-    }
     function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, bubbles, cancelable, detail);
@@ -335,96 +321,6 @@ var app = (function () {
             ? globalThis
             : global);
 
-    function destroy_block(block, lookup) {
-        block.d(1);
-        lookup.delete(block.key);
-    }
-    function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
-        let o = old_blocks.length;
-        let n = list.length;
-        let i = o;
-        const old_indexes = {};
-        while (i--)
-            old_indexes[old_blocks[i].key] = i;
-        const new_blocks = [];
-        const new_lookup = new Map();
-        const deltas = new Map();
-        i = n;
-        while (i--) {
-            const child_ctx = get_context(ctx, list, i);
-            const key = get_key(child_ctx);
-            let block = lookup.get(key);
-            if (!block) {
-                block = create_each_block(key, child_ctx);
-                block.c();
-            }
-            else if (dynamic) {
-                block.p(child_ctx, dirty);
-            }
-            new_lookup.set(key, new_blocks[i] = block);
-            if (key in old_indexes)
-                deltas.set(key, Math.abs(i - old_indexes[key]));
-        }
-        const will_move = new Set();
-        const did_move = new Set();
-        function insert(block) {
-            transition_in(block, 1);
-            block.m(node, next);
-            lookup.set(block.key, block);
-            next = block.first;
-            n--;
-        }
-        while (o && n) {
-            const new_block = new_blocks[n - 1];
-            const old_block = old_blocks[o - 1];
-            const new_key = new_block.key;
-            const old_key = old_block.key;
-            if (new_block === old_block) {
-                // do nothing
-                next = new_block.first;
-                o--;
-                n--;
-            }
-            else if (!new_lookup.has(old_key)) {
-                // remove old block
-                destroy(old_block, lookup);
-                o--;
-            }
-            else if (!lookup.has(new_key) || will_move.has(new_key)) {
-                insert(new_block);
-            }
-            else if (did_move.has(old_key)) {
-                o--;
-            }
-            else if (deltas.get(new_key) > deltas.get(old_key)) {
-                did_move.add(new_key);
-                insert(new_block);
-            }
-            else {
-                will_move.add(old_key);
-                o--;
-            }
-        }
-        while (o--) {
-            const old_block = old_blocks[o];
-            if (!new_lookup.has(old_block.key))
-                destroy(old_block, lookup);
-        }
-        while (n)
-            insert(new_blocks[n - 1]);
-        return new_blocks;
-    }
-    function validate_each_keys(ctx, list, get_context, get_key) {
-        const keys = new Set();
-        for (let i = 0; i < list.length; i++) {
-            const key = get_key(get_context(ctx, list, i));
-            if (keys.has(key)) {
-                throw new Error('Cannot have duplicate keys in a keyed each');
-            }
-            keys.add(key);
-        }
-    }
-
     function get_spread_update(levels, updates) {
         const update = {};
         const to_null_out = {};
@@ -628,10 +524,6 @@ var app = (function () {
     function prop_dev(node, property, value) {
         node[property] = value;
         dispatch_dev('SvelteDOMSetProperty', { node, property, value });
-    }
-    function dataset_dev(node, property, value) {
-        node.dataset[property] = value;
-        dispatch_dev('SvelteDOMSetDataset', { node, property, value });
     }
     function set_data_dev(text, data) {
         data = '' + data;
@@ -3222,21 +3114,7 @@ var app = (function () {
     const { console: console_1$3 } = globals;
     const file$4 = "src\\Featured.svelte";
 
-    function get_each_context$3(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[32] = list[i];
-    	child_ctx[34] = i;
-    	return child_ctx;
-    }
-
-    function get_each_context_1$2(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[32] = list[i];
-    	child_ctx[34] = i;
-    	return child_ctx;
-    }
-
-    // (82:12) {:else}
+    // (80:12) {:else}
     function create_else_block_2(ctx) {
     	let h1;
     	let t;
@@ -3245,15 +3123,15 @@ var app = (function () {
     		c: function create() {
     			h1 = element("h1");
     			t = text(/*title*/ ctx[2]);
-    			attr_dev(h1, "class", "svelte-1265mlu");
-    			add_location(h1, file$4, 82, 12, 2830);
+    			attr_dev(h1, "class", "svelte-7bav2t");
+    			add_location(h1, file$4, 80, 12, 2780);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
     			append_dev(h1, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*title*/ 4) set_data_dev(t, /*title*/ ctx[2]);
+    			if (dirty & /*title*/ 4) set_data_dev(t, /*title*/ ctx[2]);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h1);
@@ -3264,15 +3142,15 @@ var app = (function () {
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(82:12) {:else}",
+    		source: "(80:12) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (80:12) {#if title == "JOKER"}
-    function create_if_block_7(ctx) {
+    // (78:12) {#if title == "JOKER"}
+    function create_if_block_6(ctx) {
     	let h1;
     	let t;
 
@@ -3280,15 +3158,15 @@ var app = (function () {
     		c: function create() {
     			h1 = element("h1");
     			t = text(/*title*/ ctx[2]);
-    			attr_dev(h1, "class", "jokerFont svelte-1265mlu");
-    			add_location(h1, file$4, 80, 12, 2759);
+    			attr_dev(h1, "class", "jokerFont svelte-7bav2t");
+    			add_location(h1, file$4, 78, 12, 2709);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
     			append_dev(h1, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*title*/ 4) set_data_dev(t, /*title*/ ctx[2]);
+    			if (dirty & /*title*/ 4) set_data_dev(t, /*title*/ ctx[2]);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h1);
@@ -3297,17 +3175,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_7.name,
+    		id: create_if_block_6.name,
     		type: "if",
-    		source: "(80:12) {#if title == \\\"JOKER\\\"}",
+    		source: "(78:12) {#if title == \\\"JOKER\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (85:12) {#if line}
-    function create_if_block_6(ctx) {
+    // (83:12) {#if line}
+    function create_if_block_5(ctx) {
     	let h2;
     	let t;
 
@@ -3315,15 +3193,15 @@ var app = (function () {
     		c: function create() {
     			h2 = element("h2");
     			t = text(/*line*/ ctx[3]);
-    			attr_dev(h2, "class", "svelte-1265mlu");
-    			add_location(h2, file$4, 85, 12, 2905);
+    			attr_dev(h2, "class", "svelte-7bav2t");
+    			add_location(h2, file$4, 83, 12, 2855);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
     			append_dev(h2, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*line*/ 8) set_data_dev(t, /*line*/ ctx[3]);
+    			if (dirty & /*line*/ 8) set_data_dev(t, /*line*/ ctx[3]);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h2);
@@ -3332,17 +3210,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_6.name,
+    		id: create_if_block_5.name,
     		type: "if",
-    		source: "(85:12) {#if line}",
+    		source: "(83:12) {#if line}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (88:12) {#if info}
-    function create_if_block_5(ctx) {
+    // (86:12) {#if info}
+    function create_if_block_4(ctx) {
     	let h3;
     	let t;
 
@@ -3350,15 +3228,15 @@ var app = (function () {
     		c: function create() {
     			h3 = element("h3");
     			t = text(/*info*/ ctx[4]);
-    			attr_dev(h3, "class", "svelte-1265mlu");
-    			add_location(h3, file$4, 88, 12, 2979);
+    			attr_dev(h3, "class", "svelte-7bav2t");
+    			add_location(h3, file$4, 86, 12, 2929);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h3, anchor);
     			append_dev(h3, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*info*/ 16) set_data_dev(t, /*info*/ ctx[4]);
+    			if (dirty & /*info*/ 16) set_data_dev(t, /*info*/ ctx[4]);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h3);
@@ -3367,17 +3245,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_5.name,
+    		id: create_if_block_4.name,
     		type: "if",
-    		source: "(88:12) {#if info}",
+    		source: "(86:12) {#if info}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (91:12) {#if plot}
-    function create_if_block_4(ctx) {
+    // (89:12) {#if plot}
+    function create_if_block_3(ctx) {
     	let h4;
     	let t;
 
@@ -3385,15 +3263,15 @@ var app = (function () {
     		c: function create() {
     			h4 = element("h4");
     			t = text(/*plot*/ ctx[5]);
-    			attr_dev(h4, "class", "svelte-1265mlu");
-    			add_location(h4, file$4, 91, 12, 3053);
+    			attr_dev(h4, "class", "svelte-7bav2t");
+    			add_location(h4, file$4, 89, 12, 3003);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h4, anchor);
     			append_dev(h4, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*plot*/ 32) set_data_dev(t, /*plot*/ ctx[5]);
+    			if (dirty & /*plot*/ 32) set_data_dev(t, /*plot*/ ctx[5]);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h4);
@@ -3402,258 +3280,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_4.name,
-    		type: "if",
-    		source: "(91:12) {#if plot}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (95:12) {#if kind == "show"}
-    function create_if_block_3(ctx) {
-    	let select0;
-    	let optgroup0;
-    	let each_blocks_1 = [];
-    	let each0_lookup = new Map();
-    	let t;
-    	let select1;
-    	let optgroup1;
-    	let each_blocks = [];
-    	let each1_lookup = new Map();
-    	let mounted;
-    	let dispose;
-    	let each_value_1 = Array(/*NOS*/ ctx[9]);
-    	validate_each_argument(each_value_1);
-    	const get_key = ctx => /*index*/ ctx[34];
-    	validate_each_keys(ctx, each_value_1, get_each_context_1$2, get_key);
-
-    	for (let i = 0; i < each_value_1.length; i += 1) {
-    		let child_ctx = get_each_context_1$2(ctx, each_value_1, i);
-    		let key = get_key(child_ctx);
-    		each0_lookup.set(key, each_blocks_1[i] = create_each_block_1$2(key, child_ctx));
-    	}
-
-    	let each_value = Array(/*getEpisodes*/ ctx[15](/*season*/ ctx[13]));
-    	validate_each_argument(each_value);
-    	const get_key_1 = ctx => /*index*/ ctx[34];
-    	validate_each_keys(ctx, each_value, get_each_context$3, get_key_1);
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$3(ctx, each_value, i);
-    		let key = get_key_1(child_ctx);
-    		each1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
-    	}
-
-    	const block = {
-    		c: function create() {
-    			select0 = element("select");
-    			optgroup0 = element("optgroup");
-
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
-    				each_blocks_1[i].c();
-    			}
-
-    			t = space();
-    			select1 = element("select");
-    			optgroup1 = element("optgroup");
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			attr_dev(optgroup0, "label", "Season");
-    			add_location(optgroup0, file$4, 96, 16, 3213);
-    			attr_dev(select0, "name", "seasons");
-    			attr_dev(select0, "id", "seasons");
-    			attr_dev(select0, "class", "svelte-1265mlu");
-    			if (/*season*/ ctx[13] === void 0) add_render_callback(() => /*select0_change_handler*/ ctx[20].call(select0));
-    			add_location(select0, file$4, 95, 12, 3139);
-    			attr_dev(optgroup1, "label", "Episodes");
-    			add_location(optgroup1, file$4, 104, 16, 3534);
-    			attr_dev(select1, "name", "episodes");
-    			attr_dev(select1, "id", "episodes");
-    			attr_dev(select1, "class", "svelte-1265mlu");
-    			if (/*episode*/ ctx[14] === void 0) add_render_callback(() => /*select1_change_handler*/ ctx[21].call(select1));
-    			add_location(select1, file$4, 103, 12, 3457);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, select0, anchor);
-    			append_dev(select0, optgroup0);
-
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
-    				each_blocks_1[i].m(optgroup0, null);
-    			}
-
-    			select_option(select0, /*season*/ ctx[13]);
-    			insert_dev(target, t, anchor);
-    			insert_dev(target, select1, anchor);
-    			append_dev(select1, optgroup1);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(optgroup1, null);
-    			}
-
-    			select_option(select1, /*episode*/ ctx[14]);
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(select0, "change", /*select0_change_handler*/ ctx[20]),
-    					listen_dev(select1, "change", /*select1_change_handler*/ ctx[21])
-    				];
-
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*NOS*/ 512) {
-    				each_value_1 = Array(/*NOS*/ ctx[9]);
-    				validate_each_argument(each_value_1);
-    				validate_each_keys(ctx, each_value_1, get_each_context_1$2, get_key);
-    				each_blocks_1 = update_keyed_each(each_blocks_1, dirty, get_key, 1, ctx, each_value_1, each0_lookup, optgroup0, destroy_block, create_each_block_1$2, null, get_each_context_1$2);
-    			}
-
-    			if (dirty[0] & /*season, NOS*/ 8704) {
-    				select_option(select0, /*season*/ ctx[13]);
-    			}
-
-    			if (dirty[0] & /*getEpisodes, season*/ 40960) {
-    				each_value = Array(/*getEpisodes*/ ctx[15](/*season*/ ctx[13]));
-    				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context$3, get_key_1);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key_1, 1, ctx, each_value, each1_lookup, optgroup1, destroy_block, create_each_block$3, null, get_each_context$3);
-    			}
-
-    			if (dirty[0] & /*episode, getEpisodes, season*/ 57344) {
-    				select_option(select1, /*episode*/ ctx[14]);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(select0);
-
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
-    				each_blocks_1[i].d();
-    			}
-
-    			if (detaching) detach_dev(t);
-    			if (detaching) detach_dev(select1);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].d();
-    			}
-
-    			mounted = false;
-    			run_all(dispose);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(95:12) {#if kind == \\\"show\\\"}",
+    		source: "(89:12) {#if plot}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (98:16) {#each Array(NOS) as _, index (index)}
-    function create_each_block_1$2(key_1, ctx) {
-    	let option;
-    	let t_value = /*index*/ ctx[34] + 1 + "";
-    	let t;
-    	let option_value_value;
-
-    	const block = {
-    		key: key_1,
-    		first: null,
-    		c: function create() {
-    			option = element("option");
-    			t = text(t_value);
-    			option.__value = option_value_value = /*index*/ ctx[34] + 1;
-    			option.value = option.__value;
-    			add_location(option, file$4, 98, 20, 3316);
-    			this.first = option;
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, option, anchor);
-    			append_dev(option, t);
-    		},
-    		p: function update(new_ctx, dirty) {
-    			ctx = new_ctx;
-    			if (dirty[0] & /*NOS*/ 512 && t_value !== (t_value = /*index*/ ctx[34] + 1 + "")) set_data_dev(t, t_value);
-
-    			if (dirty[0] & /*NOS*/ 512 && option_value_value !== (option_value_value = /*index*/ ctx[34] + 1)) {
-    				prop_dev(option, "__value", option_value_value);
-    				option.value = option.__value;
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(option);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block_1$2.name,
-    		type: "each",
-    		source: "(98:16) {#each Array(NOS) as _, index (index)}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (106:16) {#each Array(getEpisodes(season)) as _, index (index)}
-    function create_each_block$3(key_1, ctx) {
-    	let option;
-    	let t_value = /*index*/ ctx[34] + 1 + "";
-    	let t;
-    	let option_value_value;
-
-    	const block = {
-    		key: key_1,
-    		first: null,
-    		c: function create() {
-    			option = element("option");
-    			t = text(t_value);
-    			option.__value = option_value_value = /*index*/ ctx[34] + 1;
-    			option.value = option.__value;
-    			add_location(option, file$4, 106, 20, 3655);
-    			this.first = option;
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, option, anchor);
-    			append_dev(option, t);
-    		},
-    		p: function update(new_ctx, dirty) {
-    			ctx = new_ctx;
-    			if (dirty[0] & /*season*/ 8192 && t_value !== (t_value = /*index*/ ctx[34] + 1 + "")) set_data_dev(t, t_value);
-
-    			if (dirty[0] & /*season, NOS*/ 8704 && option_value_value !== (option_value_value = /*index*/ ctx[34] + 1)) {
-    				prop_dev(option, "__value", option_value_value);
-    				option.value = option.__value;
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(option);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block$3.name,
-    		type: "each",
-    		source: "(106:16) {#each Array(getEpisodes(season)) as _, index (index)}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (118:12) {:else}
+    // (96:12) {:else}
     function create_else_block_1(ctx) {
     	let a;
     	let t;
@@ -3666,27 +3302,27 @@ var app = (function () {
     			t = text("+ Favorites");
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "favs");
-    			attr_dev(a, "class", "svelte-1265mlu");
-    			add_location(a, file$4, 118, 12, 4186);
+    			attr_dev(a, "class", "svelte-7bav2t");
+    			add_location(a, file$4, 96, 12, 3345);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
     			append_dev(a, t);
-    			/*a_binding_2*/ ctx[26](a);
+    			/*a_binding_2*/ ctx[21](a);
 
     			if (!mounted) {
-    				dispose = listen_dev(a, "click", /*click_handler_2*/ ctx[27], false, false, false);
+    				dispose = listen_dev(a, "click", /*click_handler_2*/ ctx[22], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*imdbID*/ 128) {
+    			if (dirty & /*imdbID*/ 128) {
     				attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(a);
-    			/*a_binding_2*/ ctx[26](null);
+    			/*a_binding_2*/ ctx[21](null);
     			mounted = false;
     			dispose();
     		}
@@ -3696,14 +3332,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(118:12) {:else}",
+    		source: "(96:12) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (116:12) {#if inFavorites}
+    // (94:12) {#if inFavorites}
     function create_if_block_2$1(ctx) {
     	let a;
     	let t;
@@ -3716,27 +3352,27 @@ var app = (function () {
     			t = text("- Favorites");
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "favs");
-    			attr_dev(a, "class", "svelte-1265mlu");
-    			add_location(a, file$4, 116, 12, 4047);
+    			attr_dev(a, "class", "svelte-7bav2t");
+    			add_location(a, file$4, 94, 12, 3206);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
     			append_dev(a, t);
-    			/*a_binding_1*/ ctx[24](a);
+    			/*a_binding_1*/ ctx[19](a);
 
     			if (!mounted) {
-    				dispose = listen_dev(a, "click", /*click_handler_1*/ ctx[25], false, false, false);
+    				dispose = listen_dev(a, "click", /*click_handler_1*/ ctx[20], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*imdbID*/ 128) {
+    			if (dirty & /*imdbID*/ 128) {
     				attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(a);
-    			/*a_binding_1*/ ctx[24](null);
+    			/*a_binding_1*/ ctx[19](null);
     			mounted = false;
     			dispose();
     		}
@@ -3746,14 +3382,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(116:12) {#if inFavorites}",
+    		source: "(94:12) {#if inFavorites}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (122:12) {#if kind != "show"}
+    // (100:12) {#if kind != "show"}
     function create_if_block$4(ctx) {
     	let if_block_anchor;
 
@@ -3797,14 +3433,14 @@ var app = (function () {
     		block,
     		id: create_if_block$4.name,
     		type: "if",
-    		source: "(122:12) {#if kind != \\\"show\\\"}",
+    		source: "(100:12) {#if kind != \\\"show\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (125:16) {:else}
+    // (103:16) {:else}
     function create_else_block$2(ctx) {
     	let a;
     	let t;
@@ -3817,27 +3453,27 @@ var app = (function () {
     			t = text("+ Playlist");
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "pl");
-    			attr_dev(a, "class", "svelte-1265mlu");
-    			add_location(a, file$4, 125, 16, 4538);
+    			attr_dev(a, "class", "svelte-7bav2t");
+    			add_location(a, file$4, 103, 16, 3697);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
     			append_dev(a, t);
-    			/*a_binding_4*/ ctx[30](a);
+    			/*a_binding_4*/ ctx[25](a);
 
     			if (!mounted) {
-    				dispose = listen_dev(a, "click", /*click_handler_4*/ ctx[31], false, false, false);
+    				dispose = listen_dev(a, "click", /*click_handler_4*/ ctx[26], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*imdbID*/ 128) {
+    			if (dirty & /*imdbID*/ 128) {
     				attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(a);
-    			/*a_binding_4*/ ctx[30](null);
+    			/*a_binding_4*/ ctx[25](null);
     			mounted = false;
     			dispose();
     		}
@@ -3847,14 +3483,14 @@ var app = (function () {
     		block,
     		id: create_else_block$2.name,
     		type: "else",
-    		source: "(125:16) {:else}",
+    		source: "(103:16) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (123:16) {#if inPlaylist}
+    // (101:16) {#if inPlaylist}
     function create_if_block_1$2(ctx) {
     	let a;
     	let t;
@@ -3867,27 +3503,27 @@ var app = (function () {
     			t = text("- Playlist");
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "pl");
-    			attr_dev(a, "class", "svelte-1265mlu");
-    			add_location(a, file$4, 123, 16, 4397);
+    			attr_dev(a, "class", "svelte-7bav2t");
+    			add_location(a, file$4, 101, 16, 3556);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
     			append_dev(a, t);
-    			/*a_binding_3*/ ctx[28](a);
+    			/*a_binding_3*/ ctx[23](a);
 
     			if (!mounted) {
-    				dispose = listen_dev(a, "click", /*click_handler_3*/ ctx[29], false, false, false);
+    				dispose = listen_dev(a, "click", /*click_handler_3*/ ctx[24], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*imdbID*/ 128) {
+    			if (dirty & /*imdbID*/ 128) {
     				attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(a);
-    			/*a_binding_3*/ ctx[28](null);
+    			/*a_binding_3*/ ctx[23](null);
     			mounted = false;
     			dispose();
     		}
@@ -3897,7 +3533,7 @@ var app = (function () {
     		block,
     		id: create_if_block_1$2.name,
     		type: "if",
-    		source: "(123:16) {#if inPlaylist}",
+    		source: "(101:16) {#if inPlaylist}",
     		ctx
     	});
 
@@ -3915,25 +3551,23 @@ var app = (function () {
     	let t2;
     	let t3;
     	let t4;
-    	let t5;
     	let a;
+    	let t5;
     	let t6;
     	let t7;
-    	let t8;
     	let mounted;
     	let dispose;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*title*/ ctx[2] == "JOKER") return create_if_block_7;
+    		if (/*title*/ ctx[2] == "JOKER") return create_if_block_6;
     		return create_else_block_2;
     	}
 
     	let current_block_type = select_block_type(ctx);
     	let if_block0 = current_block_type(ctx);
-    	let if_block1 = /*line*/ ctx[3] && create_if_block_6(ctx);
-    	let if_block2 = /*info*/ ctx[4] && create_if_block_5(ctx);
-    	let if_block3 = /*plot*/ ctx[5] && create_if_block_4(ctx);
-    	let if_block4 = /*kind*/ ctx[8] == "show" && create_if_block_3(ctx);
+    	let if_block1 = /*line*/ ctx[3] && create_if_block_5(ctx);
+    	let if_block2 = /*info*/ ctx[4] && create_if_block_4(ctx);
+    	let if_block3 = /*plot*/ ctx[5] && create_if_block_3(ctx);
 
     	function select_block_type_1(ctx, dirty) {
     		if (/*inFavorites*/ ctx[0]) return create_if_block_2$1;
@@ -3941,8 +3575,8 @@ var app = (function () {
     	}
 
     	let current_block_type_1 = select_block_type_1(ctx);
-    	let if_block5 = current_block_type_1(ctx);
-    	let if_block6 = /*kind*/ ctx[8] != "show" && create_if_block$4(ctx);
+    	let if_block4 = current_block_type_1(ctx);
+    	let if_block5 = /*kind*/ ctx[8] != "show" && create_if_block$4(ctx);
 
     	const block = {
     		c: function create() {
@@ -3959,30 +3593,28 @@ var app = (function () {
     			t3 = space();
     			if (if_block3) if_block3.c();
     			t4 = space();
-    			if (if_block4) if_block4.c();
-    			t5 = space();
     			a = element("a");
-    			t6 = text("Play");
+    			t5 = text("Play");
+    			t6 = space();
+    			if_block4.c();
     			t7 = space();
-    			if_block5.c();
-    			t8 = space();
-    			if (if_block6) if_block6.c();
-    			attr_dev(img_1, "class", "featuredIMG svelte-1265mlu");
+    			if (if_block5) if_block5.c();
+    			attr_dev(img_1, "class", "featuredIMG svelte-7bav2t");
     			if (!src_url_equal(img_1.src, img_1_src_value = /*img*/ ctx[6])) attr_dev(img_1, "src", img_1_src_value);
     			attr_dev(img_1, "alt", "Featured");
-    			add_location(img_1, file$4, 77, 8, 2609);
+    			add_location(img_1, file$4, 75, 8, 2559);
     			attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			attr_dev(a, "id", "playButton");
-    			attr_dev(a, "class", "bgRed svelte-1265mlu");
-    			add_location(a, file$4, 114, 12, 3896);
+    			attr_dev(a, "class", "bgRed svelte-7bav2t");
+    			add_location(a, file$4, 92, 12, 3055);
     			attr_dev(div0, "id", "featuredInfo");
-    			attr_dev(div0, "class", "info svelte-1265mlu");
-    			add_location(div0, file$4, 78, 8, 2673);
+    			attr_dev(div0, "class", "info svelte-7bav2t");
+    			add_location(div0, file$4, 76, 8, 2623);
     			attr_dev(div1, "id", "featured");
-    			attr_dev(div1, "class", "featured svelte-1265mlu");
-    			add_location(div1, file$4, 76, 4, 2563);
+    			attr_dev(div1, "class", "featured svelte-7bav2t");
+    			add_location(div1, file$4, 74, 4, 2513);
     			attr_dev(div2, "class", "featuredContainer");
-    			add_location(div2, file$4, 75, 0, 2526);
+    			add_location(div2, file$4, 73, 0, 2476);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4001,23 +3633,21 @@ var app = (function () {
     			append_dev(div0, t3);
     			if (if_block3) if_block3.m(div0, null);
     			append_dev(div0, t4);
-    			if (if_block4) if_block4.m(div0, null);
-    			append_dev(div0, t5);
     			append_dev(div0, a);
-    			append_dev(a, t6);
-    			/*a_binding*/ ctx[22](a);
+    			append_dev(a, t5);
+    			/*a_binding*/ ctx[17](a);
+    			append_dev(div0, t6);
+    			if_block4.m(div0, null);
     			append_dev(div0, t7);
-    			if_block5.m(div0, null);
-    			append_dev(div0, t8);
-    			if (if_block6) if_block6.m(div0, null);
+    			if (if_block5) if_block5.m(div0, null);
 
     			if (!mounted) {
-    				dispose = listen_dev(a, "click", /*click_handler*/ ctx[23], false, false, false);
+    				dispose = listen_dev(a, "click", /*click_handler*/ ctx[18], false, false, false);
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*img*/ 64 && !src_url_equal(img_1.src, img_1_src_value = /*img*/ ctx[6])) {
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*img*/ 64 && !src_url_equal(img_1.src, img_1_src_value = /*img*/ ctx[6])) {
     				attr_dev(img_1, "src", img_1_src_value);
     			}
 
@@ -4037,7 +3667,7 @@ var app = (function () {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
-    					if_block1 = create_if_block_6(ctx);
+    					if_block1 = create_if_block_5(ctx);
     					if_block1.c();
     					if_block1.m(div0, t2);
     				}
@@ -4050,7 +3680,7 @@ var app = (function () {
     				if (if_block2) {
     					if_block2.p(ctx, dirty);
     				} else {
-    					if_block2 = create_if_block_5(ctx);
+    					if_block2 = create_if_block_4(ctx);
     					if_block2.c();
     					if_block2.m(div0, t3);
     				}
@@ -4063,7 +3693,7 @@ var app = (function () {
     				if (if_block3) {
     					if_block3.p(ctx, dirty);
     				} else {
-    					if_block3 = create_if_block_4(ctx);
+    					if_block3 = create_if_block_3(ctx);
     					if_block3.c();
     					if_block3.m(div0, t4);
     				}
@@ -4072,46 +3702,33 @@ var app = (function () {
     				if_block3 = null;
     			}
 
-    			if (/*kind*/ ctx[8] == "show") {
-    				if (if_block4) {
-    					if_block4.p(ctx, dirty);
-    				} else {
-    					if_block4 = create_if_block_3(ctx);
-    					if_block4.c();
-    					if_block4.m(div0, t5);
-    				}
-    			} else if (if_block4) {
-    				if_block4.d(1);
-    				if_block4 = null;
-    			}
-
-    			if (dirty[0] & /*imdbID*/ 128) {
+    			if (dirty & /*imdbID*/ 128) {
     				attr_dev(a, "data-id", /*imdbID*/ ctx[7]);
     			}
 
-    			if (current_block_type_1 === (current_block_type_1 = select_block_type_1(ctx)) && if_block5) {
-    				if_block5.p(ctx, dirty);
+    			if (current_block_type_1 === (current_block_type_1 = select_block_type_1(ctx)) && if_block4) {
+    				if_block4.p(ctx, dirty);
     			} else {
-    				if_block5.d(1);
-    				if_block5 = current_block_type_1(ctx);
+    				if_block4.d(1);
+    				if_block4 = current_block_type_1(ctx);
 
-    				if (if_block5) {
-    					if_block5.c();
-    					if_block5.m(div0, t8);
+    				if (if_block4) {
+    					if_block4.c();
+    					if_block4.m(div0, t7);
     				}
     			}
 
     			if (/*kind*/ ctx[8] != "show") {
-    				if (if_block6) {
-    					if_block6.p(ctx, dirty);
+    				if (if_block5) {
+    					if_block5.p(ctx, dirty);
     				} else {
-    					if_block6 = create_if_block$4(ctx);
-    					if_block6.c();
-    					if_block6.m(div0, null);
+    					if_block5 = create_if_block$4(ctx);
+    					if_block5.c();
+    					if_block5.m(div0, null);
     				}
-    			} else if (if_block6) {
-    				if_block6.d(1);
-    				if_block6 = null;
+    			} else if (if_block5) {
+    				if_block5.d(1);
+    				if_block5 = null;
     			}
     		},
     		i: noop,
@@ -4122,10 +3739,9 @@ var app = (function () {
     			if (if_block1) if_block1.d();
     			if (if_block2) if_block2.d();
     			if (if_block3) if_block3.d();
-    			if (if_block4) if_block4.d();
-    			/*a_binding*/ ctx[22](null);
-    			if_block5.d();
-    			if (if_block6) if_block6.d();
+    			/*a_binding*/ ctx[17](null);
+    			if_block4.d();
+    			if (if_block5) if_block5.d();
     			mounted = false;
     			dispose();
     		}
@@ -4159,12 +3775,6 @@ var app = (function () {
     	var favsBTN = "";
     	var plBTN = "";
     	var playBTN = "";
-    	var season = "1";
-    	var episode = "1";
-
-    	const getEpisodes = season => {
-    		return episodeCount[season];
-    	};
 
     	const handleFavorites = () => {
     		const imdbID = favsBTN.dataset.id;
@@ -4233,11 +3843,11 @@ var app = (function () {
     	const play = () => {
     		let url = `/watch/${playBTN.dataset.id}/`;
 
-    		if (kind == "show") {
-    			url += `${season}-${episode}`;
+    		if (kind) {
+    			url += `?kind=${kind}`;
+    			if (kind == "show") url += `&NOS=${NOS}&EC=${btoa(JSON.stringify(episodeCount))}`;
     		}
 
-    		// url += `?kind=${kind}`
     		location = url;
     	};
 
@@ -4259,23 +3869,10 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$3.warn(`<Featured> was created with unknown prop '${key}'`);
     	});
 
-    	function select0_change_handler() {
-    		season = select_value(this);
-    		$$invalidate(13, season);
-    		$$invalidate(9, NOS);
-    	}
-
-    	function select1_change_handler() {
-    		episode = select_value(this);
-    		$$invalidate(14, episode);
-    		$$invalidate(15, getEpisodes);
-    		$$invalidate(13, season);
-    	}
-
     	function a_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			playBTN = $$value;
-    			$$invalidate(12, playBTN);
+    			$$invalidate(11, playBTN);
     		});
     	}
 
@@ -4284,7 +3881,7 @@ var app = (function () {
     	function a_binding_1($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			favsBTN = $$value;
-    			$$invalidate(10, favsBTN);
+    			$$invalidate(9, favsBTN);
     		});
     	}
 
@@ -4293,7 +3890,7 @@ var app = (function () {
     	function a_binding_2($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			favsBTN = $$value;
-    			$$invalidate(10, favsBTN);
+    			$$invalidate(9, favsBTN);
     		});
     	}
 
@@ -4302,7 +3899,7 @@ var app = (function () {
     	function a_binding_3($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			plBTN = $$value;
-    			$$invalidate(11, plBTN);
+    			$$invalidate(10, plBTN);
     		});
     	}
 
@@ -4311,7 +3908,7 @@ var app = (function () {
     	function a_binding_4($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			plBTN = $$value;
-    			$$invalidate(11, plBTN);
+    			$$invalidate(10, plBTN);
     		});
     	}
 
@@ -4327,8 +3924,8 @@ var app = (function () {
     		if ('kind' in $$props) $$invalidate(8, kind = $$props.kind);
     		if ('inFavorites' in $$props) $$invalidate(0, inFavorites = $$props.inFavorites);
     		if ('inPlaylist' in $$props) $$invalidate(1, inPlaylist = $$props.inPlaylist);
-    		if ('NOS' in $$props) $$invalidate(9, NOS = $$props.NOS);
-    		if ('episodeCount' in $$props) $$invalidate(19, episodeCount = $$props.episodeCount);
+    		if ('NOS' in $$props) $$invalidate(15, NOS = $$props.NOS);
+    		if ('episodeCount' in $$props) $$invalidate(16, episodeCount = $$props.episodeCount);
     	};
 
     	$$self.$capture_state = () => ({
@@ -4346,9 +3943,6 @@ var app = (function () {
     		favsBTN,
     		plBTN,
     		playBTN,
-    		season,
-    		episode,
-    		getEpisodes,
     		handleFavorites,
     		handlePlaylist,
     		play
@@ -4364,13 +3958,11 @@ var app = (function () {
     		if ('kind' in $$props) $$invalidate(8, kind = $$props.kind);
     		if ('inFavorites' in $$props) $$invalidate(0, inFavorites = $$props.inFavorites);
     		if ('inPlaylist' in $$props) $$invalidate(1, inPlaylist = $$props.inPlaylist);
-    		if ('NOS' in $$props) $$invalidate(9, NOS = $$props.NOS);
-    		if ('episodeCount' in $$props) $$invalidate(19, episodeCount = $$props.episodeCount);
-    		if ('favsBTN' in $$props) $$invalidate(10, favsBTN = $$props.favsBTN);
-    		if ('plBTN' in $$props) $$invalidate(11, plBTN = $$props.plBTN);
-    		if ('playBTN' in $$props) $$invalidate(12, playBTN = $$props.playBTN);
-    		if ('season' in $$props) $$invalidate(13, season = $$props.season);
-    		if ('episode' in $$props) $$invalidate(14, episode = $$props.episode);
+    		if ('NOS' in $$props) $$invalidate(15, NOS = $$props.NOS);
+    		if ('episodeCount' in $$props) $$invalidate(16, episodeCount = $$props.episodeCount);
+    		if ('favsBTN' in $$props) $$invalidate(9, favsBTN = $$props.favsBTN);
+    		if ('plBTN' in $$props) $$invalidate(10, plBTN = $$props.plBTN);
+    		if ('playBTN' in $$props) $$invalidate(11, playBTN = $$props.playBTN);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -4387,19 +3979,14 @@ var app = (function () {
     		img,
     		imdbID,
     		kind,
-    		NOS,
     		favsBTN,
     		plBTN,
     		playBTN,
-    		season,
-    		episode,
-    		getEpisodes,
     		handleFavorites,
     		handlePlaylist,
     		play,
+    		NOS,
     		episodeCount,
-    		select0_change_handler,
-    		select1_change_handler,
     		a_binding,
     		click_handler,
     		a_binding_1,
@@ -4417,28 +4004,19 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(
-    			this,
-    			options,
-    			instance$5,
-    			create_fragment$5,
-    			safe_not_equal,
-    			{
-    				title: 2,
-    				line: 3,
-    				info: 4,
-    				plot: 5,
-    				img: 6,
-    				imdbID: 7,
-    				kind: 8,
-    				inFavorites: 0,
-    				inPlaylist: 1,
-    				NOS: 9,
-    				episodeCount: 19
-    			},
-    			null,
-    			[-1, -1]
-    		);
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, {
+    			title: 2,
+    			line: 3,
+    			info: 4,
+    			plot: 5,
+    			img: 6,
+    			imdbID: 7,
+    			kind: 8,
+    			inFavorites: 0,
+    			inPlaylist: 1,
+    			NOS: 15,
+    			episodeCount: 16
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -4486,11 +4064,11 @@ var app = (function () {
     			console_1$3.warn("<Featured> was created without expected prop 'inPlaylist'");
     		}
 
-    		if (/*NOS*/ ctx[9] === undefined && !('NOS' in props)) {
+    		if (/*NOS*/ ctx[15] === undefined && !('NOS' in props)) {
     			console_1$3.warn("<Featured> was created without expected prop 'NOS'");
     		}
 
-    		if (/*episodeCount*/ ctx[19] === undefined && !('episodeCount' in props)) {
+    		if (/*episodeCount*/ ctx[16] === undefined && !('episodeCount' in props)) {
     			console_1$3.warn("<Featured> was created without expected prop 'episodeCount'");
     		}
     	}
@@ -6002,7 +5580,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (69:4) {#if term}
+    // (68:4) {#if term}
     function create_if_block$1(ctx) {
     	let div;
     	let promise;
@@ -6033,7 +5611,7 @@ var app = (function () {
     			info.block.c();
     			attr_dev(div, "id", "grid");
     			attr_dev(div, "class", "svelte-wzbp04");
-    			add_location(div, file$1, 69, 6, 1684);
+    			add_location(div, file$1, 68, 6, 1632);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -6064,14 +5642,14 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(69:4) {#if term}",
+    		source: "(68:4) {#if term}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (79:8) {:catch error}
+    // (78:8) {:catch error}
     function create_catch_block(ctx) {
     	let p;
     	let t0;
@@ -6084,7 +5662,7 @@ var app = (function () {
     			t0 = text("Error: ");
     			t1 = text(t1_value);
     			set_style(p, "display", "none");
-    			add_location(p, file$1, 79, 10, 2163);
+    			add_location(p, file$1, 78, 10, 2111);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -6103,14 +5681,14 @@ var app = (function () {
     		block,
     		id: create_catch_block.name,
     		type: "catch",
-    		source: "(79:8) {:catch error}",
+    		source: "(78:8) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (73:8) {:then resp}
+    // (72:8) {:then resp}
     function create_then_block(ctx) {
     	let each_1_anchor;
     	let each_value = Object.values(/*resp*/ ctx[5].data.results);
@@ -6171,14 +5749,14 @@ var app = (function () {
     		block,
     		id: create_then_block.name,
     		type: "then",
-    		source: "(73:8) {:then resp}",
+    		source: "(72:8) {:then resp}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (74:10) {#each Object.values(resp.data.results) as r}
+    // (73:10) {#each Object.values(resp.data.results) as r}
     function create_each_block(ctx) {
     	let div;
     	let img;
@@ -6199,9 +5777,9 @@ var app = (function () {
     			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*r*/ ctx[6].id + "?do=show")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "Poster");
     			attr_dev(img, "class", "svelte-wzbp04");
-    			add_location(img, file$1, 75, 14, 2037);
+    			add_location(img, file$1, 74, 14, 1985);
     			attr_dev(div, "class", "item svelte-wzbp04");
-    			add_location(div, file$1, 74, 10, 1975);
+    			add_location(div, file$1, 73, 10, 1923);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -6231,14 +5809,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(74:10) {#each Object.values(resp.data.results) as r}",
+    		source: "(73:10) {#each Object.values(resp.data.results) as r}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (71:130)             <p style="display: none;">Loading ...</p>          {:then resp}
+    // (70:130)             <p style="display: none;">Loading ...</p>          {:then resp}
     function create_pending_block(ctx) {
     	let p;
 
@@ -6247,7 +5825,7 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "Loading ...";
     			set_style(p, "display", "none");
-    			add_location(p, file$1, 71, 10, 1843);
+    			add_location(p, file$1, 70, 10, 1791);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -6262,7 +5840,7 @@ var app = (function () {
     		block,
     		id: create_pending_block.name,
     		type: "pending",
-    		source: "(71:130)             <p style=\\\"display: none;\\\">Loading ...</p>          {:then resp}",
+    		source: "(70:130)             <p style=\\\"display: none;\\\">Loading ...</p>          {:then resp}",
     		ctx
     	});
 
@@ -6297,9 +5875,9 @@ var app = (function () {
     			attr_dev(input, "type", "text");
     			attr_dev(input, "placeholder", "Search ...");
     			attr_dev(input, "class", "svelte-wzbp04");
-    			add_location(input, file$1, 53, 4, 1320);
+    			add_location(input, file$1, 52, 4, 1268);
     			attr_dev(main, "class", "svelte-wzbp04");
-    			add_location(main, file$1, 42, 0, 1090);
+    			add_location(main, file$1, 41, 0, 1038);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6418,15 +5996,7 @@ var app = (function () {
     	};
 
     	const click_handler = r => view(r.id);
-
-    	$$self.$capture_state = () => ({
-    		Nav,
-    		axios,
-    		dataset_dev,
-    		term,
-    		preloadImage,
-    		view
-    	});
+    	$$self.$capture_state = () => ({ Nav, axios, term, preloadImage, view });
 
     	$$self.$inject_state = $$props => {
     		if ('term' in $$props) $$invalidate(0, term = $$props.term);

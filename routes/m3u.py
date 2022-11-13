@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, Response
+from flask import Blueprint, request, redirect
 from utils.settings import getSetting
 from utils.paths import DB_FOLDER
 from users.users import LAH, reqToToken
@@ -32,7 +32,7 @@ def play_m3u8_episode(id, episode, ext):
     return redirect(resolved, code=302)
 
 @m3u.route('/playlist.m3u')
-def playlistm3u8():
+def playlistm3u():
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
     baseURL = request.base_url.split('/playlist')[0]

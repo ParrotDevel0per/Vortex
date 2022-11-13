@@ -14,10 +14,6 @@
     var favsBTN = "";
     var plBTN = "";
     var playBTN = "";
-    var season = "1";
-    var episode = "1";
-
-    const getEpisodes = (season) => { return episodeCount[season]; }
 
     const handleFavorites = () => {
         const imdbID = favsBTN.dataset.id;
@@ -67,8 +63,10 @@
 
     const play = () => {
         let url = `/watch/${playBTN.dataset.id}/`
-        if (kind == "show") {url += `${season}-${episode}`}
-        // url += `?kind=${kind}`
+        if (kind) {
+            url += `?kind=${kind}`;
+            if (kind == "show") url += `&NOS=${NOS}&EC=${btoa(JSON.stringify(episodeCount))}`;
+        }
         location = url
     }
 </script>
@@ -90,26 +88,6 @@
             {/if}
             {#if plot}
             <h4>{ plot }</h4>
-            {/if}
-
-            {#if kind == "show"}
-            <select bind:value={season} name="seasons" id="seasons">
-                <optgroup label="Season">
-                {#each Array(NOS) as _, index (index)}
-                    <option value="{ index+1 }">{ index+1 }</option>
-                {/each}
-                </optgroup>
-            </select>
-
-            <select bind:value={episode} name="episodes" id="episodes">
-                <optgroup label="Episodes">
-                {#each Array(getEpisodes(season)) as _, index (index)}
-                    <option value="{ index+1 }">{ index+1 }</option>
-                {/each}
-                </optgroup>
-            </select>
-
-            <!-- <input bind:value={episode} type="text" placeholder="1"> -->
             {/if}
 
             <a bind:this={playBTN} data-id="{ imdbID }" id="playButton" class="bgRed" on:click={() => play()}>Play</a>
@@ -141,13 +119,6 @@
         src: url('/static/fonts/Bignoodletitling.ttf');
     }
     /* input, */
-    select {
-        background: black;
-        border: 0px;
-        border-radius: 3px;
-        padding: 0.8% 5% 0.8% 5%;
-        color: red;
-    }
     /*
     input {
         padding-left: 0.5vh;
