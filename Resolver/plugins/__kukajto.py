@@ -101,6 +101,7 @@ class KukajTo(Resolver):
             if len(season) == 1: season = "0" + season
             url = f"https://serial.kukaj.io/{id}/S{season}E{episode}"
         resolved = self.kukajto(url)
+        print(resolved)
         headers = None
         if "mixdrop" in resolved:
             resolved, headers = ResolveURL.resolve("MixDrop", resolved, "https://kukaj.io/")

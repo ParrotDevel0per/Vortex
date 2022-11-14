@@ -26,8 +26,6 @@ def watch(id):
     baseURL = request.base_url.split('/watch')[0]
     sourcesURL = f"{baseURL}/api/sources/{id}"
     if request.args.get('kind'): sourcesURL += f"?kind={request.args.get('kind')}"
-    if request.args.get("NOS"): sourcesURL += f"&NOS={request.args.get('NOS')}"
-    if request.args.get("EC"): sourcesURL += f"&EC={request.args.get('EC')}"
     if request.args.get('source'): sourcesURL += f"&source={request.args.get('source')}"
     sources=requests.get(sourcesURL, headers=LAH(request)).json()
     return render_template('play.html', id=id, sources=json.dumps(sources))

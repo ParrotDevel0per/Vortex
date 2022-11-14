@@ -10,9 +10,8 @@ from utils.paths import POSTER_FOLDER
 from users.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser
 from utils.cache import getCachedItem, cacheItem
 from utils.browser import Firefox
-from utils.common import chunkedDownload, sanitize
+from utils.common import chunkedDownload, sanitize, get_simple_keys
 import os
-import threading
 import time
 
 api = Blueprint('api', __name__)
@@ -201,13 +200,12 @@ def sources(id):
         "n2embed": "mp4"
     }
 
-
+    baseURL = request.base_url.split("/api")[0]
     response = []
 
     if kind == "show":
-        NOS = request.args.get("NOS", 0, type=int)
-        EC = request.args.get("EC", "")
-        EC = json.loads(base64.b64decode(EC.encode()).decode())
+        EC = requests.get(f"{baseURL}/api/episodeCount/{id}", headers=LAH(request)).json()["results"]
+        NOS = len(get_simple_keys(EC))
 
         for i in range(NOS):
             i += 1
@@ -466,7 +464,6 @@ def getMovieInfo(id):
         if "number of seasons" in movie:
             resp["kind"] = "show"
             resp["NOS"] = movie["number of seasons"]
-            resp["episodeCount"] = requests.get(f"{baseURL}/api/episodeCount/{id}", headers=LAH(request)).json()["results"]
             resp["info"] += f"{resp['NOS']} Seasons"
         else: 
             resp["kind"] = "movie"

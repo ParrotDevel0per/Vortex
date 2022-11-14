@@ -12,6 +12,7 @@ class StreamTape(Resolver):
             self.firefox.addHeader("Referer", referer)
         r = requests.get(web_url, headers=self.firefox.headers).text
         src = re.findall(r'''ById\('.+?=\s*(["']//[^;<]+)''', r)
+        print(src)
         if src:
             src_url = ''
             parts = src[-1].replace("'", '"').split('+')

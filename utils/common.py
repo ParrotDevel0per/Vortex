@@ -83,3 +83,13 @@ def getLocalIP():
 def cls():
     if os.name == "nt": os.system("cls")
     else: os.system("clear")
+
+# https://stackoverflow.com/questions/34327719/get-keys-from-json-in-python
+def get_simple_keys(data):
+    result = []
+    for key in data.keys():
+        if type(data[key]) != dict:
+            result.append(key)
+        else:
+            result += get_simple_keys(data[key])
+    return result

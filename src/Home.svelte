@@ -86,8 +86,6 @@
 			featuredMetadata.kind = data.kind;
 			featuredMetadata.inFavorites = data.inFavorites;
 			featuredMetadata.inPlaylist = data.inPlaylist;
-			featuredMetadata.NOS = data.NOS;
-			featuredMetadata.episodeCount = data.episodeCount;
 			window.scrollTo(0, 0);
 			if (item) item.src = before;
 		}).catch(error => {

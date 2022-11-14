@@ -8,8 +8,6 @@
     export let kind;
     export var inFavorites;
     export var inPlaylist;
-    export let NOS;
-    export var episodeCount;
 
     var favsBTN = "";
     var plBTN = "";
@@ -63,10 +61,7 @@
 
     const play = () => {
         let url = `/watch/${playBTN.dataset.id}/`
-        if (kind) {
-            url += `?kind=${kind}`;
-            if (kind == "show") url += `&NOS=${NOS}&EC=${btoa(JSON.stringify(episodeCount))}`;
-        }
+        if (kind) url += `?kind=${kind}`;
         location = url
     }
 </script>

@@ -51,8 +51,6 @@
 			featuredMetadata.kind = data.kind;
 			featuredMetadata.inFavorites = data.inFavorites;
 			featuredMetadata.inPlaylist = data.inPlaylist;
-			featuredMetadata.episodeCount = data.episodeCount;
-			featuredMetadata.NOS = data.NOS;
             showFt = "true"
 			scrollEffect = "true"
 			window.scrollTo(0, 0);
