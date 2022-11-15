@@ -1,9 +1,7 @@
 from flask import Blueprint, request, render_template, send_from_directory
 from users.users import LAH
 from utils.paths import DB_FOLDER
-from utils.settings import getSetting
 import requests
-import base64
 import os
 import json
 

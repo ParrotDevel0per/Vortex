@@ -1,9 +1,9 @@
 from flask import Blueprint, request, url_for, Response
 from utils.beautify import BeautifyM3U8
-import requests
 import base64
 import json
 import Resolver
+from classes.net import NET
 
 universal = Blueprint('universal', __name__)
 beautifier = BeautifyM3U8()
@@ -41,7 +41,7 @@ def proxy():
     token = json.loads(base64.b64decode(token).decode('utf-8'))
     url = token['url']
     headers = token['headers']
-    resp = requests.get(url, headers=headers)
+    resp = NET().get(url, headers=headers)
     if not url: return Response('', status=400)
 
     # Get different repsonse based on file type
@@ -59,7 +59,7 @@ def proxyChunk():
     token = json.loads(base64.b64decode(token).decode('utf-8'))
     url = token['url']
     headers = token['headers']
-    resp = requests.get(url, headers=headers)
+    resp = NET().get(url, headers=headers)
     resp2 = Response(resp.content)
     resp2.headers['Content-Disposition'] = 'attachment; filename="chunk.ts"'
     resp2.headers['Content-Type'] = 'video/MP2T'

@@ -1,8 +1,8 @@
-from ..utils.browser import Firefox
+from classes.browser import Firefox
 from ..utils.resolve import Resolver
-import requests
 import re
 from bs4 import BeautifulSoup
+from classes.net import NET
 
 class Vidsrc(Resolver):
     def __init__(self):
@@ -10,7 +10,7 @@ class Vidsrc(Resolver):
 
     def vidsrc(self, url):
         self.firefox.addHeader("Referer", "https://vidsrc.me/")
-        s = requests.session()
+        s = NET().Session()
         r = s.get(url, headers=self.firefox.headers)
         soup = BeautifulSoup(r.text, 'html.parser')
         iframe = soup.find('iframe', id='player_iframe')

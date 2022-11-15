@@ -3,9 +3,8 @@ import os
 import shutil
 from utils.common import cls
 from utils.settings import getSetting, setSetting
-from users.users import createUser, reinitHome
+from users.users import createUser
 from utils.paths import CACHE_FOLDER, POSTER_FOLDER, DB_FOLDER
-from utils.banner import intro, textColor
 
 class CLI:
     def __init__(self):
@@ -101,27 +100,3 @@ class CLI:
             print("Username already exists" if "already" in r else "User created")
         else:
             print("Invalid second argument")
-
-def cli():
-    cls()
-    intro()
-
-    runner = CLI()
-
-    while True:
-        cmd = input(textColor + "Admin@ThePiratePlayer$ ")
-        if " " in cmd: cmd = cmd.split(" ")
-        else: cmd = [cmd]
-
-        for item in runner.commands:
-            if cmd[0] != item["name"]: continue
-            cmd.pop(0)
-
-            try:
-                resp = item["run"](runner, *tuple(cmd))
-                if resp == "return": return
-            except Exception as e: 
-                print(e)
-            break
-
-

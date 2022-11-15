@@ -12,7 +12,8 @@ default = {
     #"preloader": "1.png",
     "language": "en",
     "debug": "false",
-    "fernetKey": str(Fernet.generate_key()).replace("b'", "").replace("'", "")
+    "fernetKey": str(Fernet.generate_key()).replace("b'", "").replace("'", ""),
+    "keepLogs": "False"
 }
 
 def setToDefault():
@@ -29,7 +30,8 @@ settingsKeys = [
     #"preloader",
     "language",
     "debug",
-    "fernetKey"
+    "fernetKey",
+    "keepLogs"
 ]
 
 for key in settingsKeys:

@@ -1,4 +1,4 @@
-from ..utils.rmf import ResolvedMediaFile
+from classes.rmf import ResolvedMediaFile
 
 class Resolver(object):
     """

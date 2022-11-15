@@ -3,7 +3,6 @@ sleepTime = 100 # Interval of updating token
 expireAfter = 3 * 60 * 60 # When unused token will expire, must be bigger than sleepTime
 
 
-import requests
 from flask import request, url_for, Blueprint, Response
 from users.users import reqToToken
 import json
@@ -11,6 +10,7 @@ import time
 import base64
 from utils.common import randStr
 import Resolver
+from classes.net import NET
 
 vidsrc = Blueprint('vidsrc', __name__)
 database = {}
@@ -26,7 +26,7 @@ def checkIfExpired():
             del database[key]
 
 def refreshToken(token):
-    r = requests.get(token["refresher"], headers=token["headers"])
+    r = NET().GET(token["refresher"], headers=token["headers"])
     global database
     database[token["uid"]]["expire"] = int(time.time()) + sleepTime
 
@@ -43,7 +43,7 @@ def play():
     refresher = resolved.refresher["url"]
 
     UID = randStr(32)
-    requests.get(refresher, headers=headers).text # ! do not remove this line, otherwise everything gets fucked
+    NET().GET(refresher, headers=headers).text # ! do not remove this line, otherwise everything gets fucked
 
     # create wmsAuthSign
     wmsAuthSign = {}
@@ -70,7 +70,7 @@ def playlist():
     wmsAuthSign = json.loads(base64.b64decode(wmsAuthSign).decode('utf-8'))
     if wmsAuthSign["uid"] not in database: return "Forbidden"
     if database[wmsAuthSign["uid"]]["expire"] < int(time.time()): refreshToken(wmsAuthSign)
-    r = requests.get(wmsAuthSign['url'], headers=wmsAuthSign["headers"])
+    r = NET().GET(wmsAuthSign['url'], headers=wmsAuthSign["headers"])
     wmsAuthSign = base64.b64encode(json.dumps(wmsAuthSign).encode('utf-8')).decode('utf-8')
     return Response(r.text.replace("http", f"/proxy/vidsrc/ts?url=http").replace(".ts", f".ts&wmsAuthSign={wmsAuthSign}&token={reqToToken(request)}"), mimetype='application/x-mpegURL')
 
@@ -81,5 +81,5 @@ def ts():
     wmsAuthSign = json.loads(base64.b64decode(wmsAuthSign).decode('utf-8'))
     if wmsAuthSign["uid"] not in database: return "Forbidden"
     if database[wmsAuthSign["uid"]]["expire"] < int(time.time()): refreshToken(wmsAuthSign)
-    r = requests.get(request.args.get("url"), headers=wmsAuthSign["headers"])
+    r = NET().GET(request.args.get("url"), headers=wmsAuthSign["headers"])
     return Response(r.content, mimetype='video/mp2t')

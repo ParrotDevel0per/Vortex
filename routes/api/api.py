@@ -9,7 +9,7 @@ import random
 from utils.paths import POSTER_FOLDER
 from users.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser
 from utils.cache import getCachedItem, cacheItem
-from utils.browser import Firefox
+from classes.browser import Firefox
 from utils.common import chunkedDownload, sanitize, get_simple_keys
 import os
 import time
@@ -216,7 +216,7 @@ def sources(id):
 
                 sources_ = []
                 for src in sources:
-                    file = f"/play/{id}/{i}-{j}.ext?source={src}"
+                    file = f"/play/{id}/{i}-{j}.ext?source={src}&generated={now}"
                     if src in extensions: file = file.replace("ext", extensions[src])
                     else: file = file.replace(".ext", "")
 

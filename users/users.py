@@ -67,6 +67,14 @@ def usernameToUID(username):
             return db[key]["UID"]
     return ""
 
+def getAdmins():
+    db = UD.DB()
+    response = []
+    for key in db:
+        if db[key]["isAdmin"] == True:
+            response.append((db[key]["username"], db[key]["UID"]))
+    return response
+
 def uids():
     us = []
     db = UD.DB()

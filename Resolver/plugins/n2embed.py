@@ -1,9 +1,9 @@
-from ..utils.browser import Firefox
+from classes.browser import Firefox
 from ..utils.resolve import Resolver
-import requests
 from ..utils.common import girc
-import ResolveURL
+from ..hosts.streamlare import StreamLare
 import re
+from classes.net import NET
 
 class N2Embed(Resolver):
     def __init__(self):
@@ -11,19 +11,21 @@ class N2Embed(Resolver):
         self.source = "Streamlare"
 
     def n2embed(self, url):
-        resp = requests.get(url, headers=self.firefox.headers)
+        resp = NET().GET(url, headers=self.firefox.headers)
         dataID = re.findall(
             re.compile(f'data-id="(.*?)">Server {self.source}</a>', flags=re.MULTILINE), resp.text
         )[0]
 
         token = girc(
-        requests.get(url).text,
+            NET().GET(url).text,
             url,
-            'aHR0cHM6Ly93d3cuMmVtYmVkLnRvOjQ0Mw..' # Decoded: https://2embed.to:443
+            'aHR0cHM6Ly93d3cuMmVtYmVkLnRvOjQ0Mw..', # Decoded: https://2embed.to:443
+            useNET=True
         )
+        print(token)
 
         self.firefox.addHeader("Referer", url)
-        return requests.get(f"https://www.2embed.to/ajax/embed/play?id={dataID}&_token={token}", headers=self.firefox.headers).json()["link"]
+        return NET().GET(f"https://www.2embed.to/ajax/embed/play?id={dataID}&_token={token}", headers=self.firefox.headers).json()["link"]
 
     def grab(self, imdbid, episode):
         url = f"https://www.2embed.to/embed/imdb/movie?id={imdbid}"
@@ -32,7 +34,8 @@ class N2Embed(Resolver):
             season = episode[0]
             episode = episode[1]
             url = f"https://www.2embed.to/embed/imdb/tv?id={imdbid}&s={season}&e={episode}"
-        resolved, headers = ResolveURL.resolve("StreamLare", self.n2embed(url))
+        resolved, headers = StreamLare().grab(self.n2embed(url))
+        print(resolved)
         return {
             "url": resolved,
             "headers": headers
