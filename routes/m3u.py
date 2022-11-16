@@ -1,7 +1,7 @@
 from flask import Blueprint, request, redirect
 from utils.settings import getSetting
 from utils.paths import DB_FOLDER
-from users.users import LAH, reqToToken
+from utils.users import LAH, reqToToken
 import requests
 import os
 

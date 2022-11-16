@@ -18,7 +18,7 @@ from utils.settings import getSetting
 from utils.paths import DB_FOLDER
 from utils.banner import intro, lenght, textColor
 from utils.common import cls, getLocalIP
-from users.users import verify, getAdmins
+from utils.users import verify, getAdmins
 import requests
 import threading
 import os

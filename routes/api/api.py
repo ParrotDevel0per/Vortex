@@ -7,7 +7,7 @@ import base64
 import json
 import random
 from utils.paths import POSTER_FOLDER
-from users.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser
+from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser
 from utils.cache import getCachedItem, cacheItem
 from classes.browser import Firefox
 from utils.common import chunkedDownload, sanitize, get_simple_keys
@@ -66,10 +66,10 @@ def userInfo():
     data = userdata(reqToUID(request))
     if request.args.get("all") == 'true': return data
 
-    del data['favorites']
-    del data['playlist']
-    del data['history']
-    del data['password']
+    if 'favorites' in data: del data['favorites']
+    if 'playlist' in data: del data['playlist']
+    if 'history' in data: del data['history']
+    if 'password' in data: del data['password']
     return data
 
 @api.route('/users')
@@ -82,7 +82,7 @@ def users():
             "username": v["username"],
             "isAdmin": v["isAdmin"],
             "isBanned": v["isBanned"],
-            "ip": v["ip"],
+            "ip": v["ip"] if getSetting("saveIPs").lower() == 'true' else "Disabled",
             "email": v["email"],
         }
         resp[k] = user
@@ -153,8 +153,16 @@ def resolve(id):
         'message': 'No ID provided'
     })
     if not id.startswith("tt"): id = f"tt{id}"
-    use = getSetting("source")
-    if request.args.get("source"): use = request.args.get("source")
+
+    sources = []
+    for file in os.listdir("Resolver/plugins"):
+        if file.startswith("__"): continue
+        sources.append(file.split(".")[0])
+
+    use = sources[0]
+    if getSetting("source") in sources:       use = getSetting("source")
+    if request.args.get("source") in sources: use = request.args.get("source")
+
     episode = str(request.args.get("episode") or "")
     baseURL = request.base_url.split("/api")[0]
     url = ""
@@ -189,7 +197,10 @@ def sources(id):
         if file.startswith("__"): continue
         sources.append(file.split(".")[0])
 
-    default = getSetting("source")
+    default = sources[0]
+    if getSetting("source") in sources:       default = getSetting("source")
+    if request.args.get("source") in sources: default = request.args.get("source")
+    
     sources.insert(0, sources.pop(sources.index(default)))
 
     now = str(time.time()).split(".")[0]

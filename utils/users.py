@@ -1,6 +1,7 @@
 from utils.common import randStr
-from users.userdata import UserData
+from classes.userdata import UserData
 from utils.crypto import encrypt, decrypt
+from utils.settings import getSetting
 import hashlib
 import time
 
@@ -26,10 +27,10 @@ def defaultHome():
 		},
     ]
 
-def getIP(req):
-    ip = str(req.remote_addr)
-    if ip: return ip
-    return "IDK"
+def getIP(request):
+    xff = request.headers.get('X-Forwarded-For')
+    if xff is not None: return xff
+    return request.remote_addr
 
 def login(username, password):
     uid = usernameToUID(username)
@@ -122,7 +123,9 @@ def verify(req, verifyAdmin=False):
         if data['isAdmin'] != True:
             return False
 
-    ip = getIP(req)
+    ip = "Disabled"
+    if getSetting("saveIPs").lower() == "true":
+        ip = getIP(req)
 
     try: changeValue(uid, "ip", ip)
     except: pass

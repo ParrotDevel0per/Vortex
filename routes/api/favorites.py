@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 import plugins.imdb as imdb
 import threading
-from users.users import userdata, changeValue, reqToUID
+from utils.users import userdata, changeValue, reqToUID
 
 favoritesRT = Blueprint('favorites', __name__)
 

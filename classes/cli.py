@@ -3,15 +3,16 @@ import os
 import shutil
 from utils.common import cls
 from utils.settings import getSetting, setSetting
-from users.users import createUser
+from utils.users import createUser
 from utils.paths import CACHE_FOLDER, POSTER_FOLDER, DB_FOLDER
+from prettytable import PrettyTable
 
 class CLI:
     def __init__(self):
         self.commands = []
 
         for name, func in inspect.getmembers(CLI, predicate=inspect.isfunction):
-            if name.startswith("__"): continue
+            if name.startswith("__") or name.startswith("_CLI"): continue
 
             self.commands.append({
                 "name": name,
@@ -19,6 +20,43 @@ class CLI:
                 "run": func
             })
     
+
+    def __getSubclassesNames(self):
+        """
+        Get names of subclasses
+
+        Use _getSubclasses() to get class objects
+        """
+        return [cls.__name__.lower() for cls in CLI.__subclasses__()]
+
+    def __getSubclasses(self):
+        """
+        Get classes directly
+        
+        Use _getSubclassesNames() to get only names
+        """
+        return CLI.__subclasses__()
+
+    def __getSubclassByName(self, name):
+        """
+        Get only 1 subclass which matches the name
+
+        returns object
+        """
+
+        if name.lower() not in self.__getSubclassesNames(): return None
+
+        for klass in self.__getSubclasses():
+            if klass.__name__.lower() == name.lower():
+                return klass
+        return None
+
+    def exec(self, *args):
+        """Execute script file"""
+
+        if len(args) < 1: print("Invalid argument count"); return
+
+        self.__getSubclassByName("CLIScript")(args[0]).run()
 
     def exit(self, *args):
         """Exit CLI and run TPP"""
@@ -28,8 +66,10 @@ class CLI:
     def help(self, *args):
         """Show help message"""
 
+        table = PrettyTable(field_names=["Command", "Description"])
         for item in self.commands:
-            print(f"{item['name']} --- {item['desc']}")
+            table.add_row([item['name'], item['desc']])
+        print(table)
 
     def whoami(self, *args):
         """Shows current user"""

@@ -13,26 +13,26 @@ default = {
     "language": "en",
     "debug": "false",
     "fernetKey": str(Fernet.generate_key()).replace("b'", "").replace("'", ""),
-    "keepLogs": "False"
+    "keepLogs": "False",
+    "saveIPs": "False"
 }
+
+# https://stackoverflow.com/questions/34327719/get-keys-from-json-in-python
+def get_simple_keys(data):
+    result = []
+    for key in data.keys():
+        if type(data[key]) != dict:
+            result.append(key)
+        else:
+            result += get_simple_keys(data[key])
+    return result
 
 def setToDefault():
     open(SETTINGSFILE, 'w').write(json.dumps(default))
 
 SETTINGSFILE = os.path.join(DB_FOLDER, "settings.json")
 if not os.path.exists(SETTINGSFILE): setToDefault()
-settingsKeys = [
-    "ip",
-    "port",
-    "cachePosters",
-    "source",
-    "proxifyM3UPosters",
-    #"preloader",
-    "language",
-    "debug",
-    "fernetKey",
-    "keepLogs"
-]
+settingsKeys = get_simple_keys(default)
 
 for key in settingsKeys:
     settings = json.load(open(SETTINGSFILE, 'r'))

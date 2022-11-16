@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, send_from_directory
-from users.users import LAH
+from utils.users import LAH
 from utils.paths import DB_FOLDER
 import requests
 import os

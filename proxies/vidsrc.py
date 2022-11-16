@@ -4,7 +4,7 @@ expireAfter = 3 * 60 * 60 # When unused token will expire, must be bigger than s
 
 
 from flask import request, url_for, Blueprint, Response
-from users.users import reqToToken
+from utils.users import reqToToken
 import json
 import time
 import base64
