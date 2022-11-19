@@ -1,11 +1,25 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+@font-face {
+  font-family: 'Chomsky';
+  src: url('/static/fonts/Chomsky.woff') format('woff');
+}
 
 :root {
   --bg: black;
+  --bg-img: url("https://corsproxy.io/?https://assets.nflxext.com/ffe/siteui/vlv3/5aecc44d-2a1f-4313-8399-98df20908b64/5fbf316e-ca1a-4e9b-90d2-0c72608cc2b1/SK-en-20221114-popsignuptwoweeks-perspective_alpha_website_small.jpg");
+}
+
+html {
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.7), 
+      rgba(0, 0, 0, 0.7)
+    ),
+    var(--bg-img) no-repeat;
 }
 
 body, html {
-  background-color: var(--bg);
+  height: 90%;
+  width: 98%;
 }
 
 body {
@@ -14,30 +28,47 @@ body {
   -moz-osx-font-smoothing: grayscale;      
 }
 
+.tpp-logo p {
+  font-family: 'Chomsky';
+  color: rgb(255, 0, 0)!important;
+  position: absolute;
+  top: 0px;
+  left: 3.1%;
+  font-size: 2.3em;
+}
+
 .login-page {
   width: 360px;
   padding: 8% 0 0;
   margin: auto;
+  height: 100%;
 }
 .form {
   position: relative;
   z-index: 1;
-  background: #FFFFFF;
+  background: rgba(0,0,0,.75);
   max-width: 360px;
   margin: 0 auto 100px;
-  border-radius: 10px;
+  border-radius: 4px;
   padding: 45px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
+.form h1 {
+  color: #fff;
+  font-weight: 999;
+  margin-bottom: 28px;
+}
 .form input {
   font-family: "Roboto", sans-serif;
   outline: 0;
-  background: #f2f2f2;
+  background: #333333;
+  color: #7a7a7a;
+  border-radius: 4px;
   width: 100%;
   border: 0;
   margin: 0 0 15px;
-  padding: 15px;
+  padding: 16px 20px 16px;
   box-sizing: border-box;
   font-size: 14px;
 }
@@ -48,17 +79,19 @@ body {
   background: red;
   width: 100%;
   border: 0;
-  padding: 15px;
+  padding: 16px;
   color: #FFFFFF;
   font-size: 14px;
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  margin: 24px 0 12px;
 }
 .form button:hover,.form button:active,.form button:focus {
-  background: white;
+  /*background: white;
   border: 1px solid red;
-  color: red;
+  color: red;*/
+  cursor: pointer;
 }
 
 h1 {

@@ -1,14 +1,19 @@
 import requests
 from classes.browser import Firefox
+from utils.settings import getSetting
 
 class Proxy:
     def __init__(self, proxy=None, protocol=None):
-        self.protocol = protocol if protocol else "socks4"
-        self.proxy = proxy if proxy else "178.48.68.61:4145"
-        self.useproxy = False
+        p = ""
+        ps = getSetting("proxy").lower()
+        auth = getSetting("proxyAuth")
+        if auth: p = f"{auth}@{ps.split(':')[1]}:{ps.split(':')[2]}"
+
+        self.protocol = protocol if protocol else ps.split(":")[0]
+        self.proxy = proxy if proxy else p
+        self.useproxy = getSetting("useProxy").lower() == 'true'
 
     def json(self, test_ = False):
-
         if test_ == False:
             if self.useproxy == False:
                 return {}

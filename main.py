@@ -24,8 +24,10 @@ import threading
 import os
 import sys
 import logging
+import time
 from classes.cli import CLI
 from classes.cliscript import CLIScript
+from classes.openvpn import OpenVPN
 
 sysArgv = sys.argv[1:]
 
@@ -63,7 +65,8 @@ def verifyRequest():
         "api.promoteDemote",
         "api.banUnban",
         "api.deleteUser_",
-        "api.changePassword_"
+        "api.changePassword_",
+        "api.requestsIP"
     ]
 
     if endpoint in admin:
@@ -114,9 +117,14 @@ def cli():
 
 
 if __name__ == "__main__":
+    if getSetting("OpenVPNEnabled").lower() == "true":
+        try: OpenVPN().connect()
+        except Exception as e:
+            print(e)
+            time.sleep(3)
+
     if len(getAdmins()) == 0:
-        #           do    user  psw    email       admin
-        CLI().user("create admin admin admin@tpp.com true");
+        CLI().user("create", "admin", "admin", "admin@tpp.com", "true");
 
     if os.path.exists("autoexec.tpps"):
         CLIScript("autoexec.tpps").run()

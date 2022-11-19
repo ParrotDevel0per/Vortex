@@ -10,6 +10,7 @@ from utils.paths import POSTER_FOLDER
 from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser
 from utils.cache import getCachedItem, cacheItem
 from classes.browser import Firefox
+from classes.net import NET
 from utils.common import chunkedDownload, sanitize, get_simple_keys
 import os
 import time
@@ -49,6 +50,10 @@ def homeMenu():
     return jsonify(
         userdata(reqToUID(request))['home'],
     )
+
+@api.route('/requestsIP')
+def requestsIP():
+    return NET().GET("https://api.my-ip.io/ip").text
 
 @api.route('/updateHomeMenu')
 def updateHomeMenu():
@@ -435,7 +440,7 @@ def proxy(url):
         if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
     except:
         pass
-    r = requests.get(url, headers=headers, stream=True)
+    r = NET().GET(url, headers=headers, stream=True)
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'] if 'Content-Type' in r.headers else "")
 
 @api.route('/getMovieInfo/<id>')

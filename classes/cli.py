@@ -1,8 +1,10 @@
 import inspect
 import os
 import shutil
+import json
+import datetime
 from utils.common import cls
-from utils.settings import getSetting, setSetting
+from utils.settings import getSetting, setSetting, SETTINGSFILE
 from utils.users import createUser
 from utils.paths import CACHE_FOLDER, POSTER_FOLDER, DB_FOLDER
 from prettytable import PrettyTable
@@ -96,15 +98,28 @@ class CLI:
 
     def set(self, *args):
         """Set X in settings"""
-
-        if len(args) != 2: print("Invalid argument count"); return
-        print(setSetting(args[0], args[1]))
+        
+        args = list(args)
+        if len(args) < 2: print("Invalid argument count"); return
+        print(setSetting(args.pop(0), " ".join(args)))
 
     def get(self, *args):
         """Get X from settings"""
 
         if len(args) != 1: print("Invalid argument count"); return
         print(getSetting(args[0]))
+
+    def export(self, *args):
+        """Creates settings.tpps that can be imported by runing 'exec settings.tpps'"""
+
+        now = datetime.datetime.now()
+        file = f"# Auto-exported by ThePiratePlayer\n# Exported on {now.strftime('%m/%d/%Y, %H:%M:%S')}\n\n"
+        loaded = json.loads(open(SETTINGSFILE, 'r').read())
+        for k,v in loaded.items():
+            file += f"set {k} {v}\n"
+
+        open("settings.tpps", "w", encoding="utf-8").write(file)
+        print("Created settings.tpps")
 
     def remove(self, *args):
         """Remove cache, posters, ..."""

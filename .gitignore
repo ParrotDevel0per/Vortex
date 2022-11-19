@@ -11,3 +11,5 @@ dist/
 node_modules
 venv
 *.bat
+*.tpps
+openvpn/

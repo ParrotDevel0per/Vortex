@@ -14,7 +14,15 @@ default = {
     "debug": "false",
     "fernetKey": str(Fernet.generate_key()).replace("b'", "").replace("'", ""),
     "keepLogs": "False",
-    "saveIPs": "False"
+    "saveIPs": "False",
+    "proxy": "",
+    "proxyAuth": "",
+    "useProxy": "",
+
+    "OpenVPNEnabled": "False",
+    "OpenVPNPath": "",
+    "OpenVPNAuth": "",
+    "OpenVPNCFG": ""
 }
 
 # https://stackoverflow.com/questions/34327719/get-keys-from-json-in-python
