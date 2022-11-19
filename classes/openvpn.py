@@ -1,6 +1,6 @@
 import subprocess
 import os
-from utils.settings import getSetting
+from utils.settings import getSetting, setSetting
 from utils.common import get_simple_keys
 import sys
 
@@ -8,8 +8,8 @@ class OpenVPN:
     def __init__(self):
         locations = {
             "win32": [
-                "C:\\Program Files\\OpenVPN\\bin\\openvpn-gui.exe",
-                "C:\\Program Files (x86)\\OpenVPN\\bin\\openvpn-gui.exe"
+                "C:\\Program Files\\OpenVPN\\bin\\openvpn.exe",
+                "C:\\Program Files (x86)\\OpenVPN\\bin\\openvpn.exe"
             ],
             "darwin": [
                 "/Applications/OpenVPN Connect/OpenVPN Connect.app/contents/MacOS/OpenVPN Connect"
@@ -27,6 +27,7 @@ class OpenVPN:
                     break
 
         else:
+            setSetting("OpenVPNEnabled", "False")
             raise Exception("OS is not supported")
 
     def connect(self, config=None, auth=None):
