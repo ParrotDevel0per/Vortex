@@ -7,7 +7,7 @@ import base64
 import json
 import random
 from utils.paths import POSTER_FOLDER
-from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser
+from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser, defaultHome
 from utils.cache import getCachedItem, cacheItem
 from classes.browser import Firefox
 from classes.net import NET
@@ -51,6 +51,10 @@ def homeMenu():
         userdata(reqToUID(request))['home'],
     )
 
+@api.route('/defaultHome')
+def defaultHome_():
+    return defaultHome()
+
 @api.route('/requestsIP')
 def requestsIP():
     return NET().GET("https://api.my-ip.io/ip").text
@@ -65,6 +69,8 @@ def updateHomeMenu():
     changeValue(reqToUID(request), "home", new)
 
     return "Done"
+
+
 
 @api.route('/userInfo')
 def userInfo():

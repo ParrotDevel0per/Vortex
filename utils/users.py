@@ -12,18 +12,22 @@ def defaultHome():
 		{
 			"title": "Action",
 			"url": "/api/getMoviesByGenres?genres=Action",
+            "enabled": True
 		},
 		{
 			"title": "War",
 			"url": "/api/getMoviesByGenres?genres=War",
+            "enabled": True
 		},
         {
 			"title": "History",
 			"url": "/api/getMoviesByGenres?genres=History",
+            "enabled": True
 		},
         {
 			"title": "Western",
 			"url": "/api/getMoviesByGenres?genres=Western",
+            "enabled": True
 		},
     ]
 

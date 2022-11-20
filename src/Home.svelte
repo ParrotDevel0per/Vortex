@@ -101,22 +101,24 @@
 	<Featured {...featuredMetadata} />
 	{/if}
 	<div id="content" class="content">
-		<br style="font-size: 100px;" />
+		<!--<br style="font-size: 100px;" />-->
 		{#if showG == "true"}
 			{#each homeItem as m}
-				{#await axios.get(m.url, {transformResponse: (res) => { return JSON.parse(res).results; }, responseType: 'json'})}
-					<p style="display: none;">Loading ...</p>
-				{:then resp}
-				<h1>{ m.title }</h1>
-				<div class="outer">
-					{#each Object.values(resp.data) as d}
-						<img on:click={() => view(d.id)} id={d.id} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
-					{/each}
-					<div class="br"></div>
-				</div>
-				{:catch error}
-					<p style="display: none;">Error: {error.message}</p>
-				{/await}
+				{#if m.enabled == true}
+					{#await axios.get(m.url, {transformResponse: (res) => { return JSON.parse(res).results; }, responseType: 'json'})}
+						<p style="display: none;">Loading ...</p>
+					{:then resp}
+					<!--<h1>{ m.title }</h1>-->
+					<div class="outer">
+						{#each Object.values(resp.data) as d}
+							<img on:click={() => view(d.id)} id={d.id} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
+						{/each}
+						<!--<div class="br"></div>-->
+					</div>
+					{:catch error}
+						<p style="display: none;">Error: {error.message}</p>
+					{/await}
+				{/if}
 			{/each}
 		{/if}
 	</div>
@@ -135,27 +137,17 @@
         -ms-user-select: none;      
         user-select: none;
 	}
-	.br {
-		width: 100%;
-		height: 10vh;
-		background-color: black;
-		position: relative;
-		z-index: 50;
-	}
 
-	h1 {
-		color: white;
-		font-size: 1.5rem;
-		margin-left: 5px;
-		margin-bottom: 0px!important;
-		padding-bottom: 8px!important;
-		position: relative;
-		z-index: 50;
-		background-color: black;
-	}
 	main {
 		background-color: black;
 	}
+	.content {
+		box-sizing: border-box;
+		background-color: black;
+		z-index: 10;
+		position: relative;
+	}
+
 	.content > div > img {
 		height: 100%;
 		margin-left: 5px;
@@ -181,6 +173,7 @@
 		overflow-y: hidden;
 		-webkit-overflow-scrolling: touch;
 		background-color: black;
+		margin-bottom: 2%;
 	}
 
 	@media screen and (max-width: 600px) {

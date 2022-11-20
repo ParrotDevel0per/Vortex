@@ -1,40 +1,72 @@
 <script>
 	import Nav from './Nav.svelte';
 	import axios from 'axios';
-    let data = "";
-    let textarea = "";
+    
+    let rerender = false;
+
+    let defaultC = [];
     axios({
 		method: 'get',
-		url: "/api/homeMenu",
-        transformResponse: (res) => { return res; },
-		responseType: 'json'
+		url: "/api/defaultHome",
+		responseType: 'json',
+        transformResponse: (res) => { return JSON.parse(res); }
 	}).then(response => {
-		data = response.data
+		defaultC = response.data;
 	}).catch(error => {
 		console.log(error);
 	});
 
-    const handleClick = () => {
-        axios({
-            method: 'get',
-            url: "/api/updateHomeMenu?new=" + btoa(textarea.value),
-            responseType: 'text'
-        }).then(response => {
-            return
-        }).catch(error => {
-            console.log(error);
-        });
+    let categories = [];
+    axios({
+		method: 'get',
+		url: "/api/userInfo",
+		responseType: 'json',
+        transformResponse: (res) => { return JSON.parse(res); }
+	}).then(response => {
+		categories = response.data["home"];
+	}).catch(error => {
+		console.log(error);
+	});
 
+    const handleClick = (title) => {
+        for (var i=0; i<categories.length; i++)  {
+            if (categories[i]["title"] == title) {
+                if (categories[i]["enabled"] == true) categories[i]["enabled"] = false
+                else if (categories[i]["enabled"] == false) categories[i]["enabled"] = true
+                break;
+            }
+        }
+        rerender = !rerender;
     }
 
+    $: {
+        if (categories != [] && categories != undefined) {
+            axios({
+                method: 'get',
+                url: "/api/updateHomeMenu?new=" + btoa(JSON.stringify(categories)),
+                responseType: 'json'
+            }).then(response => {
+                console.log(response.data);
+            }).catch(error => {
+                console.log(error);
+            });  
+        }
+    }
 </script>
 
 <main>
 	<Nav active="home" scrollEffect="false"/>
     <br style="font-size: 100px;" />
     <div class="content">
-        <textarea bind:this={textarea} name="Home" rows="4" cols="50">{ data }</textarea>
-        <button on:click={() => {handleClick()}}>Update</button>
+        {#key rerender}
+            {#each categories as category}
+                <button 
+                    class="{category["enabled"] ? 'enabled' : 'disabled'}"
+                    on:click={()=>{handleClick(category["title"])}}
+                >{ category["title"] }</button>
+            {/each}
+        {/key}
+        <button class="default" on:click={()=>{categories=defaultC}}>Defaults</button>
     </div>
 </main>
 
@@ -60,22 +92,19 @@
         align-items:center;
         width: 100vw;
     }
-    textarea {
-        width: 50%;
-        background-color: black;
-        color: white;
-        resize: both;
-        height: 70vh;
+    
+    .enabled {
+        border: 3px solid green;
     }
-    textarea:focus {
-        outline: none!important;
+    
+    .disabled {
+        border: 3px solid red;
     }
     button {
         width: 50%;
         height: 6vh;
         background-color: black;
         border: 3px solid black;
-        border-top: 0px !important;
         color: white;
     }
     button:hover {

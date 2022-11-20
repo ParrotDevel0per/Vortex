@@ -58,8 +58,9 @@ class OpenVPN:
 
         if auth:
             if not os.path.exists(auth): return
-            command.append(f"--auth-user-pass {auth}")
+            command.append(f"--auth-user-pass")
+            command.append(auth)
         
-        subprocess.Popen(" ".join(command), close_fds=True)
+        subprocess.Popen(command, close_fds=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 
