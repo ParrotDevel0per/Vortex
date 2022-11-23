@@ -60,6 +60,7 @@
 
 	// view replace's featured with custom item
 	const view = (id) => {
+		preloadImage(`/api/banner/${id}?do=show`);
 		let item = document.getElementById(id);
 		let before = "";
 

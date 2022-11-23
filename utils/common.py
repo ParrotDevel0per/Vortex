@@ -10,6 +10,10 @@ import re
 symbols = "[@_!#$%^&*()<>?/\|}{~:]\"'"
 exceptions = ["!", ":", "?"]
 
+def insertInMiddle(string, item):
+    midPoint = len(string)//2
+    return string[:midPoint] + item + string[midPoint:]
+
 def girc(page_data, url, co):
     """
     Code adapted from https://github.com/vb6rocod/utils/

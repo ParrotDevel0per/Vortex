@@ -35,6 +35,7 @@ const searchEngine = () => {
 }
 */
 const view = (id) => {
+  preloadImage(`/api/banner/${id}?do=show`);
   location = `/?showG=false&id=${id}`;
 }
 </script>

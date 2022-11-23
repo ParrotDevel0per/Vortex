@@ -2,11 +2,12 @@ import hashlib
 from flask import Blueprint, jsonify, Response, redirect, request, send_from_directory
 from utils.settings import getSetting
 import plugins.imdb as imdb
+import plugins.fanarttv as fanarttv
 import requests
 import base64
 import json
 import random
-from utils.paths import POSTER_FOLDER
+from utils.paths import POSTER_FOLDER, BANNER_FOLDER
 from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser, defaultHome
 from utils.cache import getCachedItem, cacheItem
 from classes.browser import Firefox
@@ -16,8 +17,6 @@ import os
 import time
 
 api = Blueprint('api', __name__)
-cachePosters = getSetting('cachePosters').lower() == "true"
-
 
 @api.route('/')
 def index():
@@ -28,7 +27,7 @@ def index():
 
 featuredMovies = {
     "Joker": {
-        "img": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.wallpapersden.com%2Fimage%2Fdownload%2Fjoker-2019-movie-poster_66602_2560x1440.jpg&f=1&nofb=1",
+        "img": "/api/banner/tt7286456?do=show",
         "title": "JOKER",
         "line": "SMILE AND PUT ON A HAPPY FACE",
         "info": "8.4/10\u00A0\u00A02019\u00A0\u00A0Crime, Drama, Thriller\u00A0\u00A02h 20m",
@@ -277,20 +276,48 @@ def poster(id):
     })
     if id.startswith("tt"): id = id[2:]
     do = request.args.get('do', None)
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ?do provided'
+    })
     baseURL = request.base_url.split('/api')[0]
-    posterURL = imdb.IMDBtoPoster(id)
-    if not posterURL: posterURL = f"{baseURL}/static/img/nopicture.jpg"
-    if do == 'redirect': return redirect(posterURL)
+    if do == 'redirect':
+        p = imdb.IMDBtoPoster(id)
+        posterURL = p if p else f"{baseURL}/static/img/nopicture.jpg"
+        return redirect(posterURL)
+
     elif do == 'show':
         if not os.path.exists(POSTER_FOLDER): os.makedirs(POSTER_FOLDER)
-        if not cachePosters or "nopicture" in posterURL: return Response(requests.get(posterURL).content, mimetype="image/jpeg")
         if f"tt{id}.png" not in os.listdir(POSTER_FOLDER):
-            chunkedDownload(posterURL, os.path.join(POSTER_FOLDER, f"tt{id}.png"))
+            p = imdb.IMDBtoPoster(id)
+            chunkedDownload(p if p else f"{baseURL}/static/img/nopicture.jpg", os.path.join(POSTER_FOLDER, f"tt{id}.png"))
         return send_from_directory(POSTER_FOLDER, f"tt{id}.png")
-    return jsonify({
-        "id": id,
-        "url": posterURL
+
+@api.route('/banner/<id>')
+@api.route('/banner/', defaults={'id': None})
+def banner(id):
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ID provided'
     })
+    if id.startswith("tt"): id = id[2:]
+    do = request.args.get('do', None)
+    if not id: return jsonify({
+        'status': 'error',
+        'message': 'No ?do provided'
+    })
+
+    if do == 'redirect':
+        return redirect(fanarttv.getBanner(f"tt{id}"))
+
+    elif do == 'show':
+        if not os.path.exists(BANNER_FOLDER): os.makedirs(BANNER_FOLDER)
+        if f"tt{id}.png" not in os.listdir(BANNER_FOLDER):
+            url = fanarttv.getBanner(f"tt{id}")
+            if "/api/poster/" in url:
+                return redirect(request.base_url.split("/api")[0]+url)
+            chunkedDownload(url, os.path.join(BANNER_FOLDER, f"tt{id}.png"))
+        return send_from_directory(BANNER_FOLDER, f"tt{id}.png")
 
 @api.route('/search/<query>')
 @api.route('/search/', defaults={'query': None})
@@ -452,7 +479,6 @@ def proxy(url):
 @api.route('/getMovieInfo/<id>')
 @api.route('/getMovieInfo/', defaults={'id': None})
 def getMovieInfo(id):
-    baseURL = request.base_url.split("/api")[0]
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -489,7 +515,10 @@ def getMovieInfo(id):
             resp["info"] += f"{resp['NOS']} Seasons"
         else: 
             resp["kind"] = "movie"
-            resp["info"] += "0h 0m"
+            if "duration" in movie:
+                resp["info"] += movie["duration"]
+            else:
+                resp["info"] += "0h 0m"
 
         cacheItem(f"Item-{id}.json", "ItemInfoCache", json.dumps(resp))
         rp = resp

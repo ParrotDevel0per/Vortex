@@ -3,11 +3,12 @@
     export let line;
     export let info;
     export let plot;
-    export let img;
     export let imdbID;
     export let kind;
     export var inFavorites;
     export var inPlaylist;
+
+    if (id) imdbID = id;
 
     var favsBTN = "";
     var plBTN = "";
@@ -68,9 +69,9 @@
 
 <div class="featuredContainer">
     <div id="featured" class="featured">
-        <img class="featuredIMG" src="{ img }" alt="Featured">
+        <img class="featuredIMG" src="/api/banner/{ imdbID }?do=show" alt="Featured">
         <div id="featuredInfo" class="info">
-            {#if title == "JOKER"}
+            {#if title.toLowerCase() == "joker"}
             <h1 class="jokerFont">{ title }</h1>
             {:else}
             <h1>{ title }</h1>

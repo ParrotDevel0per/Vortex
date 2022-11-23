@@ -11,6 +11,7 @@ class Vidsrc(Resolver):
     def vidsrc(self, url):
         self.firefox.addHeader("Referer", "https://vidsrc.me/")
         r = NET().GET(url, headers=self.firefox.headers)
+        print(r.text)
         soup = BeautifulSoup(r.text, 'html.parser')
         iframe = soup.find('iframe', id='player_iframe')
         src = iframe['src'].replace('//', 'https://')

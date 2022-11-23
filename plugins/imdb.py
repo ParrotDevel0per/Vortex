@@ -1,7 +1,10 @@
 import imdb as imdb
-from utils.common import sanitize
+import requests
+from utils.common import sanitize, insertInMiddle
+from classes.browser import Firefox
+import re
 
-ia = imdb.Cinemagoer()
+ia = imdb.Cinemagoer(accessSystem="web")
 
 def runWhileNotDone(do):
     MAX = 20
@@ -9,9 +12,11 @@ def runWhileNotDone(do):
     while attemps <= MAX:
         attemps += 1
 
-        resp = eval(do)
-        #print("Attempt " + str(attemps))
-        if resp: return resp
+        try:
+            resp = eval(do)
+            #print("Attempt " + str(attemps))
+            if resp: return resp
+        except: pass
     return {}
 
 def search(query):
@@ -98,7 +103,17 @@ def IMDBtoPoster(id):
 
 def getMovieInfo(id):
     if id.startswith("tt"): id = id.replace("tt", "")
-    return dict(ia.get_movie(id))
+    data = dict(ia.get_movie(id))
+    if "number of seasons" not in data:
+        duration = re.findall(
+                        r"\"duration\"\:\"(.*?)\"",
+                        requests.get(f"https://www.imdb.com/title/tt{id}", headers=Firefox().headers).text,
+                        re.MULTILINE
+                    )[1][2:]
+        data["duration"] = insertInMiddle(duration, " ").lower()
+    return data
+        
+            
 
 def getEpisodeInfo(id, season, episode):
     series = ia.get_movie(id)

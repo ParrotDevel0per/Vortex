@@ -7,29 +7,47 @@ import time
 
 UD = UserData()
 
+genres = [
+    "Action",
+    "Adventure",
+    "Animation",
+    "Biography",
+    "Comedy",
+    "Crime",
+    "Documentary",
+    "Drama",
+    "Family",
+    "Fantasy",
+    "History",
+    "Horror",
+    "Music",
+    "Musical",
+    "Mystery",
+    "Romance",
+    "Sci-Fi",
+    "Sport",
+    "Superhero",
+    "Thriller",
+    "War",
+    "Western",
+]
+
+defaultGenres = [
+    "Action",
+    "Comedy",
+    "War",
+    "Western"
+]
+
 def defaultHome():
-    return [
-		{
-			"title": "Action",
-			"url": "/api/getMoviesByGenres?genres=Action",
-            "enabled": True
-		},
-		{
-			"title": "War",
-			"url": "/api/getMoviesByGenres?genres=War",
-            "enabled": True
-		},
-        {
-			"title": "History",
-			"url": "/api/getMoviesByGenres?genres=History",
-            "enabled": True
-		},
-        {
-			"title": "Western",
-			"url": "/api/getMoviesByGenres?genres=Western",
-            "enabled": True
-		},
-    ]
+    resp = []
+    for genre in genres:
+        resp.append({
+            "title": genre,
+			"url": f"/api/getMoviesByGenres?genres={genre}",
+            "enabled": genre in defaultGenres
+        })
+    return resp
 
 def getIP(request):
     xff = request.headers.get('X-Forwarded-For')

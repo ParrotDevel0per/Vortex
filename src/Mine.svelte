@@ -1,11 +1,7 @@
 <script>
     import Nav from './Nav.svelte';
-	import Featured from './Featured.svelte';
 	import axios from 'axios';
 
-    var featuredMetadata = { title: "Loading ...", };
-	let showFt = "false";
-	let scrollEffect = "false";
     
 	const random = (length = 8) => {
 		let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -33,41 +29,14 @@
     
 	// view replace's featured with custom item
 	const view = (id) => {
-		axios({
-			method: 'get',
-			url: "/api/getMovieInfo/" + id,
-			transformResponse: (res) => {
-				return JSON.parse(res);
-			},
-			responseType: 'json'
-		}).then(response => {
-			const data = response.data;
-			featuredMetadata.img = `/api/poster/${id}?do=show`;
-			featuredMetadata.title = data.title;
-			featuredMetadata.line = "";
-			featuredMetadata.info = data.info;
-			featuredMetadata.plot = data.plot;
-			featuredMetadata.imdbID = id;
-			featuredMetadata.kind = data.kind;
-			featuredMetadata.inFavorites = data.inFavorites;
-			featuredMetadata.inPlaylist = data.inPlaylist;
-            showFt = "true"
-			scrollEffect = "true"
-			window.scrollTo(0, 0);
-		}).catch(error => {
-			console.log(error);
-		});
+		preloadImage(`/api/banner/${id}?do=show`);
+		location = `/?showG=false&id=${id}`;
 	}
 </script>
 
 <main>
-	<Nav active="mine" scrollEffect="{scrollEffect}"/>
-	{#if showFt == "true"}
-	<Featured {...featuredMetadata} />
-	<br style="font-size: 100px;" />
-	{:else}
+	<Nav active="mine"/>
 	<br style="font-size: 50px;" />
-	{/if}
 	<div id="content" class="content">
 			{#each Object.values(menu) as m}
 			<h1>{ m.title }</h1>

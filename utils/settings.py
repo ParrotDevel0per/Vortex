@@ -6,7 +6,6 @@ import json
 default = {
     "ip": "127.0.0.1",
     "port": "5000",
-    "cachePosters": "True",
     "source": "gomo",
     "proxifyM3UPosters": "True",
     #"preloader": "1.png",

@@ -16,6 +16,6 @@
 </head>
 <body>
     <div id="player" style="width:100%;height:100%"></div>
-    <script>var player = new Playerjs({id:"player",file: JSON.parse("{{ sources }}".replaceAll('&#34;', '"').replaceAll('&amp;', '&'))});</script>
+    <script>var player = new Playerjs({id:"player",poster:"/api/banner/{{ id }}?do=show",file: JSON.parse("{{ sources }}".replaceAll('&#34;', '"').replaceAll('&amp;', '&'))});</script>
 </body>
 </html>
