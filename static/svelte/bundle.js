@@ -1,5 +1,5 @@
 
-(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35730/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 var app = (function () {
     'use strict';
 
@@ -4892,7 +4892,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (50:4) {:catch error}
+    // (54:4) {:catch error}
     function create_catch_block$1(ctx) {
     	let t_value = console.log("Fuck, Error occured: " + /*error*/ ctx[12].message) + "";
     	let t;
@@ -4914,14 +4914,14 @@ var app = (function () {
     		block,
     		id: create_catch_block$1.name,
     		type: "catch",
-    		source: "(50:4) {:catch error}",
+    		source: "(54:4) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (46:4) {:then resp}
+    // (50:4) {:then resp}
     function create_then_block$1(ctx) {
     	let each_1_anchor;
     	let each_value_1 = Object.values(/*resp*/ ctx[8].data);
@@ -4982,14 +4982,14 @@ var app = (function () {
     		block,
     		id: create_then_block$1.name,
     		type: "then",
-    		source: "(46:4) {:then resp}",
+    		source: "(50:4) {:then resp}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (47:5) {#each Object.values(resp.data) as d}
+    // (51:5) {#each Object.values(resp.data) as d}
     function create_each_block_1(ctx) {
     	let img;
     	let img_src_value;
@@ -5006,7 +5006,7 @@ var app = (function () {
     			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[9].id + "?do=show")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", /*d*/ ctx[9].title);
     			attr_dev(img, "class", "svelte-mrd3ws");
-    			add_location(img, file$2, 47, 6, 1164);
+    			add_location(img, file$2, 51, 6, 1239);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -5030,14 +5030,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(47:5) {#each Object.values(resp.data) as d}",
+    		source: "(51:5) {#each Object.values(resp.data) as d}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (44:118)        { console.log("Getting Movies ...") }
+    // (48:118)        { console.log("Getting Movies ...") }
     function create_pending_block$1(ctx) {
     	let t_value = console.log("Getting Movies ...") + "";
     	let t;
@@ -5059,14 +5059,14 @@ var app = (function () {
     		block,
     		id: create_pending_block$1.name,
     		type: "pending",
-    		source: "(44:118)        { console.log(\\\"Getting Movies ...\\\") }",
+    		source: "(48:118)        { console.log(\\\"Getting Movies ...\\\") }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (41:3) {#each Object.values(menu) as m}
+    // (45:3) {#each Object.values(menu) as m}
     function create_each_block$2(ctx) {
     	let h1;
     	let t0_value = /*m*/ ctx[5].title + "";
@@ -5106,11 +5106,11 @@ var app = (function () {
     			t2 = space();
     			div1 = element("div");
     			attr_dev(h1, "class", "svelte-mrd3ws");
-    			add_location(h1, file$2, 41, 3, 886);
+    			add_location(h1, file$2, 45, 3, 961);
     			attr_dev(div0, "class", "outer svelte-mrd3ws");
-    			add_location(div0, file$2, 42, 3, 911);
+    			add_location(div0, file$2, 46, 3, 986);
     			attr_dev(div1, "class", "br svelte-mrd3ws");
-    			add_location(div1, file$2, 53, 3, 1377);
+    			add_location(div1, file$2, 57, 3, 1452);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
@@ -5143,7 +5143,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(41:3) {#each Object.values(menu) as m}",
+    		source: "(45:3) {#each Object.values(menu) as m}",
     		ctx
     	});
 
@@ -5186,12 +5186,12 @@ var app = (function () {
     			}
 
     			set_style(br, "font-size", "50px");
-    			add_location(br, file$2, 38, 1, 776);
+    			add_location(br, file$2, 42, 1, 851);
     			attr_dev(div, "id", "content");
     			attr_dev(div, "class", "content svelte-mrd3ws");
-    			add_location(div, file$2, 39, 1, 810);
+    			add_location(div, file$2, 43, 1, 885);
     			attr_dev(main, "class", "svelte-mrd3ws");
-    			add_location(main, file$2, 36, 0, 744);
+    			add_location(main, file$2, 40, 0, 819);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5262,6 +5262,11 @@ var app = (function () {
     	return block;
     }
 
+    function preloadImage$1(url) {
+    	var img = new Image();
+    	img.src = url;
+    }
+
     function instance$3($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Mine', slots, []);
@@ -5292,7 +5297,7 @@ var app = (function () {
 
     	// view replace's featured with custom item
     	const view = id => {
-    		preloadImage(`/api/banner/${id}?do=show`);
+    		preloadImage$1(`/api/banner/${id}?do=show`);
     		location = `/?showG=false&id=${id}`;
     	};
 
@@ -5307,7 +5312,16 @@ var app = (function () {
     	};
 
     	const click_handler = d => view(d.id);
-    	$$self.$capture_state = () => ({ Nav, axios, random, menu, view });
+
+    	$$self.$capture_state = () => ({
+    		Nav,
+    		axios,
+    		preloadImage: preloadImage$1,
+    		random,
+    		menu,
+    		view
+    	});
+
     	return [menu, view, func, click_handler];
     }
 
@@ -5700,7 +5714,7 @@ var app = (function () {
     	return block;
     }
 
-    function preloadImage$1(url) {
+    function preloadImage(url) {
     	var img = new Image();
     	img.src = url;
     }
@@ -5709,7 +5723,7 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Search', slots, []);
     	var term = "";
-    	preloadImage$1("/static/img/loading.gif");
+    	preloadImage("/static/img/loading.gif");
 
     	/*
     const searchEngine = () => {
@@ -5733,7 +5747,7 @@ var app = (function () {
     }
     */
     	const view = id => {
-    		preloadImage$1(`/api/banner/${id}?do=show`);
+    		preloadImage(`/api/banner/${id}?do=show`);
     		location = `/?showG=false&id=${id}`;
     	};
 
@@ -5753,7 +5767,7 @@ var app = (function () {
     	};
 
     	const click_handler = r => view(r.id);
-    	$$self.$capture_state = () => ({ Nav, axios, term, preloadImage: preloadImage$1, view });
+    	$$self.$capture_state = () => ({ Nav, axios, term, preloadImage, view });
 
     	$$self.$inject_state = $$props => {
     		if ('term' in $$props) $$invalidate(0, term = $$props.term);

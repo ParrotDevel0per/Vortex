@@ -2,6 +2,10 @@
     import Nav from './Nav.svelte';
 	import axios from 'axios';
 
+	function preloadImage(url) {
+		var img=new Image();
+		img.src=url;
+	}
     
 	const random = (length = 8) => {
 		let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
