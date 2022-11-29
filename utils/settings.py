@@ -6,14 +6,16 @@ import json
 default = {
     "ip": "127.0.0.1",
     "port": "5000",
-    "source": "gomo",
-    "proxifyM3UPosters": "True",
+    "source": "vidsrc",
+    "proxifyM3UPosters": "true",
     #"preloader": "1.png",
     "language": "en",
     "debug": "false",
     "fernetKey": str(Fernet.generate_key()).replace("b'", "").replace("'", ""),
-    "keepLogs": "False",
-    "saveIPs": "False",
+    "keepLogs": "false",
+    "saveIPs": "false",
+    "logger": "true",
+
     "proxy": "",
     "proxyAuth": "",
     "useProxy": "",
@@ -21,7 +23,10 @@ default = {
     "OpenVPNEnabled": "False",
     "OpenVPNPath": "",
     "OpenVPNAuth": "",
-    "OpenVPNCFG": ""
+    "OpenVPNCFG": "",
+
+    "phpProxyEnabled": "false",
+    "phpProxyURL": ""
 }
 
 # https://stackoverflow.com/questions/34327719/get-keys-from-json-in-python

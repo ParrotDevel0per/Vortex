@@ -19,6 +19,7 @@ def openConnection():
         return url_for(
             "api.proxy",
             url="base64:"+base64.b64encode("https://google.com".encode()).decode(),
+            usePHPProxy="false",
             headers={}
         )
 

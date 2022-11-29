@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <title>Terminal</title>
+    <script>
+        var username = "admin";
+
+        const request = new XMLHttpRequest();
+        request.open('GET', '/api/userInfo', false);  // `false` makes the request synchronous
+        request.send(null);
+        username = JSON.parse(request.responseText).username;
+    </script>
+    <style>
+    html, body {
+        background: #1b1e2b;
+    }
+
+    .terminal{
+        background: #1b1e2b;
+        color: #c3e88d;
+        font: courier;
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        font-size: 1.2em;
+    }
+
+    .line{
+        display: table;
+        width: 100%;
+    }
+
+    .terminal span{
+        display:table-cell; 
+        width:11%;
+    }
+
+    .terminal input{
+        display:table-cell; 
+        width:100%;
+        border: none;
+        background: #1b1e2b;
+        color: #c3e88d;
+        outline: none;
+        font-size: 1em;
+    }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+    <div id="history">
+        
+    </div>
+    <div class="line">
+        <span id="path"></span>
+        <input type="text" id="input">
+    </div>
+</div>
+</body>
+<script>
+    $('#path').html(`${username}@ThePiratePlayer$ `);
+    const exec = (command) => {
+        if (!command) return `${username}@ThePiratePlayer$`
+        const request = new XMLHttpRequest();
+        request.open('GET', '/api/terminal?cmd=' + btoa(command), false);  // `false` makes the request synchronous
+        request.send(null);
+        return request.responseText;
+    }
+
+    $(function() {
+        $('.terminal').on('click', function() {
+            $('#input').focus();
+        });
+    
+        $('#input').on('keydown', function search(e) {
+            if (e.keyCode == 13) {
+                $('#history').append(exec($(this).val()) + '<br/>');
+                $('#input').val('');
+            }
+        });
+    });
+</script>
+</html>

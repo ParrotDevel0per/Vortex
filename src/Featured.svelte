@@ -69,13 +69,10 @@
 
 <div class="featuredContainer">
     <div id="featured" class="featured">
-        <img class="featuredIMG" src="/api/banner/{ imdbID }?do=show" alt="Featured">
+        <img class="featuredIMG" src={imdbID ? `/api/banner/${ imdbID }?do=show` : ""} alt="Featured">
         <div id="featuredInfo" class="info">
-            {#if title.toLowerCase() == "joker"}
-            <h1 class="jokerFont">{ title }</h1>
-            {:else}
-            <h1>{ title }</h1>
-            {/if}
+            <h1 class={title.toLowerCase() == "joker" ? "jokerFont" : "normalFont" }>{@html title.replace(": ", ": <br />") }</h1>
+
             {#if line}
             <h2>{ line }</h2>
             {/if}
@@ -85,19 +82,12 @@
             {#if plot}
             <h4>{ plot }</h4>
             {/if}
-
-            <a bind:this={playBTN} data-id="{ imdbID }" id="playButton" class="bgRed" on:click={() => play()}>Play</a>
-            {#if inFavorites}
-            <a bind:this={favsBTN} data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()}>- Favorites</a>
-            {:else}
-            <a bind:this={favsBTN} data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()}>+ Favorites</a>
-            {/if}
-
-            {#if kind != "show"}
-                {#if inPlaylist}
-                <a bind:this={plBTN} data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>- Playlist</a>
-                {:else}
-                <a bind:this={plBTN} data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>+ Playlist</a>
+            
+            {#if imdbID && kind}
+                <a bind:this={playBTN} data-id="{ imdbID }" id="playButton" class="bgRed" on:click={() => play()}>Play</a>
+                <a bind:this={favsBTN} data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()}>{inFavorites ? "-" : "+"} Favorites</a>
+                {#if kind != "show"}
+                    <a bind:this={plBTN} data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>{inPlaylist ? "-" : "+"} Playlist</a>
                 {/if}
             {/if}
         </div>
@@ -113,6 +103,10 @@
     @font-face {
         font-family: 'Bignoodletitling';
         src: url('/static/fonts/Bignoodletitling.ttf');
+    }
+    @font-face {
+        font-family: 'VanguardCF-Regular';
+        src: url('/static/fonts/VanguardCF/VanguardCF-Regular.otf');
     }
     /* input, */
     /*
@@ -142,7 +136,7 @@
         top: 20%;
         z-index: 1000;
         padding: 5px;
-        width: 30%;
+        width: 40%;
         text-align: center;
     }
     .info > h1 {
@@ -152,6 +146,10 @@
     .jokerFont {
         font-family: '28DayLater';
         font-size: 10vw!important;
+    }
+    .normalFont {
+        font-family: 'VanguardCF-Regular';
+        font-size: 5vw !important;
     }
     .info > h2 {
         color: white;

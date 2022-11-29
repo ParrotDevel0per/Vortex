@@ -6,4 +6,6 @@ admin = Blueprint("admin", __name__)
 def index():
     return render_template("admin.html")
 
-
+@admin.route('/terminal')
+def terminal():
+    return render_template("terminal.html")

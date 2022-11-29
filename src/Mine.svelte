@@ -39,7 +39,7 @@
 </script>
 
 <main>
-	<Nav active="mine"/>
+	<Nav active="mine" scrollEffect="false"/>
 	<br style="font-size: 50px;" />
 	<div id="content" class="content">
 			{#each Object.values(menu) as m}

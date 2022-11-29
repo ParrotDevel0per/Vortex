@@ -1,31 +1,27 @@
 import requests
 import base64
+import json
 from classes.proxy import Proxy
+from utils.settings import getSetting
 
 request_settings = {
     "timeout": 30,
     "verify": True
 }
 
-#phpProxy = "http://localhost:8081"
-#phpProxyEnabled = True
-
 class NET:
     def __init__(self) -> None:
-        pass
+        self.phpProxyURL = getSetting("phpProxyURL")
         
-    def GET(self, url, headers={}, allow_redirects=True, stream=False):
-        if False:
-            #if allow_redirects:
-            #    headers["X-PHPProxy-AllowRedirects"] = True
+    def GET(self, url, headers={}, allow_redirects=True, stream=False, usePHPProxy=getSetting("phpProxyEnabled").lower() == "true"):
+        if usePHPProxy:
+            if allow_redirects:
+                headers["X-PHPProxy-AllowRedirects"] = "true"
 
-            r = requests.get(
-                f"https://PunyAcceptableCopyleft.parrotdevelopers.repl.co/get.php?url={base64.b64encode(url.encode()).decode()}",
-                headers=headers
+            return requests.get(
+                f"{self.phpProxyURL}/get.php?url={base64.b64encode(url.encode()).decode()}&headers={base64.b64encode(json.dumps(headers).encode()).decode()}",
+                allow_redirects=False
             )
-            print(r.text)
-
-            return r
 
         return requests.get(
             url,
@@ -37,17 +33,16 @@ class NET:
             stream=stream
         )
 
-    def POST(self, url, headers={}, data=None, allow_redirects=True):
-        if False:
-            print(url)
+    def POST(self, url, headers={}, data=None, allow_redirects=True, usePHPProxy=getSetting("phpProxyEnabled").lower() == "true"):
+        if usePHPProxy:
+            settingHeaders = {}
             if allow_redirects:
-                headers["X-PHPProxy-AllowRedirects"] = True
-
+                settingHeaders["X-PHPProxy-AllowRedirects"] = "true"
+            
             return requests.post(
-                f"{phpProxy}/post.php?url={base64.b64encode(url.encode()).decode()}",
-                headers=headers,
-                timeout=request_settings["timeout"],
-                data=data
+                f"{self.phpProxyURL}/post.php?url={base64.b64encode(url.encode()).decode()}&headers={base64.b64encode(json.dumps(headers).encode()).decode()}&data={base64.b64encode(json.dumps(data).encode()).decode()}",
+                headers=settingHeaders,
+                allow_redirects=False
             )
 
         return requests.post(
@@ -60,9 +55,11 @@ class NET:
             proxies=Proxy().json()
         )
 
+    def get(self, url, headers={}, allow_redirects=True, stream=False):
+        return self.GET(url, headers=headers, allow_redirects=allow_redirects, stream=stream)
+
+    def post(self, url, headers={}, data=None, allow_redirects=True):
+        return self.POST(url, headers=headers, data=data, allow_redirects=allow_redirects)
+
     def Session(self):
-        raise NotImplementedError
-        s = requests.Session()
-        p = Proxy()
-        if p.useproxy: s.proxies.update(p.json())
-        return s
+        return NET()

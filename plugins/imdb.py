@@ -2,6 +2,7 @@ import imdb as imdb
 import requests
 from utils.common import sanitize, insertInMiddle
 from classes.browser import Firefox
+from urllib.parse import quote
 import re
 
 ia = imdb.Cinemagoer(accessSystem="web")
@@ -19,6 +20,7 @@ def runWhileNotDone(do):
         except: pass
     return {}
 
+"""
 def search(query):
     movies = runWhileNotDone(f"ia.search_movie('{sanitize(query)}')")
     response = {}
@@ -28,6 +30,25 @@ def search(query):
         response[movie.getID()] = dict(movie)
         response[movie.getID()]["id"] = f"tt{movie.getID()}"
     return response
+"""
+
+def search(query):
+    firefox = Firefox()
+    resp = requests.get(f"https://v3.sg.media-imdb.com/suggestion/titles/x/{quote(query)}.json?includeVideos=0", headers=firefox.headers)
+    response = {}
+    for movie in resp.json()['d']:
+        if movie["qid"] not in ["movie", "tvSeries"]: continue
+        if "i" not in movie: continue
+        
+        response[movie["id"]] = {
+            "title": movie["l"],
+            #"year": movie["y"],
+            "kind": movie["qid"],
+            "id": movie["id"],
+            "poster": f"/api/poster/{movie['id']}?do=show"
+        }
+    return response
+
 
 def seasons(id):
     series = ia.get_movie(id)

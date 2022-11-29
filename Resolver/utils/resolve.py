@@ -49,8 +49,9 @@ class Resolver(object):
         """
         c = self._getSubclassByName(module)()
         c.parent = self
-        try:data = c.grab(imdbid, episode)
-        except: data = {}
+        #try:data = c.grab(imdbid, episode)
+        #except: data = {}
+        data = c.grab(imdbid, episode)
         return ResolvedMediaFile(
             url=data.get("url", ""),
             headers=data.get("headers", {}),

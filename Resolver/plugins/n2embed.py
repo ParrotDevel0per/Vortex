@@ -17,12 +17,12 @@ class N2Embed(Resolver):
         )[0]
 
         token = girc(
-            NET().GET(url).text,
+            resp.text,
             url,
             'aHR0cHM6Ly93d3cuMmVtYmVkLnRvOjQ0Mw..', # Decoded: https://2embed.to:443
             useNET=True
         )
-        print(token)
+
 
         self.firefox.addHeader("Referer", url)
         return NET().GET(f"https://www.2embed.to/ajax/embed/play?id={dataID}&_token={token}", headers=self.firefox.headers).json()["link"]
@@ -35,7 +35,6 @@ class N2Embed(Resolver):
             episode = episode[1]
             url = f"https://www.2embed.to/embed/imdb/tv?id={imdbid}&s={season}&e={episode}"
         resolved, headers = StreamLare().grab(self.n2embed(url))
-        print(resolved)
         return {
             "url": resolved,
             "headers": headers

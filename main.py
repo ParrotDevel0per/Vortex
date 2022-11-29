@@ -34,7 +34,8 @@ sysArgv = sys.argv[1:]
 logFile = os.path.join(DB_FOLDER, "app.log")
 if getSetting("keepLogs").lower() == "false":
     open(logFile, "w").write("")
-logging.basicConfig(filename=logFile, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+if getSetting("logger").lower() == "true":
+    logging.basicConfig(filename=logFile, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 app = Flask("The Pirate Player")
 app.config['JSON_SORT_KEYS'] = False
 app.register_blueprint(api, url_prefix='/api')
@@ -61,6 +62,8 @@ def verifyRequest():
     admin = [ # These endpoints require admin rights
         "auth.create_",
         "admin.index",
+        "admin.terminal",
+        "api.terminal",
         "api.users",
         "api.promoteDemote",
         "api.banUnban",
@@ -111,6 +114,7 @@ def cli():
             try:
                 resp = item["run"](runner, *tuple(cmd))
                 if resp == "return": return
+                else: print(resp)
             except Exception as e: 
                 print(e)
             break

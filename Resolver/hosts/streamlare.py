@@ -11,7 +11,6 @@ class StreamLare:
         return NET().GET(url, headers=headers, allow_redirects=False).headers.get('location') or url
 
     def grab(self, url):
-        print(url)
         parsed = urlparse(url)
         host = parsed.netloc
         media_id = parsed.path.replace("/e/", "").replace("/d/", "")

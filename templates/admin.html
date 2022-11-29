@@ -26,12 +26,18 @@
             <tbody id="tbody"></tbody>
         </table>
 
-        <button id="createAccountAsk" onclick="createAccount()"">Create Account</button>
+        <button id="createAccountAsk" onclick="createAccount()">Create Account</button>
+        <button onclick="redirect('/admin/terminal')">Open Web Terminal</button>
     </div>
 </body>
 <script>
     let thead = document.getElementById("thead");
     let tbody = document.getElementById("tbody");
+
+    const redirect = (url) => {
+        location = url
+    }
+
     const clearTR = () => {
         while (tbody.firstChild) {
             tbody.removeChild(tbody.firstChild);

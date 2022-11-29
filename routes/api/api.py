@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, Response, redirect, request, send_from_dir
 from utils.settings import getSetting
 import plugins.imdb as imdb
 import plugins.fanarttv as fanarttv
+from classes.cli import CLI
 import requests
 import base64
 import json
@@ -69,6 +70,28 @@ def updateHomeMenu():
 
     return "Done"
 
+@api.route('/terminal')
+def terminal():
+    cmd = request.args.get("cmd")
+    if not cmd: return "Error"
+    cmd = base64.b64decode(cmd.encode()).decode()
+            
+    if " " in cmd: cmd = cmd.split(" ")
+    else: cmd = [cmd]
+
+    if cmd[0].lower() in ["ff", "exit"]:
+        return "This command is not allowed in web terminal."
+
+    runner = CLI()
+    for item in runner.commands:
+        if cmd[0] != item["name"]: continue
+        cmd.pop(0)
+
+        try:
+            return item["run"](runner, *tuple(cmd))
+        except Exception as e: 
+            return "Invalid command"
+    return "Invalid command"
 
 
 @api.route('/userInfo')
@@ -242,7 +265,7 @@ def sources(id):
                     else: file = file.replace(".ext", "")
 
                     sources_.append({
-                        "title": src,
+                        "title": src.replace("n2embed", "2embed"),
                         "file": file
                     })
 
@@ -258,7 +281,7 @@ def sources(id):
         return response
 
     for src in sources:
-        j = {"title": src,}
+        j = {"title": src.replace("n2embed", "2embed") }
         j["file"] = f"/play/{id}.ext"
         j["file"] += f"?source={src}&generated={now}"
         j["file"] = j["file"].replace("ext", extensions[src]) if src in extensions else j["file"]
@@ -473,7 +496,12 @@ def proxy(url):
         if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
     except:
         pass
-    r = NET().GET(url, headers=headers, stream=True)
+    
+    usePHPProxy = False
+    if request.args.get("usePHPProxy") == "true":
+        usePHPProxy = True
+
+    r = NET().GET(url, headers=headers, stream=True, usePHPProxy=usePHPProxy)
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'] if 'Content-Type' in r.headers else "")
 
 @api.route('/getMovieInfo/<id>')

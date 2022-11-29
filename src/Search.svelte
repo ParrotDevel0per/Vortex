@@ -5,7 +5,7 @@ import axios from 'axios';
 //var search = "";
 //var results = {};
 
-var term = "";
+var term = localStorage.getItem("lastQuery") ? localStorage.getItem("lastQuery") : "";
 
 function preloadImage(url) {
 		var img=new Image();
@@ -42,30 +42,13 @@ const view = (id) => {
 
 <main>
     <Nav active="search" />
-    <!--
-    <input
-        bind:this={search}
-        on:keyup={searchEngine}
-        on:keydown={searchEngine}
-        type="text"
-        placeholder="Search ..."
-    >
-    -->
     <input
         bind:value={term}
+        on:keyup={() => localStorage.setItem("lastQuery", term)}
         type="text"
         placeholder="Search ..."
     >
 
-    <!--
-    <div id="grid">
-      {#each Object.values(results) as r}
-      <div class="item" on:click={() => view(r.id)}>
-          <img src="/api/poster/{ r.id }?do=show" alt="Poster">
-      </div>
-      {/each}
-    </div>
-    -->
     {#if term}
       <div id="grid">
         {#await axios.get("/api/search/" + term, {transformResponse: (res) => { return JSON.parse(res); }, responseType: 'json'})}

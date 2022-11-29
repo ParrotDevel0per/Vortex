@@ -92,9 +92,10 @@ def girc(page_data, url, co, useNET=False):
     and https://github.com/addon-lab/addon-lab_resolver_Project
     Copyright (C) 2021 ADDON-LAB, KAR10S
     """
-    net = ""
-    if useNET: net = NET().Session()
-    else: net = requests.Session()
+    if useNET:
+        net = NET()
+    else:
+        net = requests.Session()
     hdrs = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0",
             'Referer': url}
     rurl = 'https://www.google.com/recaptcha/api.js'

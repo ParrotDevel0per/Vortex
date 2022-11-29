@@ -28,3 +28,4 @@ class CLIScript(CLI):
         for fn, args in self.tokens:
             resp = fn(self, *args)
             if resp == "return": return
+            else: print(resp)

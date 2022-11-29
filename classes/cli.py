@@ -56,7 +56,7 @@ class CLI:
     def exec(self, *args):
         """Execute script file"""
 
-        if len(args) < 1: print("Invalid argument count"); return
+        if len(args) < 1: return "Invalid argument count"
 
         self.__getSubclassByName("CLIScript")(args[0]).run()
 
@@ -71,12 +71,12 @@ class CLI:
         table = PrettyTable(field_names=["Command", "Description"])
         for item in self.commands:
             table.add_row([item['name'], item['desc']])
-        print(table)
+        return table
 
     def whoami(self, *args):
         """Shows current user"""
 
-        print("Admin, I guess")
+        return "Admin, I guess"
 
 
     def clear(self, *args):
@@ -100,14 +100,14 @@ class CLI:
         """Set X in settings"""
         
         args = list(args)
-        if len(args) < 2: print("Invalid argument count"); return
-        print(setSetting(args.pop(0), " ".join(args)))
+        if len(args) < 2: return "Invalid argument count"
+        return setSetting(args.pop(0), " ".join(args))
 
     def get(self, *args):
         """Get X from settings"""
 
-        if len(args) != 1: print("Invalid argument count"); return
-        print(getSetting(args[0]))
+        if len(args) != 1: return "Invalid argument count"
+        return getSetting(args[0])
 
     def export(self, *args):
         """Creates settings.tpps that can be imported by runing 'exec settings.tpps'"""
@@ -119,12 +119,12 @@ class CLI:
             file += f"set {k} {v}\n"
 
         open("settings.tpps", "w", encoding="utf-8").write(file)
-        print("Created settings.tpps")
+        return "Created settings.tpps"
 
     def remove(self, *args):
         """Remove cache, posters, ..."""
 
-        if len(args) != 1: print("Invalid argument count"); return
+        if len(args) != 1: return "Invalid argument count"
         if args[0] == "cache":
             shutil.rmtree(CACHE_FOLDER)
             os.makedirs(CACHE_FOLDER)
@@ -132,26 +132,26 @@ class CLI:
             shutil.rmtree(POSTER_FOLDER)
             os.makedirs(POSTER_FOLDER)
         else:
-            print("Invalid second argument")
+            return "Invalid second argument"
 
     def log(self, *args):
         """Prints out log"""
 
-        print(open(os.path.join(DB_FOLDER, "app.log"), 'r').read() if open(os.path.join(DB_FOLDER, "app.log"), 'r').read() != "" else "Log is empty")
+        return open(os.path.join(DB_FOLDER, "app.log"), 'r').read() if open(os.path.join(DB_FOLDER, "app.log"), 'r').read() != "" else "Log is empty"
 
     def user(self, *args):
         """Create, Edit, Remove users"""
 
-        if len(args) < 1: print("Invalid argument count"); return
+        if len(args) < 1: return "Invalid argument count"
 
         if args[0].lower() == "create":
-            if len(args) < 3: print("Invalid argument count"); return
+            if len(args) < 3: return "Invalid argument count"
             r = createUser(
                 username=args[1],
                 password=args[2],
                 email="" if len(args) != 4 else args[3],
                 admin=False if len(args) != 5 else args[4] == 'true',
             )
-            print("Username already exists" if "already" in r else "User created")
+            return "Username already exists" if "already" in r else "User created"
         else:
-            print("Invalid second argument")
+            return "Invalid second argument"

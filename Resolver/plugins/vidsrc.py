@@ -11,7 +11,7 @@ class Vidsrc(Resolver):
     def vidsrc(self, url):
         self.firefox.addHeader("Referer", "https://vidsrc.me/")
         r = NET().GET(url, headers=self.firefox.headers)
-        print(r.text)
+        #print(r.text)
         soup = BeautifulSoup(r.text, 'html.parser')
         iframe = soup.find('iframe', id='player_iframe')
         src = iframe['src'].replace('//', 'https://')
@@ -19,7 +19,7 @@ class Vidsrc(Resolver):
         r = NET().GET(src, headers=self.firefox.headers)
         src = re.search(r'src: \'(.*?)\'', r.text).group(1).replace("//", "https://")
         self.firefox.addHeader("Referer", src)
-        r = NET().GET(src, headers=self.firefox.headers)
+        r = NET().GET(src, headers=self.firefox.headers, allow_redirects=True)
         hlsurl = re.search(r'video.setAttribute\("src" , "(.*?)"\)', r.text).group(1)
         path = re.findall(r'var path = "(.*?)"', r.text)[1].replace("//", "https://")
         self.firefox.reInitHeaders()
@@ -27,7 +27,7 @@ class Vidsrc(Resolver):
         return hlsurl, path, self.firefox.headers
 
     def grab(self, imdbid, episode):
-        url = "https://vidsrc.me/embed/{}/".format(imdbid)
+        url = "https://v2.vidsrc.me/embed/{}/".format(imdbid)
         if episode != None: url += "{}/".format(episode)
         hlsurl, refresher, headers = self.vidsrc(url)
 
