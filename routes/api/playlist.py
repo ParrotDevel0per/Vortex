@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-import plugins.imdb as imdb
+from classes.imdb import IMDB
 import threading
 import json
 from utils.cache import getCachedItem, cacheItem
@@ -14,7 +14,7 @@ def playlist():
     })
 
 def addToPlaylistThread(id, uid):
-    movie = imdb.getMovieInfo(id)
+    movie = IMDB().getMovieInfo(id)
     playlist = userdata(uid)["playlist"]
     playlist[id] = {
         "title": movie['title'],
@@ -89,7 +89,7 @@ def serieasToPlaylist(id):
     #pl = imdb.createPlaylistFromSeries(id)
     cache = getCachedItem(f"playlist-{id}.json", "playlists")
     if cache == None:
-        pl = imdb.createPlaylistFromSeries(id)
+        pl = IMDB().createPlaylistFromSeries(id)
         cacheItem(f"playlist-{id}.json", "playlists", json.dumps(pl), expiry=(24 * 60 * 60 * 7))
         return pl
     #print(f"Returning cached playlist for \"{id}\"")

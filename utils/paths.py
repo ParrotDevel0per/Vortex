@@ -1,12 +1,12 @@
 import os
 
 USERDATA = ""
-FOLDERNAME = "ThePiratePlayer"
+FOLDERNAME = "Vortex"
 CACHEFOLDERNAME = "cache"
 if os.name == 'nt': USERDATA = os.environ['APPDATA']
 else:
     USERDATA = os.environ['HOME']
-    FOLDERNAME = ".ThePiratePlayer"
+    FOLDERNAME = ".Vortex"
     CACHEFOLDERNAME = ".cache"
 
 # Folder Paths

@@ -84,6 +84,14 @@ var app = (function () {
         else if (node.getAttribute(attribute) !== value)
             node.setAttribute(attribute, value);
     }
+    function set_custom_element_data(node, prop, value) {
+        if (prop in node) {
+            node[prop] = typeof node[prop] === 'boolean' && value === '' ? true : value;
+        }
+        else {
+            attr(node, prop, value);
+        }
+    }
     function children(element) {
         return Array.from(element.childNodes);
     }
@@ -2677,17 +2685,17 @@ var app = (function () {
     			li1 = element("li");
     			a1 = element("a");
     			a1.textContent = "Logout";
-    			attr_dev(a0, "class", a0_class_value = "nav-link " + (/*active*/ ctx[0] === 'settings' ? 'active' : '') + " svelte-1jvuqz5");
+    			attr_dev(a0, "class", a0_class_value = "nav-link " + (/*active*/ ctx[0] === 'settings' ? 'active' : '') + " svelte-6u7gr7");
     			set_style(a0, "margin-left", "71vw");
     			attr_dev(a0, "href", "/?tab=settings");
-    			add_location(a0, file$5, 57, 14, 2364);
+    			add_location(a0, file$5, 57, 14, 2353);
     			attr_dev(li0, "class", "nav-item");
-    			add_location(li0, file$5, 56, 12, 2327);
-    			attr_dev(a1, "class", "nav-link svelte-1jvuqz5");
+    			add_location(li0, file$5, 56, 12, 2316);
+    			attr_dev(a1, "class", "nav-link svelte-6u7gr7");
     			attr_dev(a1, "href", "/logout");
-    			add_location(a1, file$5, 60, 14, 2555);
+    			add_location(a1, file$5, 60, 14, 2544);
     			attr_dev(li1, "class", "nav-item");
-    			add_location(li1, file$5, 59, 12, 2518);
+    			add_location(li1, file$5, 59, 12, 2507);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li0, anchor);
@@ -2698,7 +2706,7 @@ var app = (function () {
     			append_dev(li1, a1);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*active*/ 1 && a0_class_value !== (a0_class_value = "nav-link " + (/*active*/ ctx[0] === 'settings' ? 'active' : '') + " svelte-1jvuqz5")) {
+    			if (dirty & /*active*/ 1 && a0_class_value !== (a0_class_value = "nav-link " + (/*active*/ ctx[0] === 'settings' ? 'active' : '') + " svelte-6u7gr7")) {
     				attr_dev(a0, "class", a0_class_value);
     			}
     		},
@@ -2744,22 +2752,22 @@ var app = (function () {
     			li2 = element("li");
     			a2 = element("a");
     			a2.textContent = "Logout";
-    			attr_dev(a0, "class", "nav-link svelte-1jvuqz5");
+    			attr_dev(a0, "class", "nav-link svelte-6u7gr7");
     			set_style(a0, "margin-left", "67vw");
     			attr_dev(a0, "href", "/?tab=settings");
-    			add_location(a0, file$5, 47, 14, 1961);
+    			add_location(a0, file$5, 47, 14, 1950);
     			attr_dev(li0, "class", "nav-item");
-    			add_location(li0, file$5, 46, 12, 1924);
-    			attr_dev(a1, "class", "nav-link svelte-1jvuqz5");
+    			add_location(li0, file$5, 46, 12, 1913);
+    			attr_dev(a1, "class", "nav-link svelte-6u7gr7");
     			attr_dev(a1, "href", "/admin");
-    			add_location(a1, file$5, 50, 14, 2112);
+    			add_location(a1, file$5, 50, 14, 2101);
     			attr_dev(li1, "class", "nav-item");
-    			add_location(li1, file$5, 49, 12, 2075);
-    			attr_dev(a2, "class", "nav-link svelte-1jvuqz5");
+    			add_location(li1, file$5, 49, 12, 2064);
+    			attr_dev(a2, "class", "nav-link svelte-6u7gr7");
     			attr_dev(a2, "href", "/logout");
-    			add_location(a2, file$5, 53, 14, 2228);
+    			add_location(a2, file$5, 53, 14, 2217);
     			attr_dev(li2, "class", "nav-item");
-    			add_location(li2, file$5, 52, 12, 2191);
+    			add_location(li2, file$5, 52, 12, 2180);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li0, anchor);
@@ -2870,7 +2878,7 @@ var app = (function () {
     		c: function create() {
     			nav_1 = element("nav");
     			a0 = element("a");
-    			a0.textContent = "The Pirate Player";
+    			a0.textContent = "Vortex";
     			t1 = space();
     			button = element("button");
     			span = element("span");
@@ -2890,11 +2898,11 @@ var app = (function () {
     			t7 = text("Mine");
     			t8 = space();
     			info.block.c();
-    			attr_dev(a0, "class", "navbar-brand svelte-1jvuqz5");
+    			attr_dev(a0, "class", "navbar-brand svelte-6u7gr7");
     			attr_dev(a0, "href", "/");
     			add_location(a0, file$5, 31, 4, 899);
     			attr_dev(span, "class", "navbar-toggler-icon");
-    			add_location(span, file$5, 33, 6, 1165);
+    			add_location(span, file$5, 33, 6, 1154);
     			attr_dev(button, "class", "navbar-toggler");
     			attr_dev(button, "type", "button");
     			attr_dev(button, "data-toggle", "collapse");
@@ -2902,28 +2910,28 @@ var app = (function () {
     			attr_dev(button, "aria-controls", "navbarSupportedContent");
     			attr_dev(button, "aria-expanded", "false");
     			attr_dev(button, "aria-label", "Toggle navigation");
-    			add_location(button, file$5, 32, 4, 959);
-    			attr_dev(a1, "class", a1_class_value = "nav-link " + (/*active*/ ctx[0] === 'home' ? 'active' : '') + " svelte-1jvuqz5");
+    			add_location(button, file$5, 32, 4, 948);
+    			attr_dev(a1, "class", a1_class_value = "nav-link " + (/*active*/ ctx[0] === 'home' ? 'active' : '') + " svelte-6u7gr7");
     			attr_dev(a1, "href", "/");
-    			add_location(a1, file$5, 38, 29, 1365);
+    			add_location(a1, file$5, 38, 29, 1354);
     			attr_dev(li0, "class", "nav-item");
-    			add_location(li0, file$5, 38, 8, 1344);
-    			attr_dev(a2, "class", a2_class_value = "nav-link " + (/*active*/ ctx[0] === 'search' ? 'active' : '') + " svelte-1jvuqz5");
+    			add_location(li0, file$5, 38, 8, 1333);
+    			attr_dev(a2, "class", a2_class_value = "nav-link " + (/*active*/ ctx[0] === 'search' ? 'active' : '') + " svelte-6u7gr7");
     			attr_dev(a2, "href", "/?tab=search");
-    			add_location(a2, file$5, 39, 29, 1474);
+    			add_location(a2, file$5, 39, 29, 1463);
     			attr_dev(li1, "class", "nav-item");
-    			add_location(li1, file$5, 39, 8, 1453);
-    			attr_dev(a3, "class", a3_class_value = "nav-link " + (/*active*/ ctx[0] === 'mine' ? 'active' : '') + " svelte-1jvuqz5");
+    			add_location(li1, file$5, 39, 8, 1442);
+    			attr_dev(a3, "class", a3_class_value = "nav-link " + (/*active*/ ctx[0] === 'mine' ? 'active' : '') + " svelte-6u7gr7");
     			attr_dev(a3, "href", "/?tab=mine");
-    			add_location(a3, file$5, 40, 29, 1598);
+    			add_location(a3, file$5, 40, 29, 1587);
     			attr_dev(li2, "class", "nav-item");
-    			add_location(li2, file$5, 40, 8, 1577);
+    			add_location(li2, file$5, 40, 8, 1566);
     			attr_dev(ul, "class", "navbar-nav mr-auto");
-    			add_location(ul, file$5, 36, 6, 1301);
+    			add_location(ul, file$5, 36, 6, 1290);
     			attr_dev(div, "class", "collapse navbar-collapse");
     			attr_dev(div, "id", "navbarSupportedContent");
-    			add_location(div, file$5, 35, 4, 1227);
-    			attr_dev(nav_1, "class", "navbar navbar-expand-lg fixed-top svelte-1jvuqz5");
+    			add_location(div, file$5, 35, 4, 1216);
+    			attr_dev(nav_1, "class", "navbar navbar-expand-lg fixed-top svelte-6u7gr7");
     			add_location(nav_1, file$5, 30, 0, 830);
     		},
     		l: function claim(nodes) {
@@ -2958,15 +2966,15 @@ var app = (function () {
     		p: function update(new_ctx, [dirty]) {
     			ctx = new_ctx;
 
-    			if (dirty & /*active*/ 1 && a1_class_value !== (a1_class_value = "nav-link " + (/*active*/ ctx[0] === 'home' ? 'active' : '') + " svelte-1jvuqz5")) {
+    			if (dirty & /*active*/ 1 && a1_class_value !== (a1_class_value = "nav-link " + (/*active*/ ctx[0] === 'home' ? 'active' : '') + " svelte-6u7gr7")) {
     				attr_dev(a1, "class", a1_class_value);
     			}
 
-    			if (dirty & /*active*/ 1 && a2_class_value !== (a2_class_value = "nav-link " + (/*active*/ ctx[0] === 'search' ? 'active' : '') + " svelte-1jvuqz5")) {
+    			if (dirty & /*active*/ 1 && a2_class_value !== (a2_class_value = "nav-link " + (/*active*/ ctx[0] === 'search' ? 'active' : '') + " svelte-6u7gr7")) {
     				attr_dev(a2, "class", a2_class_value);
     			}
 
-    			if (dirty & /*active*/ 1 && a3_class_value !== (a3_class_value = "nav-link " + (/*active*/ ctx[0] === 'mine' ? 'active' : '') + " svelte-1jvuqz5")) {
+    			if (dirty & /*active*/ 1 && a3_class_value !== (a3_class_value = "nav-link " + (/*active*/ ctx[0] === 'mine' ? 'active' : '') + " svelte-6u7gr7")) {
     				attr_dev(a3, "class", a3_class_value);
     			}
 
@@ -3122,7 +3130,7 @@ var app = (function () {
     		c: function create() {
     			h2 = element("h2");
     			t = text(/*line*/ ctx[4]);
-    			attr_dev(h2, "class", "svelte-b644bp");
+    			attr_dev(h2, "class", "svelte-azcwu5");
     			add_location(h2, file$4, 76, 12, 2705);
     		},
     		m: function mount(target, anchor) {
@@ -3157,7 +3165,7 @@ var app = (function () {
     		c: function create() {
     			h3 = element("h3");
     			t = text(/*info*/ ctx[5]);
-    			attr_dev(h3, "class", "svelte-b644bp");
+    			attr_dev(h3, "class", "svelte-azcwu5");
     			add_location(h3, file$4, 79, 12, 2779);
     		},
     		m: function mount(target, anchor) {
@@ -3192,7 +3200,7 @@ var app = (function () {
     		c: function create() {
     			h4 = element("h4");
     			t = text(/*plot*/ ctx[6]);
-    			attr_dev(h4, "class", "svelte-b644bp");
+    			attr_dev(h4, "class", "svelte-azcwu5");
     			add_location(h4, file$4, 82, 12, 2853);
     		},
     		m: function mount(target, anchor) {
@@ -3246,11 +3254,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr_dev(a0, "data-id", /*imdbID*/ ctx[0]);
     			attr_dev(a0, "id", "playButton");
-    			attr_dev(a0, "class", "bgRed svelte-b644bp");
+    			attr_dev(a0, "class", "bgRed svelte-azcwu5");
     			add_location(a0, file$4, 86, 16, 2955);
     			attr_dev(a1, "data-id", /*imdbID*/ ctx[0]);
     			attr_dev(a1, "id", "favs");
-    			attr_dev(a1, "class", "svelte-b644bp");
+    			attr_dev(a1, "class", "svelte-azcwu5");
     			add_location(a1, file$4, 87, 16, 3079);
     		},
     		m: function mount(target, anchor) {
@@ -3340,7 +3348,7 @@ var app = (function () {
     			t1 = text(" Playlist");
     			attr_dev(a, "data-id", /*imdbID*/ ctx[0]);
     			attr_dev(a, "id", "pl");
-    			attr_dev(a, "class", "svelte-b644bp");
+    			attr_dev(a, "class", "svelte-azcwu5");
     			add_location(a, file$4, 89, 20, 3267);
     		},
     		m: function mount(target, anchor) {
@@ -3415,7 +3423,7 @@ var app = (function () {
     			if (if_block2) if_block2.c();
     			t4 = space();
     			if (if_block3) if_block3.c();
-    			attr_dev(img, "class", "featuredIMG svelte-b644bp");
+    			attr_dev(img, "class", "featuredIMG svelte-azcwu5");
 
     			if (!src_url_equal(img.src, img_src_value = /*imdbID*/ ctx[0]
     			? `/api/banner/${/*imdbID*/ ctx[0]}?do=show`
@@ -3426,14 +3434,14 @@ var app = (function () {
 
     			attr_dev(h1, "class", h1_class_value = "" + (null_to_empty(/*title*/ ctx[3].toLowerCase() == "joker"
     			? "jokerFont"
-    			: "normalFont") + " svelte-b644bp"));
+    			: "normalFont") + " svelte-azcwu5"));
 
     			add_location(h1, file$4, 73, 12, 2547);
     			attr_dev(div0, "id", "featuredInfo");
-    			attr_dev(div0, "class", "info svelte-b644bp");
+    			attr_dev(div0, "class", "info svelte-azcwu5");
     			add_location(div0, file$4, 72, 8, 2497);
     			attr_dev(div1, "id", "featured");
-    			attr_dev(div1, "class", "featured svelte-b644bp");
+    			attr_dev(div1, "class", "featured svelte-azcwu5");
     			add_location(div1, file$4, 70, 4, 2347);
     			attr_dev(div2, "class", "featuredContainer");
     			add_location(div2, file$4, 69, 0, 2310);
@@ -3468,7 +3476,7 @@ var app = (function () {
     			if (dirty & /*title*/ 8 && raw_value !== (raw_value = /*title*/ ctx[3].replace(": ", ": <br />") + "")) h1.innerHTML = raw_value;
     			if (dirty & /*title*/ 8 && h1_class_value !== (h1_class_value = "" + (null_to_empty(/*title*/ ctx[3].toLowerCase() == "joker"
     			? "jokerFont"
-    			: "normalFont") + " svelte-b644bp"))) {
+    			: "normalFont") + " svelte-azcwu5"))) {
     				attr_dev(h1, "class", h1_class_value);
     			}
 
@@ -3858,6 +3866,16 @@ var app = (function () {
     	}
     }
 
+    function createCommonjsModule(fn) {
+      var module = { exports: {} };
+    	return fn(module, module.exports), module.exports;
+    }
+
+    createCommonjsModule(function (module, exports) {
+    !function(t,e,n,r,o){if("customElements"in n)o();else {if(n.AWAITING_WEB_COMPONENTS_POLYFILL)return void n.AWAITING_WEB_COMPONENTS_POLYFILL.then(o);var a=n.AWAITING_WEB_COMPONENTS_POLYFILL=f();a.then(o);var i=n.WEB_COMPONENTS_POLYFILL||"//cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.0.2/webcomponents-bundle.js",s=n.ES6_CORE_POLYFILL||"//cdnjs.cloudflare.com/ajax/libs/core-js/2.5.3/core.min.js";"Promise"in n?c(i).then((function(){a.isDone=!0,a.exec();})):c(s).then((function(){c(i).then((function(){a.isDone=!0,a.exec();}));}));}function f(){var t=[];return t.isDone=!1,t.exec=function(){t.splice(0).forEach((function(t){t();}));},t.then=function(e){return t.isDone?e():t.push(e),t},t}function c(t){var e=f(),n=r.createElement("script");return n.type="text/javascript",n.readyState?n.onreadystatechange=function(){"loaded"!=n.readyState&&"complete"!=n.readyState||(n.onreadystatechange=null,e.isDone=!0,e.exec());}:n.onload=function(){e.isDone=!0,e.exec();},n.src=t,r.getElementsByTagName("head")[0].appendChild(n),n.then=e.then,n}}(0,0,window,document,(function(){var e;e=function(){return function(t){var e={};function n(r){if(e[r])return e[r].exports;var o=e[r]={i:r,l:!1,exports:{}};return t[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}return n.m=t,n.c=e,n.d=function(t,e,r){n.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:r});},n.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0});},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var o in t)n.d(r,o,function(e){return t[e]}.bind(null,o));return r},n.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.p="",n(n.s=5)}([function(t,e){t.exports=function(t){var e=[];return e.toString=function(){return this.map((function(e){var n=function(t,e){var n,r=t[1]||"",o=t[3];if(!o)return r;if(e&&"function"==typeof btoa){var a=(n=o,"/*# sourceMappingURL=data:application/json;charset=utf-8;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(n))))+" */"),i=o.sources.map((function(t){return "/*# sourceURL="+o.sourceRoot+t+" */"}));return [r].concat(i).concat([a]).join("\n")}return [r].join("\n")}(e,t);return e[2]?"@media "+e[2]+"{"+n+"}":n})).join("")},e.i=function(t,n){"string"==typeof t&&(t=[[null,t,""]]);for(var r={},o=0;o<this.length;o++){var a=this[o][0];"number"==typeof a&&(r[a]=!0);}for(o=0;o<t.length;o++){var i=t[o];"number"==typeof i[0]&&r[i[0]]||(n&&!i[2]?i[2]=n:n&&(i[2]="("+i[2]+") and ("+n+")"),e.push(i));}},e};},function(t,e,n){var r=n(3);t.exports="string"==typeof r?r:r.toString();},function(t,e,n){var r=n(4);t.exports="string"==typeof r?r:r.toString();},function(t,e,n){(t.exports=n(0)(!1)).push([t.i,"@-webkit-keyframes spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}@keyframes spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}@-webkit-keyframes burst{0%{-webkit-transform:scale(1);transform:scale(1);opacity:1}90%{-webkit-transform:scale(1.5);transform:scale(1.5);opacity:0}}@keyframes burst{0%{-webkit-transform:scale(1);transform:scale(1);opacity:1}90%{-webkit-transform:scale(1.5);transform:scale(1.5);opacity:0}}@-webkit-keyframes flashing{0%{opacity:1}45%{opacity:0}90%{opacity:1}}@keyframes flashing{0%{opacity:1}45%{opacity:0}90%{opacity:1}}@-webkit-keyframes fade-left{0%{-webkit-transform:translateX(0);transform:translateX(0);opacity:1}75%{-webkit-transform:translateX(-20px);transform:translateX(-20px);opacity:0}}@keyframes fade-left{0%{-webkit-transform:translateX(0);transform:translateX(0);opacity:1}75%{-webkit-transform:translateX(-20px);transform:translateX(-20px);opacity:0}}@-webkit-keyframes fade-right{0%{-webkit-transform:translateX(0);transform:translateX(0);opacity:1}75%{-webkit-transform:translateX(20px);transform:translateX(20px);opacity:0}}@keyframes fade-right{0%{-webkit-transform:translateX(0);transform:translateX(0);opacity:1}75%{-webkit-transform:translateX(20px);transform:translateX(20px);opacity:0}}@-webkit-keyframes fade-up{0%{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}75%{-webkit-transform:translateY(-20px);transform:translateY(-20px);opacity:0}}@keyframes fade-up{0%{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}75%{-webkit-transform:translateY(-20px);transform:translateY(-20px);opacity:0}}@-webkit-keyframes fade-down{0%{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}75%{-webkit-transform:translateY(20px);transform:translateY(20px);opacity:0}}@keyframes fade-down{0%{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}75%{-webkit-transform:translateY(20px);transform:translateY(20px);opacity:0}}@-webkit-keyframes tada{0%{-webkit-transform:scaleX(1);transform:scaleX(1)}10%,20%{-webkit-transform:scale3d(.95,.95,.95) rotate(-10deg);transform:scale3d(.95,.95,.95) rotate(-10deg)}30%,50%,70%,90%{-webkit-transform:scaleX(1) rotate(10deg);transform:scaleX(1) rotate(10deg)}40%,60%,80%{-webkit-transform:scaleX(1) rotate(-10deg);transform:scaleX(1) rotate(-10deg)}to{-webkit-transform:scaleX(1);transform:scaleX(1)}}@keyframes tada{0%{-webkit-transform:scaleX(1);transform:scaleX(1)}10%,20%{-webkit-transform:scale3d(.95,.95,.95) rotate(-10deg);transform:scale3d(.95,.95,.95) rotate(-10deg)}30%,50%,70%,90%{-webkit-transform:scaleX(1) rotate(10deg);transform:scaleX(1) rotate(10deg)}40%,60%,80%{-webkit-transform:rotate(-10deg);transform:rotate(-10deg)}to{-webkit-transform:scaleX(1);transform:scaleX(1)}}.bx-spin,.bx-spin-hover:hover{-webkit-animation:spin 2s linear infinite;animation:spin 2s linear infinite}.bx-tada,.bx-tada-hover:hover{-webkit-animation:tada 1.5s ease infinite;animation:tada 1.5s ease infinite}.bx-flashing,.bx-flashing-hover:hover{-webkit-animation:flashing 1.5s infinite linear;animation:flashing 1.5s infinite linear}.bx-burst,.bx-burst-hover:hover{-webkit-animation:burst 1.5s infinite linear;animation:burst 1.5s infinite linear}.bx-fade-up,.bx-fade-up-hover:hover{-webkit-animation:fade-up 1.5s infinite linear;animation:fade-up 1.5s infinite linear}.bx-fade-down,.bx-fade-down-hover:hover{-webkit-animation:fade-down 1.5s infinite linear;animation:fade-down 1.5s infinite linear}.bx-fade-left,.bx-fade-left-hover:hover{-webkit-animation:fade-left 1.5s infinite linear;animation:fade-left 1.5s infinite linear}.bx-fade-right,.bx-fade-right-hover:hover{-webkit-animation:fade-right 1.5s infinite linear;animation:fade-right 1.5s infinite linear}",""]);},function(t,e,n){(t.exports=n(0)(!1)).push([t.i,'.bx-rotate-90{transform:rotate(90deg);-ms-filter:"progid:DXImageTransform.Microsoft.BasicImage(rotation=1)"}.bx-rotate-180{transform:rotate(180deg);-ms-filter:"progid:DXImageTransform.Microsoft.BasicImage(rotation=2)"}.bx-rotate-270{transform:rotate(270deg);-ms-filter:"progid:DXImageTransform.Microsoft.BasicImage(rotation=3)"}.bx-flip-horizontal{transform:scaleX(-1);-ms-filter:"progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)"}.bx-flip-vertical{transform:scaleY(-1);-ms-filter:"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)"}',""]);},function(t,e,n){n.r(e),n.d(e,"BoxIconElement",(function(){return g}));var r,o,a,i,s=n(1),f=n.n(s),c=n(2),l=n.n(c),m="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},u=function(){function t(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r);}}return function(e,n,r){return n&&t(e.prototype,n),r&&t(e,r),e}}(),d=(o=(r=Object).getPrototypeOf||function(t){return t.__proto__},a=r.setPrototypeOf||function(t,e){return t.__proto__=e,t},i="object"===("undefined"==typeof Reflect?"undefined":m(Reflect))?Reflect.construct:function(t,e,n){var r,o=[null];return o.push.apply(o,e),r=t.bind.apply(t,o),a(new r,n.prototype)},function(t){var e=o(t);return a(t,a((function(){return i(e,arguments,o(this).constructor)}),e))}),p=window,b={},y=document.createElement("template"),h=function(){return !!p.ShadyCSS};y.innerHTML='\n<style>\n:host {\n  display: inline-block;\n  font-size: initial;\n  box-sizing: border-box;\n  width: 24px;\n  height: 24px;\n}\n:host([size=xs]) {\n    width: 0.8rem;\n    height: 0.8rem;\n}\n:host([size=sm]) {\n    width: 1.55rem;\n    height: 1.55rem;\n}\n:host([size=md]) {\n    width: 2.25rem;\n    height: 2.25rem;\n}\n:host([size=lg]) {\n    width: 3.0rem;\n    height: 3.0rem;\n}\n\n:host([size]:not([size=""]):not([size=xs]):not([size=sm]):not([size=md]):not([size=lg])) {\n    width: auto;\n    height: auto;\n}\n:host([pull=left]) #icon {\n    float: left;\n    margin-right: .3em!important;\n}\n:host([pull=right]) #icon {\n    float: right;\n    margin-left: .3em!important;\n}\n:host([border=square]) #icon {\n    padding: .25em;\n    border: .07em solid rgba(0,0,0,.1);\n    border-radius: .25em;\n}\n:host([border=circle]) #icon {\n    padding: .25em;\n    border: .07em solid rgba(0,0,0,.1);\n    border-radius: 50%;\n}\n#icon,\nsvg {\n  width: 100%;\n  height: 100%;\n}\n#icon {\n    box-sizing: border-box;\n} \n'+f.a+"\n"+l.a+'\n</style>\n<div id="icon"></div>';var g=d(function(t){function e(){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,e);var t=function(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return !e||"object"!=typeof e&&"function"!=typeof e?t:e}(this,(e.__proto__||Object.getPrototypeOf(e)).call(this));return t.$ui=t.attachShadow({mode:"open"}),t.$ui.appendChild(t.ownerDocument.importNode(y.content,!0)),h()&&p.ShadyCSS.styleElement(t),t._state={$iconHolder:t.$ui.getElementById("icon"),type:t.getAttribute("type")},t}return function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e);}(e,HTMLElement),u(e,null,[{key:"getIconSvg",value:function(t,e){var n=this.cdnUrl+"/regular/bx-"+t+".svg";return "solid"===e?n=this.cdnUrl+"/solid/bxs-"+t+".svg":"logo"===e&&(n=this.cdnUrl+"/logos/bxl-"+t+".svg"),n&&b[n]||(b[n]=new Promise((function(t,e){var r=new XMLHttpRequest;r.addEventListener("load",(function(){this.status<200||this.status>=300?e(new Error(this.status+" "+this.responseText)):t(this.responseText);})),r.onerror=e,r.onabort=e,r.open("GET",n),r.send();}))),b[n]}},{key:"define",value:function(t){t=t||this.tagName,h()&&p.ShadyCSS.prepareTemplate(y,t),customElements.define(t,this);}},{key:"cdnUrl",get:function(){return "//unpkg.com/boxicons@2.1.4/svg"}},{key:"tagName",get:function(){return "box-icon"}},{key:"observedAttributes",get:function(){return ["type","name","color","size","rotate","flip","animation","border","pull"]}}]),u(e,[{key:"attributeChangedCallback",value:function(t,e,n){var r=this._state.$iconHolder;switch(t){case"type":!function(t,e,n){var r=t._state;r.$iconHolder.textContent="",r.type&&(r.type=null),r.type=!n||"solid"!==n&&"logo"!==n?"regular":n,void 0!==r.currentName&&t.constructor.getIconSvg(r.currentName,r.type).then((function(t){r.type===n&&(r.$iconHolder.innerHTML=t);})).catch((function(t){console.error("Failed to load icon: "+r.currentName+"\n"+t);}));}(this,0,n);break;case"name":!function(t,e,n){var r=t._state;r.currentName=n,r.$iconHolder.textContent="",n&&void 0!==r.type&&t.constructor.getIconSvg(n,r.type).then((function(t){r.currentName===n&&(r.$iconHolder.innerHTML=t);})).catch((function(t){console.error("Failed to load icon: "+n+"\n"+t);}));}(this,0,n);break;case"color":r.style.fill=n||"";break;case"size":!function(t,e,n){var r=t._state;r.size&&(r.$iconHolder.style.width=r.$iconHolder.style.height="",r.size=r.sizeType=null),n&&!/^(xs|sm|md|lg)$/.test(r.size)&&(r.size=n.trim(),r.$iconHolder.style.width=r.$iconHolder.style.height=r.size);}(this,0,n);break;case"rotate":e&&r.classList.remove("bx-rotate-"+e),n&&r.classList.add("bx-rotate-"+n);break;case"flip":e&&r.classList.remove("bx-flip-"+e),n&&r.classList.add("bx-flip-"+n);break;case"animation":e&&r.classList.remove("bx-"+e),n&&r.classList.add("bx-"+n);}}},{key:"connectedCallback",value:function(){h()&&p.ShadyCSS.styleElement(this);}}]),e}());e.default=g,g.define();}])},module.exports=e();}));
+
+    });
+
     /* src\Home.svelte generated by Svelte v3.49.0 */
 
     const { Object: Object_1$2, console: console_1$2 } = globals;
@@ -3865,17 +3883,17 @@ var app = (function () {
 
     function get_each_context$3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[8] = list[i];
+    	child_ctx[12] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[12] = list[i];
+    	child_ctx[16] = list[i];
     	return child_ctx;
     }
 
-    // (101:1) {#if showFt == "true"}
+    // (111:1) {#if showFt == "true"}
     function create_if_block_2$1(ctx) {
     	let featured;
     	let current;
@@ -3921,14 +3939,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(101:1) {#if showFt == \\\"true\\\"}",
+    		source: "(111:1) {#if showFt == \\\"true\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (106:2) {#if showG == "true"}
+    // (116:2) {#if showG == "true"}
     function create_if_block$2(ctx) {
     	let each_1_anchor;
     	let each_value = /*homeItem*/ ctx[2];
@@ -3955,7 +3973,7 @@ var app = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*axios, homeItem, JSON, Object, view*/ 20) {
+    			if (dirty & /*axios, homeItem, JSON, Object, view, scrollRight, scrollLeft*/ 116) {
     				each_value = /*homeItem*/ ctx[2];
     				validate_each_argument(each_value);
     				let i;
@@ -3989,14 +4007,14 @@ var app = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(106:2) {#if showG == \\\"true\\\"}",
+    		source: "(116:2) {#if showG == \\\"true\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (108:4) {#if m.enabled == true}
+    // (118:4) {#if m.enabled == true}
     function create_if_block_1$1(ctx) {
     	let await_block_anchor;
     	let promise;
@@ -4009,13 +4027,13 @@ var app = (function () {
     		pending: create_pending_block$2,
     		then: create_then_block$2,
     		catch: create_catch_block$2,
-    		value: 11,
-    		error: 15
+    		value: 15,
+    		error: 19
     	};
 
     	handle_promise(
-    		promise = axios.get(/*m*/ ctx[8].url, {
-    			transformResponse: /*func*/ ctx[6],
+    		promise = axios.get(/*m*/ ctx[12].url, {
+    			transformResponse: /*func*/ ctx[8],
     			responseType: 'json'
     		}),
     		info
@@ -4036,8 +4054,8 @@ var app = (function () {
     			ctx = new_ctx;
     			info.ctx = ctx;
 
-    			if (dirty & /*homeItem*/ 4 && promise !== (promise = axios.get(/*m*/ ctx[8].url, {
-    				transformResponse: /*func*/ ctx[6],
+    			if (dirty & /*homeItem*/ 4 && promise !== (promise = axios.get(/*m*/ ctx[12].url, {
+    				transformResponse: /*func*/ ctx[8],
     				responseType: 'json'
     			})) && handle_promise(promise, info)) ; else {
     				update_await_block_branch(info, ctx, dirty);
@@ -4055,18 +4073,18 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(108:4) {#if m.enabled == true}",
+    		source: "(118:4) {#if m.enabled == true}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (119:5) {:catch error}
+    // (136:5) {:catch error}
     function create_catch_block$2(ctx) {
     	let p;
     	let t0;
-    	let t1_value = /*error*/ ctx[15].message + "";
+    	let t1_value = /*error*/ ctx[19].message + "";
     	let t1;
     	let t2;
 
@@ -4077,7 +4095,7 @@ var app = (function () {
     			t1 = text(t1_value);
     			t2 = space();
     			set_style(p, "display", "none");
-    			add_location(p, file$3, 119, 6, 3011);
+    			add_location(p, file$3, 136, 6, 3649);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -4086,7 +4104,7 @@ var app = (function () {
     			insert_dev(target, t2, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*homeItem*/ 4 && t1_value !== (t1_value = /*error*/ ctx[15].message + "")) set_data_dev(t1, t1_value);
+    			if (dirty & /*homeItem*/ 4 && t1_value !== (t1_value = /*error*/ ctx[19].message + "")) set_data_dev(t1, t1_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(p);
@@ -4098,18 +4116,38 @@ var app = (function () {
     		block,
     		id: create_catch_block$2.name,
     		type: "catch",
-    		source: "(119:5) {:catch error}",
+    		source: "(136:5) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (111:5) {:then resp}
+    // (121:5) {:then resp}
     function create_then_block$2(ctx) {
-    	let div;
-    	let t;
-    	let each_value_1 = Object.values(/*resp*/ ctx[11].data);
+    	let div0;
+    	let box_icon0;
+    	let t0;
+    	let div1;
+    	let box_icon1;
+    	let t1;
+    	let div3;
+    	let div2;
+    	let t2;
+    	let div3_id_value;
+    	let t3;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[9](/*m*/ ctx[12]);
+    	}
+
+    	function click_handler_1() {
+    		return /*click_handler_1*/ ctx[10](/*m*/ ctx[12]);
+    	}
+
+    	let each_value_1 = Object.values(/*resp*/ ctx[15].data);
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -4119,28 +4157,70 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div = element("div");
+    			div0 = element("div");
+    			box_icon0 = element("box-icon");
+    			t0 = space();
+    			div1 = element("div");
+    			box_icon1 = element("box-icon");
+    			t1 = space();
+    			div3 = element("div");
+    			div2 = element("div");
+    			t2 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t = space();
-    			attr_dev(div, "class", "outer svelte-1sm6wrm");
-    			add_location(div, file$3, 112, 5, 2755);
+    			t3 = space();
+    			set_custom_element_data(box_icon0, "name", "chevron-left");
+    			set_custom_element_data(box_icon0, "color", "white");
+    			set_custom_element_data(box_icon0, "class", "svelte-ik8q7s");
+    			add_location(box_icon0, file$3, 123, 6, 3087);
+    			attr_dev(div0, "class", "arrows left svelte-ik8q7s");
+    			add_location(div0, file$3, 122, 5, 3010);
+    			set_custom_element_data(box_icon1, "name", "chevron-right");
+    			set_custom_element_data(box_icon1, "color", "white");
+    			set_custom_element_data(box_icon1, "class", "svelte-ik8q7s");
+    			add_location(box_icon1, file$3, 126, 6, 3239);
+    			attr_dev(div1, "class", "arrows right svelte-ik8q7s");
+    			add_location(div1, file$3, 125, 5, 3160);
+    			attr_dev(div2, "class", "placeholder svelte-ik8q7s");
+    			add_location(div2, file$3, 129, 6, 3357);
+    			attr_dev(div3, "id", div3_id_value = "" + (/*m*/ ctx[12].title + "Box"));
+    			attr_dev(div3, "class", "outer svelte-ik8q7s");
+    			add_location(div3, file$3, 128, 5, 3313);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
+    			insert_dev(target, div0, anchor);
+    			append_dev(div0, box_icon0);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, box_icon1);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, div2);
+    			append_dev(div3, t2);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div, null);
+    				each_blocks[i].m(div3, null);
     			}
 
-    			insert_dev(target, t, anchor);
+    			insert_dev(target, t3, anchor);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(div0, "click", click_handler, false, false, false),
+    					listen_dev(div1, "click", click_handler_1, false, false, false)
+    				];
+
+    				mounted = true;
+    			}
     		},
-    		p: function update(ctx, dirty) {
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
     			if (dirty & /*Object, axios, homeItem, JSON, view*/ 20) {
-    				each_value_1 = Object.values(/*resp*/ ctx[11].data);
+    				each_value_1 = Object.values(/*resp*/ ctx[15].data);
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -4152,7 +4232,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block_1$1(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(div, null);
+    						each_blocks[i].m(div3, null);
     					}
     				}
 
@@ -4162,11 +4242,21 @@ var app = (function () {
 
     				each_blocks.length = each_value_1.length;
     			}
+
+    			if (dirty & /*homeItem*/ 4 && div3_id_value !== (div3_id_value = "" + (/*m*/ ctx[12].title + "Box"))) {
+    				attr_dev(div3, "id", div3_id_value);
+    			}
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div3);
     			destroy_each(each_blocks, detaching);
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(t3);
+    			mounted = false;
+    			run_all(dispose);
     		}
     	};
 
@@ -4174,14 +4264,14 @@ var app = (function () {
     		block,
     		id: create_then_block$2.name,
     		type: "then",
-    		source: "(111:5) {:then resp}",
+    		source: "(121:5) {:then resp}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (114:6) {#each Object.values(resp.data) as d}
+    // (131:6) {#each Object.values(resp.data) as d}
     function create_each_block_1$1(ctx) {
     	let img;
     	let img_id_value;
@@ -4190,39 +4280,39 @@ var app = (function () {
     	let mounted;
     	let dispose;
 
-    	function click_handler() {
-    		return /*click_handler*/ ctx[7](/*d*/ ctx[12]);
+    	function click_handler_2() {
+    		return /*click_handler_2*/ ctx[11](/*d*/ ctx[16]);
     	}
 
     	const block = {
     		c: function create() {
     			img = element("img");
-    			attr_dev(img, "id", img_id_value = /*d*/ ctx[12].id);
-    			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[12].id + "?do=show")) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "alt", img_alt_value = /*d*/ ctx[12].title);
-    			attr_dev(img, "class", "svelte-1sm6wrm");
-    			add_location(img, file$3, 114, 7, 2826);
+    			attr_dev(img, "class", "clickablePoster svelte-ik8q7s");
+    			attr_dev(img, "id", img_id_value = /*d*/ ctx[16].id);
+    			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[16].id + "?do=show")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", img_alt_value = /*d*/ ctx[16].title);
+    			add_location(img, file$3, 131, 7, 3440);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(img, "click", click_handler, false, false, false);
+    				dispose = listen_dev(img, "click", click_handler_2, false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*homeItem*/ 4 && img_id_value !== (img_id_value = /*d*/ ctx[12].id)) {
+    			if (dirty & /*homeItem*/ 4 && img_id_value !== (img_id_value = /*d*/ ctx[16].id)) {
     				attr_dev(img, "id", img_id_value);
     			}
 
-    			if (dirty & /*homeItem*/ 4 && !src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[12].id + "?do=show")) {
+    			if (dirty & /*homeItem*/ 4 && !src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[16].id + "?do=show")) {
     				attr_dev(img, "src", img_src_value);
     			}
 
-    			if (dirty & /*homeItem*/ 4 && img_alt_value !== (img_alt_value = /*d*/ ctx[12].title)) {
+    			if (dirty & /*homeItem*/ 4 && img_alt_value !== (img_alt_value = /*d*/ ctx[16].title)) {
     				attr_dev(img, "alt", img_alt_value);
     			}
     		},
@@ -4237,14 +4327,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1$1.name,
     		type: "each",
-    		source: "(114:6) {#each Object.values(resp.data) as d}",
+    		source: "(131:6) {#each Object.values(resp.data) as d}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (109:119)        <p style="display: none;">Loading ...</p>      {:then resp}
+    // (119:119)        <p style="display: none;">Loading ...</p>      {:then resp}
     function create_pending_block$2(ctx) {
     	let p;
     	let t1;
@@ -4255,7 +4345,7 @@ var app = (function () {
     			p.textContent = "Loading ...";
     			t1 = space();
     			set_style(p, "display", "none");
-    			add_location(p, file$3, 109, 6, 2657);
+    			add_location(p, file$3, 119, 6, 2912);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -4272,17 +4362,17 @@ var app = (function () {
     		block,
     		id: create_pending_block$2.name,
     		type: "pending",
-    		source: "(109:119)        <p style=\\\"display: none;\\\">Loading ...</p>      {:then resp}",
+    		source: "(119:119)        <p style=\\\"display: none;\\\">Loading ...</p>      {:then resp}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (107:3) {#each homeItem as m}
+    // (117:3) {#each homeItem as m}
     function create_each_block$3(ctx) {
     	let if_block_anchor;
-    	let if_block = /*m*/ ctx[8].enabled == true && create_if_block_1$1(ctx);
+    	let if_block = /*m*/ ctx[12].enabled == true && create_if_block_1$1(ctx);
 
     	const block = {
     		c: function create() {
@@ -4294,7 +4384,7 @@ var app = (function () {
     			insert_dev(target, if_block_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (/*m*/ ctx[8].enabled == true) {
+    			if (/*m*/ ctx[12].enabled == true) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -4317,7 +4407,7 @@ var app = (function () {
     		block,
     		id: create_each_block$3.name,
     		type: "each",
-    		source: "(107:3) {#each homeItem as m}",
+    		source: "(117:3) {#each homeItem as m}",
     		ctx
     	});
 
@@ -4350,10 +4440,10 @@ var app = (function () {
     			div = element("div");
     			if (if_block1) if_block1.c();
     			attr_dev(div, "id", "content");
-    			attr_dev(div, "class", "content svelte-1sm6wrm");
-    			add_location(div, file$3, 103, 1, 2377);
-    			attr_dev(main, "class", "svelte-1sm6wrm");
-    			add_location(main, file$3, 98, 0, 2280);
+    			attr_dev(div, "class", "content svelte-ik8q7s");
+    			add_location(div, file$3, 113, 1, 2632);
+    			attr_dev(main, "class", "svelte-ik8q7s");
+    			add_location(main, file$3, 108, 0, 2535);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4540,6 +4630,16 @@ var app = (function () {
     		view(id);
     	}
 
+    	const scrollRight = id => {
+    		let item = document.getElementById(id);
+    		item.scrollLeft = item.scrollLeft + 500;
+    	};
+
+    	const scrollLeft = id => {
+    		let item = document.getElementById(id);
+    		item.scrollLeft = item.scrollLeft - 500;
+    	};
+
     	const writable_props = ['showG', 'id', 'showFt'];
 
     	Object_1$2.keys($$props).forEach(key => {
@@ -4550,11 +4650,19 @@ var app = (function () {
     		return JSON.parse(res).results;
     	};
 
-    	const click_handler = d => view(d.id);
+    	const click_handler = m => {
+    		scrollLeft(`${m.title}Box`);
+    	};
+
+    	const click_handler_1 = m => {
+    		scrollRight(`${m.title}Box`);
+    	};
+
+    	const click_handler_2 = d => view(d.id);
 
     	$$self.$$set = $$props => {
     		if ('showG' in $$props) $$invalidate(0, showG = $$props.showG);
-    		if ('id' in $$props) $$invalidate(5, id = $$props.id);
+    		if ('id' in $$props) $$invalidate(7, id = $$props.id);
     		if ('showFt' in $$props) $$invalidate(1, showFt = $$props.showFt);
     	};
 
@@ -4568,12 +4676,14 @@ var app = (function () {
     		homeItem,
     		featuredMetadata,
     		preloadImage: preloadImage$2,
-    		view
+    		view,
+    		scrollRight,
+    		scrollLeft
     	});
 
     	$$self.$inject_state = $$props => {
     		if ('showG' in $$props) $$invalidate(0, showG = $$props.showG);
-    		if ('id' in $$props) $$invalidate(5, id = $$props.id);
+    		if ('id' in $$props) $$invalidate(7, id = $$props.id);
     		if ('showFt' in $$props) $$invalidate(1, showFt = $$props.showFt);
     		if ('homeItem' in $$props) $$invalidate(2, homeItem = $$props.homeItem);
     		if ('featuredMetadata' in $$props) $$invalidate(3, featuredMetadata = $$props.featuredMetadata);
@@ -4583,13 +4693,26 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [showG, showFt, homeItem, featuredMetadata, view, id, func, click_handler];
+    	return [
+    		showG,
+    		showFt,
+    		homeItem,
+    		featuredMetadata,
+    		view,
+    		scrollRight,
+    		scrollLeft,
+    		id,
+    		func,
+    		click_handler,
+    		click_handler_1,
+    		click_handler_2
+    	];
     }
 
     class Home extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { showG: 0, id: 5, showFt: 1 });
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { showG: 0, id: 7, showFt: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -4605,7 +4728,7 @@ var app = (function () {
     			console_1$2.warn("<Home> was created without expected prop 'showG'");
     		}
 
-    		if (/*id*/ ctx[5] === undefined && !('id' in props)) {
+    		if (/*id*/ ctx[7] === undefined && !('id' in props)) {
     			console_1$2.warn("<Home> was created without expected prop 'id'");
     		}
 
@@ -4646,19 +4769,19 @@ var app = (function () {
 
     function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[5] = list[i];
+    	child_ctx[9] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[9] = list[i];
+    	child_ctx[13] = list[i];
     	return child_ctx;
     }
 
-    // (54:4) {:catch error}
+    // (69:4) {:catch error}
     function create_catch_block$1(ctx) {
-    	let t_value = console.log("Fuck, Error occured: " + /*error*/ ctx[12].message) + "";
+    	let t_value = console.log("Fuck, Error occured: " + /*error*/ ctx[16].message) + "";
     	let t;
 
     	const block = {
@@ -4678,17 +4801,17 @@ var app = (function () {
     		block,
     		id: create_catch_block$1.name,
     		type: "catch",
-    		source: "(54:4) {:catch error}",
+    		source: "(69:4) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (50:4) {:then resp}
+    // (65:4) {:then resp}
     function create_then_block$1(ctx) {
     	let each_1_anchor;
-    	let each_value_1 = Object.values(/*resp*/ ctx[8].data);
+    	let each_value_1 = Object.values(/*resp*/ ctx[12].data);
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -4712,8 +4835,8 @@ var app = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*Object, axios, menu, JSON, view*/ 3) {
-    				each_value_1 = Object.values(/*resp*/ ctx[8].data);
+    			if (dirty & /*Object, axios, menu, JSON, view*/ 9) {
+    				each_value_1 = Object.values(/*resp*/ ctx[12].data);
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -4746,37 +4869,37 @@ var app = (function () {
     		block,
     		id: create_then_block$1.name,
     		type: "then",
-    		source: "(50:4) {:then resp}",
+    		source: "(65:4) {:then resp}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (51:5) {#each Object.values(resp.data) as d}
+    // (66:5) {#each Object.values(resp.data) as d}
     function create_each_block_1(ctx) {
     	let img;
     	let img_src_value;
     	let mounted;
     	let dispose;
 
-    	function click_handler() {
-    		return /*click_handler*/ ctx[3](/*d*/ ctx[9]);
+    	function click_handler_2() {
+    		return /*click_handler_2*/ ctx[7](/*d*/ ctx[13]);
     	}
 
     	const block = {
     		c: function create() {
     			img = element("img");
-    			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[9].id + "?do=show")) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "alt", /*d*/ ctx[9].title);
-    			attr_dev(img, "class", "svelte-mrd3ws");
-    			add_location(img, file$2, 51, 6, 1260);
+    			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[13].id + "?do=show")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", /*d*/ ctx[13].title);
+    			attr_dev(img, "class", "svelte-9k8vnm");
+    			add_location(img, file$2, 66, 6, 1873);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(img, "click", click_handler, false, false, false);
+    				dispose = listen_dev(img, "click", click_handler_2, false, false, false);
     				mounted = true;
     			}
     		},
@@ -4794,14 +4917,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(51:5) {#each Object.values(resp.data) as d}",
+    		source: "(66:5) {#each Object.values(resp.data) as d}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (48:118)        { console.log("Getting Movies ...") }
+    // (63:118)        { console.log("Getting Movies ...") }
     function create_pending_block$1(ctx) {
     	let t_value = console.log("Getting Movies ...") + "";
     	let t;
@@ -4823,22 +4946,40 @@ var app = (function () {
     		block,
     		id: create_pending_block$1.name,
     		type: "pending",
-    		source: "(48:118)        { console.log(\\\"Getting Movies ...\\\") }",
+    		source: "(63:118)        { console.log(\\\"Getting Movies ...\\\") }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (45:3) {#each Object.values(menu) as m}
+    // (53:3) {#each Object.values(menu) as m}
     function create_each_block$2(ctx) {
     	let h1;
-    	let t0_value = /*m*/ ctx[5].title + "";
+    	let t0_value = /*m*/ ctx[9].title + "";
     	let t0;
     	let t1;
     	let div0;
+    	let box_icon0;
     	let t2;
     	let div1;
+    	let box_icon1;
+    	let t3;
+    	let div3;
+    	let div2;
+    	let t4;
+    	let t5;
+    	let div4;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[4](/*m*/ ctx[9]);
+    	}
+
+    	function click_handler_1() {
+    		return /*click_handler_1*/ ctx[5](/*m*/ ctx[9]);
+    	}
 
     	let info = {
     		ctx,
@@ -4848,13 +4989,13 @@ var app = (function () {
     		pending: create_pending_block$1,
     		then: create_then_block$1,
     		catch: create_catch_block$1,
-    		value: 8,
-    		error: 12
+    		value: 12,
+    		error: 16
     	};
 
     	handle_promise(
-    		axios.get(/*m*/ ctx[5].url, {
-    			transformResponse: /*func*/ ctx[2],
+    		axios.get(/*m*/ ctx[9].url, {
+    			transformResponse: /*func*/ ctx[6],
     			responseType: 'json'
     		}),
     		info
@@ -4866,26 +5007,66 @@ var app = (function () {
     			t0 = text(t0_value);
     			t1 = space();
     			div0 = element("div");
-    			info.block.c();
+    			box_icon0 = element("box-icon");
     			t2 = space();
     			div1 = element("div");
-    			attr_dev(h1, "class", "svelte-mrd3ws");
-    			add_location(h1, file$2, 45, 3, 982);
-    			attr_dev(div0, "class", "outer svelte-mrd3ws");
-    			add_location(div0, file$2, 46, 3, 1007);
-    			attr_dev(div1, "class", "br svelte-mrd3ws");
-    			add_location(div1, file$2, 57, 3, 1473);
+    			box_icon1 = element("box-icon");
+    			t3 = space();
+    			div3 = element("div");
+    			div2 = element("div");
+    			t4 = space();
+    			info.block.c();
+    			t5 = space();
+    			div4 = element("div");
+    			attr_dev(h1, "class", "svelte-9k8vnm");
+    			add_location(h1, file$2, 53, 3, 1243);
+    			set_custom_element_data(box_icon0, "name", "chevron-left");
+    			set_custom_element_data(box_icon0, "color", "white");
+    			set_custom_element_data(box_icon0, "class", "svelte-9k8vnm");
+    			add_location(box_icon0, file$2, 55, 4, 1344);
+    			attr_dev(div0, "class", "arrows left svelte-9k8vnm");
+    			add_location(div0, file$2, 54, 3, 1268);
+    			set_custom_element_data(box_icon1, "name", "chevron-right");
+    			set_custom_element_data(box_icon1, "color", "white");
+    			set_custom_element_data(box_icon1, "class", "svelte-9k8vnm");
+    			add_location(box_icon1, file$2, 58, 4, 1493);
+    			attr_dev(div1, "class", "arrows right svelte-9k8vnm");
+    			add_location(div1, file$2, 57, 3, 1415);
+    			attr_dev(div2, "class", "placeholder svelte-9k8vnm");
+    			add_location(div2, file$2, 61, 4, 1608);
+    			attr_dev(div3, "id", "" + (/*m*/ ctx[9].title + "Box"));
+    			attr_dev(div3, "class", "outer svelte-9k8vnm");
+    			add_location(div3, file$2, 60, 3, 1565);
+    			attr_dev(div4, "class", "br svelte-9k8vnm");
+    			add_location(div4, file$2, 72, 3, 2086);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
     			append_dev(h1, t0);
     			insert_dev(target, t1, anchor);
     			insert_dev(target, div0, anchor);
-    			info.block.m(div0, info.anchor = null);
-    			info.mount = () => div0;
-    			info.anchor = null;
+    			append_dev(div0, box_icon0);
     			insert_dev(target, t2, anchor);
     			insert_dev(target, div1, anchor);
+    			append_dev(div1, box_icon1);
+    			insert_dev(target, t3, anchor);
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, div2);
+    			append_dev(div3, t4);
+    			info.block.m(div3, info.anchor = null);
+    			info.mount = () => div3;
+    			info.anchor = null;
+    			insert_dev(target, t5, anchor);
+    			insert_dev(target, div4, anchor);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(div0, "click", click_handler, false, false, false),
+    					listen_dev(div1, "click", click_handler_1, false, false, false)
+    				];
+
+    				mounted = true;
+    			}
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
@@ -4895,11 +5076,17 @@ var app = (function () {
     			if (detaching) detach_dev(h1);
     			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t2);
+    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(div3);
     			info.block.d();
     			info.token = null;
     			info = null;
-    			if (detaching) detach_dev(t2);
-    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(t5);
+    			if (detaching) detach_dev(div4);
+    			mounted = false;
+    			run_all(dispose);
     		}
     	};
 
@@ -4907,7 +5094,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(45:3) {#each Object.values(menu) as m}",
+    		source: "(53:3) {#each Object.values(menu) as m}",
     		ctx
     	});
 
@@ -4950,12 +5137,12 @@ var app = (function () {
     			}
 
     			set_style(br, "font-size", "50px");
-    			add_location(br, file$2, 42, 1, 872);
+    			add_location(br, file$2, 50, 1, 1133);
     			attr_dev(div, "id", "content");
-    			attr_dev(div, "class", "content svelte-mrd3ws");
-    			add_location(div, file$2, 43, 1, 906);
-    			attr_dev(main, "class", "svelte-mrd3ws");
-    			add_location(main, file$2, 40, 0, 819);
+    			attr_dev(div, "class", "content svelte-9k8vnm");
+    			add_location(div, file$2, 51, 1, 1167);
+    			attr_dev(main, "class", "svelte-9k8vnm");
+    			add_location(main, file$2, 48, 0, 1080);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4975,7 +5162,7 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*axios, Object, menu, JSON, console, view*/ 3) {
+    			if (dirty & /*Object, menu, axios, JSON, console, view, scrollRight, scrollLeft*/ 15) {
     				each_value = Object.values(/*menu*/ ctx[0]);
     				validate_each_argument(each_value);
     				let i;
@@ -5059,6 +5246,16 @@ var app = (function () {
     		}
     	};
 
+    	const scrollRight = id => {
+    		let item = document.getElementById(id);
+    		item.scrollLeft = item.scrollLeft + 500;
+    	};
+
+    	const scrollLeft = id => {
+    		let item = document.getElementById(id);
+    		item.scrollLeft = item.scrollLeft - 500;
+    	};
+
     	// view replace's featured with custom item
     	const view = id => {
     		preloadImage$1(`/api/banner/${id}?do=show`);
@@ -5071,11 +5268,19 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<Mine> was created with unknown prop '${key}'`);
     	});
 
+    	const click_handler = m => {
+    		scrollLeft(`${m.title}Box`);
+    	};
+
+    	const click_handler_1 = m => {
+    		scrollRight(`${m.title}Box`);
+    	};
+
     	const func = res => {
     		return JSON.parse(res).results;
     	};
 
-    	const click_handler = d => view(d.id);
+    	const click_handler_2 = d => view(d.id);
 
     	$$self.$capture_state = () => ({
     		Nav,
@@ -5083,10 +5288,21 @@ var app = (function () {
     		preloadImage: preloadImage$1,
     		random,
     		menu,
+    		scrollRight,
+    		scrollLeft,
     		view
     	});
 
-    	return [menu, view, func, click_handler];
+    	return [
+    		menu,
+    		scrollRight,
+    		scrollLeft,
+    		view,
+    		click_handler,
+    		click_handler_1,
+    		func,
+    		click_handler_2
+    	];
     }
 
     class Mine extends SvelteComponentDev {
@@ -5114,7 +5330,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (52:4) {#if term}
+    // (27:4) {#if term}
     function create_if_block$1(ctx) {
     	let div;
     	let promise;
@@ -5144,8 +5360,8 @@ var app = (function () {
     			div = element("div");
     			info.block.c();
     			attr_dev(div, "id", "grid");
-    			attr_dev(div, "class", "svelte-wzbp04");
-    			add_location(div, file$1, 52, 6, 1384);
+    			attr_dev(div, "class", "svelte-b2rtgt");
+    			add_location(div, file$1, 27, 6, 592);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -5176,14 +5392,14 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(52:4) {#if term}",
+    		source: "(27:4) {#if term}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (62:8) {:catch error}
+    // (38:8) {:catch error}
     function create_catch_block(ctx) {
     	let p;
     	let t0;
@@ -5196,7 +5412,8 @@ var app = (function () {
     			t0 = text("Error: ");
     			t1 = text(t1_value);
     			set_style(p, "display", "none");
-    			add_location(p, file$1, 62, 10, 1863);
+    			attr_dev(p, "class", "svelte-b2rtgt");
+    			add_location(p, file$1, 38, 10, 1102);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -5215,16 +5432,17 @@ var app = (function () {
     		block,
     		id: create_catch_block.name,
     		type: "catch",
-    		source: "(62:8) {:catch error}",
+    		source: "(38:8) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (56:8) {:then resp}
+    // (31:8) {:then resp}
     function create_then_block(ctx) {
-    	let each_1_anchor;
+    	let t;
+    	let p;
     	let each_value = Object.values(/*resp*/ ctx[6].data.results);
     	validate_each_argument(each_value);
     	let each_blocks = [];
@@ -5239,14 +5457,19 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			each_1_anchor = empty();
+    			t = space();
+    			p = element("p");
+    			set_style(p, "display", "none");
+    			attr_dev(p, "class", "svelte-b2rtgt");
+    			add_location(p, file$1, 36, 10, 1036);
     		},
     		m: function mount(target, anchor) {
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(target, anchor);
     			}
 
-    			insert_dev(target, each_1_anchor, anchor);
+    			insert_dev(target, t, anchor);
+    			insert_dev(target, p, anchor);
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*view, Object, axios, term, JSON*/ 3) {
@@ -5262,7 +5485,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block$1(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    						each_blocks[i].m(t.parentNode, t);
     					}
     				}
 
@@ -5275,7 +5498,8 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			destroy_each(each_blocks, detaching);
-    			if (detaching) detach_dev(each_1_anchor);
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(p);
     		}
     	};
 
@@ -5283,19 +5507,18 @@ var app = (function () {
     		block,
     		id: create_then_block.name,
     		type: "then",
-    		source: "(56:8) {:then resp}",
+    		source: "(31:8) {:then resp}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (57:10) {#each Object.values(resp.data.results) as r}
+    // (32:10) {#each Object.values(resp.data.results) as r}
     function create_each_block$1(ctx) {
     	let div;
     	let img;
     	let img_src_value;
-    	let t;
     	let mounted;
     	let dispose;
 
@@ -5307,18 +5530,16 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			img = element("img");
-    			t = space();
     			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*r*/ ctx[7].id + "?do=show")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "Poster");
-    			attr_dev(img, "class", "svelte-wzbp04");
-    			add_location(img, file$1, 58, 14, 1737);
-    			attr_dev(div, "class", "item svelte-wzbp04");
-    			add_location(div, file$1, 57, 10, 1675);
+    			attr_dev(img, "class", "svelte-b2rtgt");
+    			add_location(img, file$1, 33, 14, 934);
+    			attr_dev(div, "class", "item svelte-b2rtgt");
+    			add_location(div, file$1, 32, 10, 872);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, img);
-    			append_dev(div, t);
 
     			if (!mounted) {
     				dispose = listen_dev(div, "click", click_handler, false, false, false);
@@ -5343,23 +5564,23 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(57:10) {#each Object.values(resp.data.results) as r}",
+    		source: "(32:10) {#each Object.values(resp.data.results) as r}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (54:130)             <p style="display: none;">Loading ...</p>          {:then resp}
+    // (29:130)             <p style="display: none;"></p>          {:then resp}
     function create_pending_block(ctx) {
     	let p;
 
     	const block = {
     		c: function create() {
     			p = element("p");
-    			p.textContent = "Loading ...";
     			set_style(p, "display", "none");
-    			add_location(p, file$1, 54, 10, 1543);
+    			attr_dev(p, "class", "svelte-b2rtgt");
+    			add_location(p, file$1, 29, 10, 751);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -5374,7 +5595,7 @@ var app = (function () {
     		block,
     		id: create_pending_block.name,
     		type: "pending",
-    		source: "(54:130)             <p style=\\\"display: none;\\\">Loading ...</p>          {:then resp}",
+    		source: "(29:130)             <p style=\\\"display: none;\\\"></p>          {:then resp}",
     		ctx
     	});
 
@@ -5408,10 +5629,10 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(input, "type", "text");
     			attr_dev(input, "placeholder", "Search ...");
-    			attr_dev(input, "class", "svelte-wzbp04");
-    			add_location(input, file$1, 44, 4, 1197);
-    			attr_dev(main, "class", "svelte-wzbp04");
-    			add_location(main, file$1, 42, 0, 1156);
+    			attr_dev(input, "class", "svelte-b2rtgt");
+    			add_location(input, file$1, 20, 4, 407);
+    			attr_dev(main, "class", "svelte-b2rtgt");
+    			add_location(main, file$1, 18, 0, 366);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5495,29 +5716,6 @@ var app = (function () {
     	? localStorage.getItem("lastQuery")
     	: "";
 
-    	preloadImage("/static/img/loading.gif");
-
-    	/*
-    const searchEngine = () => {
-        const searchTerm = search.value.toLowerCase();
-        if (searchTerm.length >= 3) {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.onreadystatechange = function() {
-                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                    var resp = JSON.parse(xmlHttp.responseText);
-                    resp = resp["results"];
-                    if (resp == undefined) { return; }
-                    results = resp;
-                }
-            }
-            xmlHttp.open("GET", "/api/search/" + searchTerm, true);
-            xmlHttp.setRequestHeader('Accept', 'application/json');
-            xmlHttp.send(null);
-        } else {
-          results = {};
-        }
-    }
-    */
     	const view = id => {
     		preloadImage(`/api/banner/${id}?do=show`);
     		location = `/?showG=false&id=${id}`;

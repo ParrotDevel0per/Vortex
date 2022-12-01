@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <title>Terminal</title>
+    <title>Vortex | Terminal</title>
     <script>
         var username = "admin";
 
@@ -63,9 +63,9 @@
 </div>
 </body>
 <script>
-    $('#path').html(`${username}@ThePiratePlayer$ `);
+    $('#path').html(`${username}@Vortex$ `);
     const exec = (command) => {
-        if (!command) return `${username}@ThePiratePlayer$`
+        if (!command) return `${username}@Vortex$`
         const request = new XMLHttpRequest();
         request.open('GET', '/api/terminal?cmd=' + btoa(command), false);  // `false` makes the request synchronous
         request.send(null);

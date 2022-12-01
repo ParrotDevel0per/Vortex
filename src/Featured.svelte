@@ -183,10 +183,10 @@
         cursor: pointer;
     }
     .bgRed {
-        background-color: red!important;
+        background-color: blue!important;
     }
     .bgRed:hover {
-        background-color: #ff4444!important;
+        background-color: #1703cc!important;
         cursor: pointer;
     }
 

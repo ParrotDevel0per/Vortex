@@ -57,5 +57,7 @@ def logout():
     resp = Response(
         "<script>location='/';</script>"
     )
+    resp.headers["Location"] = "/"
     resp.set_cookie("token", "", expires=0)
+    resp.status_code = 302
     return resp

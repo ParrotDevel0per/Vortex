@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 @font-face {
-  font-family: 'Chomsky';
-  src: url('/static/fonts/Chomsky.woff') format('woff');
+  font-family: 'ModernWarfare';
+  src: url('/static/fonts/ModernWarfare.ttf');
 }
 
 :root {
@@ -28,9 +28,9 @@ body {
   -moz-osx-font-smoothing: grayscale;      
 }
 
-.tpp-logo p {
-  font-family: 'Chomsky';
-  color: rgb(255, 0, 0)!important;
+.v-logo p {
+  font-family: 'ModernWarfare';
+  color: blue;
   position: absolute;
   top: 0px;
   left: 3.1%;
@@ -76,7 +76,7 @@ body {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: red;
+  background: blue;
   width: 100%;
   border: 0;
   padding: 16px;

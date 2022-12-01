@@ -60,12 +60,12 @@ class CLI:
 
         self.__getSubclassByName("CLIScript")(args[0]).run()
 
-    def exit(self, *args):
-        """Exit CLI and run TPP"""
+    def exit(self, *args) -> str:
+        """Exit CLI and run Vortex"""
         
         return "return"
 
-    def help(self, *args):
+    def help(self, *args) -> PrettyTable:
         """Show help message"""
 
         table = PrettyTable(field_names=["Command", "Description"])
@@ -73,7 +73,7 @@ class CLI:
             table.add_row([item['name'], item['desc']])
         return table
 
-    def whoami(self, *args):
+    def whoami(self, *args) -> str:
         """Shows current user"""
 
         return "Admin, I guess"
@@ -85,35 +85,35 @@ class CLI:
         cls()
 
     def ff(self, *args):
-        """Exit CLI, Exit TPP"""
+        """Exit CLI, Exit Vortex"""
 
         self.clear()
         exit()
 
     def update(self, *args):
-        """Update TPP"""
+        """Update Vortex"""
 
         os.system("git fetch")
         os.system("git merge")
 
-    def set(self, *args):
+    def set(self, *args) -> str:
         """Set X in settings"""
         
         args = list(args)
         if len(args) < 2: return "Invalid argument count"
         return setSetting(args.pop(0), " ".join(args))
 
-    def get(self, *args):
+    def get(self, *args) -> str:
         """Get X from settings"""
 
         if len(args) != 1: return "Invalid argument count"
         return getSetting(args[0])
 
-    def export(self, *args):
+    def export(self, *args) -> str:
         """Creates settings.tpps that can be imported by runing 'exec settings.tpps'"""
 
         now = datetime.datetime.now()
-        file = f"# Auto-exported by ThePiratePlayer\n# Exported on {now.strftime('%m/%d/%Y, %H:%M:%S')}\n\n"
+        file = f"# Auto-exported by Vortex\n# Exported on {now.strftime('%m/%d/%Y, %H:%M:%S')}\n\n"
         loaded = json.loads(open(SETTINGSFILE, 'r').read())
         for k,v in loaded.items():
             file += f"set {k} {v}\n"
@@ -139,7 +139,7 @@ class CLI:
 
         return open(os.path.join(DB_FOLDER, "app.log"), 'r').read() if open(os.path.join(DB_FOLDER, "app.log"), 'r').read() != "" else "Log is empty"
 
-    def user(self, *args):
+    def user(self, *args) -> str:
         """Create, Edit, Remove users"""
 
         if len(args) < 1: return "Invalid argument count"

@@ -2,6 +2,7 @@
 	import Nav from './Nav.svelte';
 	import Featured from './Featured.svelte';
 	import axios from 'axios';
+	import 'boxicons'
 	export let showG;
 	export let id;
 	export let showFt;
@@ -94,6 +95,15 @@
 		});
 	}
 	if (id) {view(id)}
+
+	const scrollRight = (id) => {
+		let item = document.getElementById(id);
+		item.scrollLeft = item.scrollLeft + 500
+	}
+	const scrollLeft = (id) => {
+		let item = document.getElementById(id);
+		item.scrollLeft = item.scrollLeft - 500
+	}
 </script>
 
 <main>
@@ -110,9 +120,16 @@
 						<p style="display: none;">Loading ...</p>
 					{:then resp}
 					<!--<h1>{ m.title }</h1>-->
-					<div class="outer">
+					<div on:click={()=>{scrollLeft(`${m.title}Box`)}} class="arrows left">
+						<box-icon name='chevron-left' color="white"></box-icon>
+					</div>
+					<div on:click={()=>{scrollRight(`${m.title}Box`)}} class="arrows right">
+						<box-icon name='chevron-right' color="white"></box-icon>
+					</div>
+					<div id="{m.title}Box" class="outer">
+						<div class="placeholder"></div>
 						{#each Object.values(resp.data) as d}
-							<img on:click={() => view(d.id)} id={d.id} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
+							<img class="clickablePoster" on:click={() => view(d.id)} id={d.id} src="/api/poster/{ d.id }?do=show" alt="{ d.title }">
 						{/each}
 						<!--<div class="br"></div>-->
 					</div>
@@ -142,6 +159,33 @@
 	main {
 		background-color: black;
 	}
+
+	box-icon {
+		width: 100%!important;
+		height: 100%!important;
+	}
+
+	.placeholder {
+		width: 50px;
+		height: 48.2vh;
+	}
+
+	.arrows {
+		position: absolute;
+		width: 50px;
+		height: 50vh;
+		background-color: #101214;
+		z-index: 999;
+	}
+
+	.left {
+		left: 0;
+	}
+	
+	.right {
+		right: 0;
+	}
+
 	.content {
 		box-sizing: border-box;
 		background-color: black;

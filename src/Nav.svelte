@@ -29,7 +29,7 @@
 </script>
 
 <nav bind:this={nav} class="navbar navbar-expand-lg fixed-top">
-    <a class="navbar-brand" href="/">The Pirate Player</a>
+    <a class="navbar-brand" href="/">Vortex</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -71,8 +71,8 @@
 
 <style>
 @font-face {
-  font-family: 'Chomsky';
-  src: url('/static/fonts/Chomsky.woff') format('woff');
+  font-family: 'ModernWarfare';
+  src: url('/static/fonts/ModernWarfare.ttf');
 }
 
 /*
@@ -92,10 +92,14 @@ nav {
 }
 
 .navbar-brand {
-  font-family: 'Chomsky';
-  color: rgb(255, 0, 0)!important;
+  font-family: 'ModernWarfare';
+  color: blue;
   margin-right: 2%!important;
   padding-left: 1%;
+}
+
+.navbar-brand:hover {
+  color: #1703cc;
 }
 
 .nav-link {

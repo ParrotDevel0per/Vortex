@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template
 
 # App routes
 from routes.api.api import api
@@ -25,9 +25,11 @@ import os
 import sys
 import logging
 import time
+from plugins import *
 from classes.cli import CLI
 from classes.cliscript import CLIScript
 from classes.openvpn import OpenVPN
+from classes.plugin import Plugin
 
 sysArgv = sys.argv[1:]
 
@@ -36,7 +38,7 @@ if getSetting("keepLogs").lower() == "false":
     open(logFile, "w").write("")
 if getSetting("logger").lower() == "true":
     logging.basicConfig(filename=logFile, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
-app = Flask("The Pirate Player")
+app = Flask("Vortex")
 app.config['JSON_SORT_KEYS'] = False
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(favoritesRT, url_prefix='/api')
@@ -48,7 +50,21 @@ app.register_blueprint(auth, url_prefix='/')
 app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
 app.register_blueprint(universal, url_prefix='/proxy/universal')
 
+css = Plugin().getCSS()
 
+for bp in Plugin().getBlueprints():
+    app.register_blueprint(bp, url_prefix='/p')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.after_request
+def overrideResponse(response):
+    endpoint = request.endpoint
+    if endpoint in css and css[endpoint] and endpoint.startswith(("api.", ) == False):
+        response.data =  f"<!--CSS Injected by plugin-->\n<style>{css[endpoint]}</style>\n\n{response.data.decode()}"
+    return response
 
 
 @app.before_request
@@ -103,7 +119,7 @@ def cli():
     runner = CLI()
 
     while True:
-        cmd = input(textColor + "Admin@ThePiratePlayer$ ")
+        cmd = input(textColor + "Admin@Vortex$ ")
         if " " in cmd: cmd = cmd.split(" ")
         else: cmd = [cmd]
 

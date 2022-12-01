@@ -2,7 +2,7 @@ import ipaddress
 import random
 import requests
 from urllib.parse import urlencode
-from plugins.imdb import getMovieInfo
+from classes.imdb import IMDB
 from classes.browser import Firefox
 from classes.net import NET
 import re
@@ -134,7 +134,7 @@ def girc(page_data, url, co, useNET=False):
     return ''
 
 def translateItemToCzech(id, isMovie):
-    url = "https://www.csfd.cz/api/search/autocomplete/?q=" + getMovieInfo(id)["title"]
+    url = "https://www.csfd.cz/api/search/autocomplete/?q=" + IMDB().getMovieInfo(id)["title"]
     headers = {
         "User-Agent": Firefox().ua,
         "Accept": "application/json, text/javascript, */*; q=0.01",

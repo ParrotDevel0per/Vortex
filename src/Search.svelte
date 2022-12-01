@@ -2,42 +2,18 @@
 import Nav from "./Nav.svelte";
 import axios from 'axios';
 
-//var search = "";
-//var results = {};
-
 var term = localStorage.getItem("lastQuery") ? localStorage.getItem("lastQuery") : "";
 
 function preloadImage(url) {
 		var img=new Image();
 		img.src=url;
 }
-preloadImage("/static/img/loading.gif")
 
-/*
-const searchEngine = () => {
-    const searchTerm = search.value.toLowerCase();
-    if (searchTerm.length >= 3) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function() {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                var resp = JSON.parse(xmlHttp.responseText);
-                resp = resp["results"];
-                if (resp == undefined) { return; }
-                results = resp;
-            }
-        }
-        xmlHttp.open("GET", "/api/search/" + searchTerm, true);
-        xmlHttp.setRequestHeader('Accept', 'application/json');
-        xmlHttp.send(null);
-    } else {
-      results = {};
-    }
-}
-*/
 const view = (id) => {
   preloadImage(`/api/banner/${id}?do=show`);
   location = `/?showG=false&id=${id}`;
 }
+
 </script>
 
 <main>
@@ -48,17 +24,17 @@ const view = (id) => {
         type="text"
         placeholder="Search ..."
     >
-
     {#if term}
       <div id="grid">
         {#await axios.get("/api/search/" + term, {transformResponse: (res) => { return JSON.parse(res); }, responseType: 'json'})}
-          <p style="display: none;">Loading ...</p>
+          <p style="display: none;"></p>
         {:then resp}
           {#each Object.values(resp.data.results) as r}
           <div class="item" on:click={() => view(r.id)}>
               <img src="/api/poster/{ r.id }?do=show" alt="Poster">
           </div>
           {/each}
+          <p style="display: none;"></p>
         {:catch error}
           <p style="display: none;">Error: {error.message}</p>
         {/await}
@@ -77,6 +53,11 @@ const view = (id) => {
     -moz-user-select: none;    
     -ms-user-select: none;      
     user-select: none;
+}
+p {
+  text-align: center;
+  margin-bottom: 7vh;
+  color: #3e3e3e;
 }
 main {
 	background-color: black;
@@ -121,7 +102,7 @@ input {
   text-decoration: none;
   position: relative;
   border: none;
-  margin-bottom: 8vh;
+  margin-bottom: 1vh;
   margin-top: 8vh;
   margin-left: 12.5%;
 }

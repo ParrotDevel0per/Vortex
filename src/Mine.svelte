@@ -1,6 +1,7 @@
 <script>
     import Nav from './Nav.svelte';
 	import axios from 'axios';
+	import 'boxicons'
 
 	function preloadImage(url) {
 		var img=new Image();
@@ -29,7 +30,14 @@
 		},
 	}
 	
-
+	const scrollRight = (id) => {
+		let item = document.getElementById(id);
+		item.scrollLeft = item.scrollLeft + 500
+	}
+	const scrollLeft = (id) => {
+		let item = document.getElementById(id);
+		item.scrollLeft = item.scrollLeft - 500
+	}
     
 	// view replace's featured with custom item
 	const view = (id) => {
@@ -44,7 +52,14 @@
 	<div id="content" class="content">
 			{#each Object.values(menu) as m}
 			<h1>{ m.title }</h1>
-			<div class="outer">
+			<div on:click={()=>{scrollLeft(`${m.title}Box`)}} class="arrows left">
+				<box-icon name='chevron-left' color="white"></box-icon>
+			</div>
+			<div on:click={()=>{scrollRight(`${m.title}Box`)}} class="arrows right">
+				<box-icon name='chevron-right' color="white"></box-icon>
+			</div>
+			<div id="{m.title}Box" class="outer">
+				<div class="placeholder"></div>
 				{#await axios.get(m.url, {transformResponse: (res) => { return JSON.parse(res).results; }, responseType: 'json'})}
 					{ console.log("Getting Movies ...") }
 				{:then resp}
@@ -65,6 +80,32 @@
 	:root {
         --blur-rate: 3px;
     }
+
+	box-icon {
+		width: 100%!important;
+		height: 100%!important;
+	}
+
+	.placeholder {
+		width: 50px;
+		height: 48.2vh;
+	}
+
+	.arrows {
+		position: absolute;
+		width: 50px;
+		height: 50vh;
+		background-color: #101214;
+		z-index: 999;
+	}
+
+	.left {
+		left: 0;
+	}
+	
+	.right {
+		right: 0;
+	}
 
 	.br {
 		width: 100%;

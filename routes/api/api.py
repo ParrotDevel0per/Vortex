@@ -1,8 +1,8 @@
 import hashlib
 from flask import Blueprint, jsonify, Response, redirect, request, send_from_directory
 from utils.settings import getSetting
-import plugins.imdb as imdb
-import plugins.fanarttv as fanarttv
+from classes.imdb import IMDB
+from classes.fanarttv import FanartTV
 from classes.cli import CLI
 import requests
 import base64
@@ -15,6 +15,7 @@ from classes.browser import Firefox
 from classes.net import NET
 from utils.common import chunkedDownload, sanitize, get_simple_keys
 import os
+from prettytable import PrettyTable
 import time
 
 api = Blueprint('api', __name__)
@@ -88,7 +89,10 @@ def terminal():
         cmd.pop(0)
 
         try:
-            return item["run"](runner, *tuple(cmd))
+            resp = item["run"](runner, *tuple(cmd))
+            if type(resp) == PrettyTable:
+                return str(resp).replace("\n", "<br/>").replace(" ", "&nbsp;")
+            return resp
         except Exception as e: 
             return "Invalid command"
     return "Invalid command"
@@ -305,14 +309,14 @@ def poster(id):
     })
     baseURL = request.base_url.split('/api')[0]
     if do == 'redirect':
-        p = imdb.IMDBtoPoster(id)
+        p = IMDB().IMDBtoPoster(id)
         posterURL = p if p else f"{baseURL}/static/img/nopicture.jpg"
         return redirect(posterURL)
 
     elif do == 'show':
         if not os.path.exists(POSTER_FOLDER): os.makedirs(POSTER_FOLDER)
         if f"tt{id}.png" not in os.listdir(POSTER_FOLDER):
-            p = imdb.IMDBtoPoster(id)
+            p = IMDB().IMDBtoPoster(id)
             chunkedDownload(p if p else f"{baseURL}/static/img/nopicture.jpg", os.path.join(POSTER_FOLDER, f"tt{id}.png"))
         return send_from_directory(POSTER_FOLDER, f"tt{id}.png")
 
@@ -331,12 +335,12 @@ def banner(id):
     })
 
     if do == 'redirect':
-        return redirect(fanarttv.getBanner(f"tt{id}"))
+        return redirect(FanartTV().getBanner(f"tt{id}"))
 
     elif do == 'show':
         if not os.path.exists(BANNER_FOLDER): os.makedirs(BANNER_FOLDER)
         if f"tt{id}.png" not in os.listdir(BANNER_FOLDER):
-            url = fanarttv.getBanner(f"tt{id}")
+            url = FanartTV().getBanner(f"tt{id}")
             if "/api/poster/" in url:
                 return redirect(request.base_url.split("/api")[0]+url)
             chunkedDownload(url, os.path.join(BANNER_FOLDER, f"tt{id}.png"))
@@ -352,7 +356,7 @@ def search(query):
     })
     cached = getCachedItem(f"search-query-{query.replace(' ', '---')}.json", "search")
     if cached == None:
-        results = imdb.search(query)
+        results = IMDB().search(query)
         cacheItem(f"search-query-{query.replace(' ', '---')}.json", "search", json.dumps(results))
         return jsonify({
             "query": query,
@@ -374,7 +378,7 @@ def seasons(id):
     if id.startswith("tt"): id = id[2:]
     cached = getCachedItem(f"seasons-{id}.json", "seasons")
     if cached == None:
-        results = imdb.seasons(id)
+        results = IMDB().seasons(id)
         cacheItem(f"seasons-{id}.json", "seasons", json.dumps(results))
         return jsonify({
             "id": id,
@@ -404,7 +408,7 @@ def episodes(id, season):
     })
     cached = getCachedItem(f"episodes-{id}-{season}.json", "episodes")
     if cached == None:
-        results = imdb.episodes(id, season)
+        results = IMDB().episodes(id, season)
         cacheItem(f"episodes-{id}-{season}.json", "episodes", json.dumps(results))
         return jsonify({
             "id": id,
@@ -428,7 +432,7 @@ def episodeCount(id):
     if id.startswith("tt"): id = id[2:]
     cached = getCachedItem(f"episodeCount-{id}.json", "episodeCounts")
     if cached == None:
-        results = imdb.allEpisodesCount(id)
+        results = IMDB().allEpisodesCount(id)
         cacheItem(f"episodeCount-{id}.json", "episodeCounts", json.dumps(results))
         return jsonify({
             "id": id,
@@ -443,7 +447,7 @@ def episodeCount(id):
 def top250movies():
     cached = getCachedItem("top250movies.json", "imdbCache")
     if cached == None:
-        results = imdb.top250movies()
+        results = IMDB().top250movies()
         cacheItem("top250movies.json", "imdbCache", json.dumps(results))
         return jsonify({
             "results": results
@@ -457,7 +461,7 @@ def top250movies():
 def bottom100movies():
     cached = getCachedItem("bottom100movies.json", "imdbCache")
     if cached == None:
-        results = imdb.bottom100movies()
+        results = IMDB().bottom100movies()
         cacheItem("bottom100movies.json", "imdbCache", json.dumps(results))
         return jsonify({
             "results": results
@@ -479,7 +483,7 @@ def getMoviesByGenres():
 
     cached = getCachedItem("-".join(genres) + ".json", "genres")
     if cached == None:
-        results = imdb.getMoviesByGenres(genres)
+        results = IMDB().getMoviesByGenres(genres)
         cacheItem("-".join(genres) + ".json", "genres", json.dumps(results))
         return jsonify({
             "results": dict(list(results.items())[:MAX_RESULTS])
@@ -516,7 +520,7 @@ def getMovieInfo(id):
     rp = "" # response
     cached = getCachedItem(f"Item-{id}.json", "ItemInfoCache")
     if cached == None:
-        movie = imdb.getMovieInfo(id)
+        movie = IMDB().getMovieInfo(id)
         resp = {}
         resp["title"] = movie['title']
         resp["plot"] = movie['plot'][0]

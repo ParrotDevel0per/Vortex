@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
+    "boxicons": "^2.1.4",
+    "dragscroll": "^0.0.8",
     "jquery": "^3.6.1",
     "sirv-cli": "^2.0.0",
     "svelte-modals": "^1.2.0"

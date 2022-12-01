@@ -15,3 +15,6 @@ venv
 openvpn/auth/*
 openvpn
 php/
+plugins/*
+!plugins/__init__.py
+!plugins/example.py

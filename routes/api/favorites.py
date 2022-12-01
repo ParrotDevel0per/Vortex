@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-import plugins.imdb as imdb
+from classes.imdb import IMDB
 import threading
 from utils.users import userdata, changeValue, reqToUID
 
@@ -12,7 +12,7 @@ def favorites():
     })
 
 def addToFavsThread(id, uid):
-    movie = imdb.getMovieInfo(id)
+    movie = IMDB().getMovieInfo(id)
     favorites = userdata(uid)["favorites"]
     favorites[id] = {
         "title": movie["title"],
