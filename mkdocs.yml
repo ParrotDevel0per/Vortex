@@ -1,2 +1,8 @@
+site_url: http://v-vortex.rtfd.io/
+site_description: Media centre coded in python / javascript
+site_author: Parrot Developers
+
+repo_url: https://weboasis.app/HereIronman7746/Vortex
+
 theme:
     name: readthedocs
