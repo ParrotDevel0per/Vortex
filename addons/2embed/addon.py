@@ -7,16 +7,26 @@ import json
 from utils.common import girc, base64encode
 from hosts.streamlare import StreamLare
 
-blueprint = Blueprint("2embed", __name__)
+n2embed = Blueprint("2embed", __name__)
 
 class toEmbed(Plugin):
     def __init__(self) -> None:
-        super().__init__()
+        self.metadata = {
+            "name": "2embed",
+            "desc": "Plugin for grabbing streams from 2embed.to",
+            "author": "Parrot Developers",
+            "id": "2embed",
+            "logo": "logo.png",
+            "resolver": {
+                "name": "2embed",
+                "ext": "mp4",
+                "func": self.resolve,
+            }
+        }
     
     
     
-    def resolve(imdbid, episode=None):
-        """2embed-mp4""" # Name of resolver | output format
+    def resolve(self, imdbid, episode=None):
         url = f"https://www.2embed.to/embed/imdb/movie?id={imdbid}"
         if episode:
             episode = episode.split("-")
@@ -28,7 +38,7 @@ class toEmbed(Plugin):
 
         resp = NET().GET(url, headers=firefox.headers)
         dataID = re.findall(
-            re.compile(f'data-id="(.*?)">Server Streamlare</a>', flags=re.MULTILINE), resp.text
+            re.compile('data-id="(.*?)">Server Streamlare</a>', flags=re.MULTILINE), resp.text
         )[0]
 
         token = girc(
@@ -43,5 +53,5 @@ class toEmbed(Plugin):
         return f"/api/proxy/base64:{base64encode(url)}&headers={base64encode(json.dumps(headers))}&token=[[token]]"
 
     # Required
-    def blueprint() -> Blueprint:
-        return blueprint
+    def blueprint(self) -> Blueprint:
+        return n2embed

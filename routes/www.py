@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, send_from_directory
 from utils.users import LAH
 from utils.paths import DB_FOLDER
+from classes.plugin import Plugin
 import requests
 import os
 import json
@@ -28,6 +29,10 @@ def watch(id):
     sources=requests.get(sourcesURL, headers=LAH(request)).json()
     return render_template('play.html', id=id, sources=json.dumps(sources))
 
+
+@www.route("/p")
+def p(): # Plugins
+    return render_template("plugins.html", plugins=Plugin().plugins)
 
 @www.route('/static/<path:path>')
 def send_static(path):

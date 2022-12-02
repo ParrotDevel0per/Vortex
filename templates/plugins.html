@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+    <style>
+        html, body {
+            background-color: black;
+        }
+
+        .collapsible {
+            background-color: rgb(36, 36, 36);
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+          }
+          
+          .active, .collapsible:hover {
+            background-color: #555;
+          }
+          
+          .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: black;
+          }
+          img {
+            width: 150px;
+            height: 150px;
+            margin-right: 15px;
+          }
+        
+          .parent {
+            display: flex;
+            margin-top: 8px;
+            margin-bottom: 8px;
+          }
+
+          p, h2 {
+            color: #2d6597;
+          }
+    </style>
+</head>
+  
+<body>
+    <div class="container">
+        {% for plugin in plugins %}
+        <button type="button" class="collapsible">{{ plugin.name }}</button>
+        <div class="content">
+            <div class="parent">
+                <img src="/api/addonLogo/{{ plugin.id }}" />
+                <div>
+                  <h2>{{ plugin.name }}</h2>
+                  <p>{{ plugin.desc }}</p>
+                  <p>by {{ plugin.author }}</p>
+                  <p>Adds Resolver: {{ plugin.addsResolver }}</p>
+                  <p>Adds Extra CSS: {{ plugin.addsCSS }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+    
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+          content.style.display = "none";
+        } else {
+          content.style.display = "block";
+        }
+      });
+    }
+</script>
+</html>

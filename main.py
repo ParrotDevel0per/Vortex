@@ -21,7 +21,6 @@ import os
 import sys
 import logging
 import time
-from plugins import *
 from classes.cli import CLI
 from classes.cliscript import CLIScript
 from classes.openvpn import OpenVPN
@@ -81,7 +80,8 @@ def verifyRequest():
         "api.banUnban",
         "api.deleteUser_",
         "api.changePassword_",
-        "api.requestsIP"
+        "api.requestsIP",
+        "www.p"
     ]
 
     if endpoint in admin:

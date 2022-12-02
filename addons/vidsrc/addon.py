@@ -11,7 +11,7 @@ from utils.users import reqToToken
 import json
 
 name = "vidsrc"
-blueprint = Blueprint(name, __name__)
+vidsrcBP = Blueprint(name, __name__)
 database = {}
 sleepTime = 100 # Interval of updating token
 expireAfter = 3 * 60 * 60 # When unused token will expire, must be bigger than sleepTime
@@ -27,7 +27,7 @@ def refreshToken(token):
     database[token["uid"]]["expire"] = int(time.time()) + sleepTime
 
 
-@blueprint.route('/playlist.m3u8')
+@vidsrcBP.route('/playlist.m3u8')
 def playlist():
     wmsAuthSign = request.args.get('wmsAuthSign')
     if wmsAuthSign is None: return "Forbidden"
@@ -38,7 +38,7 @@ def playlist():
     wmsAuthSign = base64.b64encode(json.dumps(wmsAuthSign).encode('utf-8')).decode('utf-8')
     return Response(r.text.replace("http", f"/p/{name}/ts?url=http").replace(".ts", f".ts&wmsAuthSign={wmsAuthSign}&token={reqToToken(request)}"), mimetype='application/x-mpegURL')
 
-@blueprint.route('/ts')
+@vidsrcBP.route('/ts')
 def ts():
     wmsAuthSign = request.args.get('wmsAuthSign')
     if wmsAuthSign is None: return "Forbidden"
@@ -50,10 +50,20 @@ def ts():
 
 class VidSrc(Plugin):
     def __init__(self) -> None:
-        super().__init__()
+        self.metadata = {
+            "name": "VidSrc",
+            "desc": "Plugin for grabbing streams from vidsrc.me",
+            "author": "Parrot Developers",
+            "id": "vidsrc",
+            "logo": "logo.png",
+            "resolver": {
+                "name": "vidsrc",
+                "ext": "m3u8",
+                "func": self.resolve,
+            }
+        }
     
-    def resolve(imdbid, episode=None):
-        """vidsrc-m3u8""" # Name of resolver | output format
+    def resolve(self, imdbid, episode=None):
         url = "https://v2.vidsrc.me/embed/{}/".format(imdbid)
         if episode != None: url += "{}/".format(episode)
 
@@ -95,5 +105,5 @@ class VidSrc(Plugin):
         return f"/p/{name}/playlist.m3u8?wmsAuthSign={wmsAuthSign}&token=[[token]]"
 
     # Required
-    def blueprint() -> Blueprint:
-        return blueprint
+    def blueprint(self) -> Blueprint:
+        return vidsrcBP

@@ -1,5 +1,5 @@
 import hashlib
-from flask import Blueprint, jsonify, Response, redirect, request, send_from_directory
+from flask import Blueprint, jsonify, Response, redirect, request, send_from_directory, send_file
 from utils.settings import getSetting
 from classes.imdb import IMDB
 from classes.fanarttv import FanartTV
@@ -10,7 +10,7 @@ import json
 import random
 #from plugins import *
 from classes.plugin import Plugin
-from utils.paths import POSTER_FOLDER, BANNER_FOLDER
+from utils.paths import POSTER_FOLDER, BANNER_FOLDER, ADDONS_FOLDER
 from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser, defaultHome, reqToToken
 from utils.cache import getCachedItem, cacheItem
 from classes.browser import Firefox
@@ -57,6 +57,27 @@ def homeMenu():
 @api.route('/defaultHome')
 def defaultHome_():
     return defaultHome()
+
+@api.route('/addonLogo/<id>')
+def addonLogo(id):
+    plugin = Plugin()
+    logo = ""
+    for plugin_ in plugin.plugins:
+        if plugin_["id"] != id:
+            continue
+        logo = plugin_["logo"]
+        break
+    else:
+        return {"status": "error"}
+
+    if os.path.exists(os.path.join(os.getcwd(), "addons", id, logo)):
+        return send_file(os.path.join(os.getcwd(), "addons", id, logo))
+
+    if os.path.exists(os.path.join(ADDONS_FOLDER, id ,logo)):
+        return send_file(os.path.join(ADDONS_FOLDER, id ,logo))
+    
+    return {"status": "error"}
+
 
 @api.route('/requestsIP')
 def requestsIP():

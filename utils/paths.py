@@ -15,6 +15,7 @@ DB_FOLDER = os.path.join(USERDATA, "DB")
 CACHE_FOLDER = os.path.join(USERDATA, CACHEFOLDERNAME)
 POSTER_FOLDER = os.path.join(USERDATA, "posters")
 BANNER_FOLDER = os.path.join(USERDATA, "banners")
+ADDONS_FOLDER = os.path.join(USERDATA, "addons")
 
 # If folders dont exist create them
 if not os.path.exists(USERDATA): os.makedirs(USERDATA)
@@ -22,3 +23,4 @@ if not os.path.exists(DB_FOLDER): os.makedirs(DB_FOLDER)
 if not os.path.exists(CACHE_FOLDER): os.makedirs(CACHE_FOLDER)
 if not os.path.exists(POSTER_FOLDER): os.makedirs(POSTER_FOLDER)
 if not os.path.exists(BANNER_FOLDER): os.makedirs(BANNER_FOLDER)
+if not os.path.exists(ADDONS_FOLDER): os.makedirs(ADDONS_FOLDER)

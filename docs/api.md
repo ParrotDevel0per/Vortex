@@ -264,7 +264,7 @@ GET /api/seasons/<imdb id>
 ```json
 {
     "query": query,
-    "results": {}
+    "results": {...Long Response...}
 }
 ```
 
@@ -277,7 +277,7 @@ GET /api/episodes/<imdb id>/<season>
 ```json
 {
     "query": query,
-    "results": {}
+    "results": {...Long Response...}
 }
 ```
 
@@ -290,7 +290,7 @@ GET /api/episodeCount/<imdb id>
 ```json
 {
     "query": query,
-    "results": {}
+    "results": {...Long Response...}
 }
 ```
 
@@ -303,7 +303,7 @@ GET /api/top250movies/
 ```json
 {
     "query": query,
-    "results": {}
+    "results": {...Long Response...}
 }
 ```
 
@@ -316,7 +316,7 @@ GET /api/bottom100movies/
 ```json
 {
     "query": query,
-    "results": {}
+    "results": {...Long Response...}
 }
 ```
 
@@ -329,7 +329,7 @@ GET /api/getMoviesByGenres?genres=Action|Family
 ```json
 {
     "query": query,
-    "results": {}
+    "results": {...Long Response...}
 }
 ```
 

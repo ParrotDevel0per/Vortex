@@ -1,8 +1,12 @@
+import os
+from utils.paths import ADDONS_FOLDER
+
 class Plugin:
     def __init__(self) -> None:
         self.css = {}
         self.blueprints = []
         self.resolvers = {}
+        self.plugins = []
         self.setData()
 
     def __getSubclasses(self):
@@ -11,19 +15,47 @@ class Plugin:
     def setData(self):
         for klass in self.__getSubclasses():
             # Add all blueprints
-            self.blueprints.append(klass.blueprint())
+            self.blueprints.append(klass().blueprint())
+
+            metadata = klass().metadata
+            self.plugins.append({
+                "name": metadata["name"],
+                "desc": metadata["desc"],
+                "author": metadata["author"],
+                "id": metadata["id"],
+                "logo": metadata["logo"],
+                "addsCSS": "css" in metadata and metadata["css"],
+                "addsResolver": "resolver" in metadata and metadata["resolver"] != {}
+            })
 
             # Add custom css
-            try: self.css.update(klass.customCSS())
-            except: pass
+            if "css" in metadata and metadata["css"]:
+                self.css.update(metadata["css"])
             
             # Check for resolvers
-            try:
-                name = klass.resolve.__doc__.split("-")
-                self.resolvers[name[0]] = {
-                    "run": klass.resolve,
-                    "ext": name[1]
+            if "resolver" in metadata and metadata["resolver"]:
+                self.resolvers[metadata["resolver"]["name"]] = {
+                    "run": metadata["resolver"]["func"],
+                    "ext": metadata["resolver"]["ext"]
                 }
-            except:
-                pass
-            
+
+# Import all addons
+for addon in os.listdir(ADDONS_FOLDER):
+    if os.path.isdir(os.path.join(ADDONS_FOLDER, addon)):
+        continue
+
+    if addon.startswith("__"):
+        continue
+
+    exec(open(os.path.join(ADDONS_FOLDER, addon, "addon.py"), "r", encoding="utf-8").read())
+
+# Import preinstalled addons
+for addon in os.listdir(os.path.join(os.getcwd(), "addons")):
+    if os.path.isdir(os.path.join(os.getcwd(), "addons", addon)) == False:
+        continue
+
+    if addon.startswith("__"):
+        continue
+
+
+    exec(open(os.path.join(os.getcwd(), "addons", addon, "addon.py"), "r", encoding="utf-8").read())
