@@ -40,7 +40,7 @@ class toEmbed(Plugin):
         firefox.addHeader("Referer", url)
         embedurl = NET().GET(f"https://www.2embed.to/ajax/embed/play?id={dataID}&_token={token}", headers=firefox.headers).json()["link"]
         url, headers = StreamLare().grab(embedurl)
-        return f"/api/proxy/base64:{base64encode(url)}&headers={base64encode(json.dumps(headers))}"
+        return f"/api/proxy/base64:{base64encode(url)}&headers={base64encode(json.dumps(headers))}&token=[[token]]"
 
     # Required
     def blueprint() -> Blueprint:
