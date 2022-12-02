@@ -210,8 +210,7 @@ def resolve(id):
     if episode: url += f"&episode={episode}"
     return jsonify({
         "id": id,
-        "url": requests.get(url, headers=LAH(request)).text,
-        "poster": "/static/img/preloader/1.png"
+        "url": requests.get(url, headers=LAH(request)).text
     })
 
 @api.route('/sources/<id>')
