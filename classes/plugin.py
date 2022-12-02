@@ -1,19 +1,29 @@
 class Plugin:
     def __init__(self) -> None:
-        pass
+        self.css = {}
+        self.blueprints = []
+        self.resolvers = {}
+        self.setData()
 
     def __getSubclasses(self):
         return Plugin.__subclasses__()
 
-    def getCSS(self):
-        css = {}
+    def setData(self):
         for klass in self.__getSubclasses():
-            try: css.update(klass.customCSS())
-            except: pass
-        return css
+            # Add all blueprints
+            self.blueprints.append(klass.blueprint())
 
-    def getBlueprints(self):
-        blueprints = []
-        for klass in self.__getSubclasses():
-            blueprints.append(klass.blueprint())
-        return blueprints
+            # Add custom css
+            try: self.css.update(klass.customCSS())
+            except: pass
+            
+            # Check for resolvers
+            try:
+                name = klass.resolve.__doc__.split("-")
+                self.resolvers[name[0]] = {
+                    "run": klass.resolve,
+                    "ext": name[1]
+                }
+            except:
+                pass
+            

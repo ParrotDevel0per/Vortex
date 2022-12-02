@@ -9,10 +9,6 @@ from routes.www import www
 from routes.m3u import m3u
 from routes.admin import admin
 
-# Proxies
-from proxies.vidsrc import vidsrc
-from proxies.universal import universal
-
 # Rest
 from utils.settings import getSetting
 from utils.paths import DB_FOLDER
@@ -47,13 +43,13 @@ app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(www, url_prefix='/')
 app.register_blueprint(m3u, url_prefix='/')
 app.register_blueprint(auth, url_prefix='/')
-app.register_blueprint(vidsrc, url_prefix='/proxy/vidsrc')
-app.register_blueprint(universal, url_prefix='/proxy/universal')
 
-css = Plugin().getCSS()
+plugin = Plugin()
 
-for bp in Plugin().getBlueprints():
-    app.register_blueprint(bp, url_prefix='/p')
+css = plugin.css
+
+for bp in plugin.blueprints:
+    app.register_blueprint(bp, url_prefix=f'/p/{bp.name}')
 
 @app.errorhandler(404)
 def page_not_found(e):

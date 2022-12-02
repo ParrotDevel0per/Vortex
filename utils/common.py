@@ -5,7 +5,9 @@ from utils.settings import getSetting
 from urllib.parse import urlencode
 import socket
 import os
+import base64
 import re
+from classes.net import NET
 
 symbols = "[@_!#$%^&*()<>?/\|}{~:]\"'"
 exceptions = ["!", ":", "?"]
@@ -14,14 +16,17 @@ def insertInMiddle(string, item):
     midPoint = len(string)//2
     return string[:midPoint] + item + string[midPoint:]
 
-def girc(page_data, url, co):
+def girc(page_data, url, co, useNET=False):
     """
     Code adapted from https://github.com/vb6rocod/utils/
     Copyright (C) 2019 vb6rocod
     and https://github.com/addon-lab/addon-lab_resolver_Project
     Copyright (C) 2021 ADDON-LAB, KAR10S
     """
-    net = requests.Session()
+    if useNET:
+        net = NET()
+    else:
+        net = requests.Session()
     hdrs = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0",
             'Referer': url}
     rurl = 'https://www.google.com/recaptcha/api.js'
@@ -56,6 +61,7 @@ def girc(page_data, url, co):
         gtoken = re.search('rresp","([^"]+)', page_data3)
         if gtoken:
             return gtoken.group(1)
+
     return ''
 
 def randStr(length = 32, incUpper=False):
@@ -97,3 +103,10 @@ def get_simple_keys(data):
         else:
             result += get_simple_keys(data[key])
     return result
+
+
+def base64encode(data):
+    return base64.b64encode(data.encode()).decode()
+
+def base64decode(data):
+    return base64.b64decode(data.encode()).decode()

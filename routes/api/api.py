@@ -8,8 +8,10 @@ import requests
 import base64
 import json
 import random
+#from plugins import *
+from classes.plugin import Plugin
 from utils.paths import POSTER_FOLDER, BANNER_FOLDER
-from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser, defaultHome
+from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser, defaultHome, reqToToken
 from utils.cache import getCachedItem, cacheItem
 from classes.browser import Firefox
 from classes.net import NET
@@ -191,10 +193,10 @@ def resolve(id):
     })
     if not id.startswith("tt"): id = f"tt{id}"
 
+    plugin = Plugin()
     sources = []
-    for file in os.listdir("Resolver/plugins"):
-        if file.startswith("__"): continue
-        sources.append(file.split(".")[0])
+    for k,v in plugin.resolvers.items():
+        sources.append(k)
 
     use = sources[0]
     if getSetting("source") in sources:       use = getSetting("source")
@@ -202,15 +204,10 @@ def resolve(id):
 
     episode = str(request.args.get("episode") or "")
     baseURL = request.base_url.split("/api")[0]
-    url = ""
-    if "vidsrc" in use.lower():
-        url = f"{baseURL}/proxy/vidsrc/play?item={id}"
-    else:
-        url = f"{baseURL}/proxy/universal/openConnection?module={use}&item={id}"
-    if episode: url += f"&episode={episode}"
+
     return jsonify({
         "id": id,
-        "url": requests.get(url, headers=LAH(request)).text
+        "url": baseURL + plugin.resolvers[use]["run"](id, episode=episode or None).replace("[[token]]", reqToToken(request))
     })
 
 @api.route('/sources/<id>')
@@ -229,23 +226,18 @@ def sources(id):
 
 
     sources = []
-    for file in os.listdir("Resolver/plugins"):
-        if file.startswith("__"): continue
-        sources.append(file.split(".")[0])
+    extensions = {}
+
+    for k,v in Plugin().resolvers.items():
+        extensions[k] = v["ext"]
+        sources.append(k)
 
     default = sources[0]
     if getSetting("source") in sources:       default = getSetting("source")
     if request.args.get("source") in sources: default = request.args.get("source")
     
     sources.insert(0, sources.pop(sources.index(default)))
-
     now = str(time.time()).split(".")[0]
-
-    extensions = {
-        "vidsrc": "m3u8",
-        "kukajto": "mp4",
-        "n2embed": "mp4"
-    }
 
     baseURL = request.base_url.split("/api")[0]
     response = []
@@ -268,7 +260,7 @@ def sources(id):
                     else: file = file.replace(".ext", "")
 
                     sources_.append({
-                        "title": src.replace("n2embed", "2embed"),
+                        "title": src,
                         "file": file
                     })
 
@@ -284,7 +276,7 @@ def sources(id):
         return response
 
     for src in sources:
-        j = {"title": src.replace("n2embed", "2embed") }
+        j = {"title": src }
         j["file"] = f"/play/{id}.ext"
         j["file"] += f"?source={src}&generated={now}"
         j["file"] = j["file"].replace("ext", extensions[src]) if src in extensions else j["file"]
