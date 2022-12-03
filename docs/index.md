@@ -32,7 +32,7 @@ Run with python:
 python3 main.py
 ```
 
-Optional arguments:
+Optional arguments:  
 - ```--cli``` - Autostart CLI  
 - ```--nocli``` - Do not ask for cli  
 - ```--debug``` - Run Vortex with flask debug  
