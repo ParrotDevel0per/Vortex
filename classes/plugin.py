@@ -37,7 +37,6 @@ class Plugin:
             if "resolver" in metadata and metadata["resolver"]:
                 self.resolvers[metadata["resolver"]["name"]] = {
                     "run": metadata["resolver"]["func"],
-                    "ext": metadata["resolver"]["ext"]
                 }
 
             if "admin" in metadata and metadata["admin"]:

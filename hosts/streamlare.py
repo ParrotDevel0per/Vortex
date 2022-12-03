@@ -29,6 +29,7 @@ class StreamLare:
         if not source:
             html = NET().POST(api_durl, headers=headers, data=data).text
             source = json.loads(html).get('result', {}).get('Original', {}).get('url')
+        
         if source:
             headers.pop('X-Requested-With')
             if '?token=' in source:

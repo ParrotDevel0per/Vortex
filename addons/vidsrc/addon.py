@@ -58,7 +58,6 @@ class VidSrc(Plugin):
             "logo": "logo.png",
             "resolver": {
                 "name": "vidsrc",
-                "ext": "m3u8",
                 "func": self.resolve,
             }
         }

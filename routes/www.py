@@ -27,7 +27,7 @@ def watch(id):
     if request.args.get('kind'): sourcesURL += f"?kind={request.args.get('kind')}"
     if request.args.get('source'): sourcesURL += f"&source={request.args.get('source')}"
     sources=requests.get(sourcesURL, headers=LAH(request)).json()
-    return render_template('play.html', id=id, sources=json.dumps(sources))
+    return render_template('play.html', id=id, sources=json.dumps(sources), sourcesURL=sourcesURL)
 
 
 @www.route("/p")

@@ -8,6 +8,8 @@ import time
 UD = UserData()
 
 genres = [
+    "Favorites",
+    "Playlist",
     "Action",
     "Adventure",
     "Animation",
@@ -42,9 +44,14 @@ defaultGenres = [
 def defaultHome():
     resp = []
     for genre in genres:
+        url = f"/api/getMoviesByGenres?genres={genre}"
+        if genre == "Favorites":
+            url = "/api/favorites"
+        if genre == "Playlist":
+            url = "/api/playlist"
         resp.append({
             "title": genre,
-			"url": f"/api/getMoviesByGenres?genres={genre}",
+			"url": url,
             "enabled": genre in defaultGenres
         })
     return resp

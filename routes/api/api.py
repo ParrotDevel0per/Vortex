@@ -247,10 +247,10 @@ def sources(id):
 
 
     sources = []
-    extensions = {}
+    #extensions = {}
 
     for k,v in Plugin().resolvers.items():
-        extensions[k] = v["ext"]
+        #extensions[k] = v["ext"]
         sources.append(k)
 
     default = sources[0]
@@ -276,9 +276,9 @@ def sources(id):
 
                 sources_ = []
                 for src in sources:
-                    file = f"/play/{id}/{i}-{j}.ext?source={src}&generated={now}"
-                    if src in extensions: file = file.replace("ext", extensions[src])
-                    else: file = file.replace(".ext", "")
+                    file = f"/play/{id}/{i}-{j}?source={src}&generated={now}"
+                    #if src in extensions: file = file.replace("ext", extensions[src])
+                    #else: file = file.replace(".ext", "")
 
                     sources_.append({
                         "title": src,
@@ -298,9 +298,9 @@ def sources(id):
 
     for src in sources:
         j = {"title": src }
-        j["file"] = f"/play/{id}.ext"
+        j["file"] = f"/play/{id}"
         j["file"] += f"?source={src}&generated={now}"
-        j["file"] = j["file"].replace("ext", extensions[src]) if src in extensions else j["file"]
+        #j["file"] = j["file"].replace("ext", extensions[src]) if src in extensions else j["file"]
         response.append(j)
     return response
 
@@ -564,7 +564,7 @@ def getMovieInfo(id):
             else:
                 resp["info"] += "0h 0m"
 
-        cacheItem(f"Item-{id}.json", "ItemInfoCache", json.dumps(resp))
+        cacheItem(f"Item-{id}.json", "ItemInfoCache", json.dumps(resp), expiry=(30*24*60*60))
         rp = resp
     else: rp = json.loads(cached)
     rp["inFavorites"] = requests.get(request.base_url.split("/api")[0] + "/api/isInFavorites/" + id, headers=LAH(request)).json()['status'] == 'ok'

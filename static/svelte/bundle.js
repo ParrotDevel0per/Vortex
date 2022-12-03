@@ -5794,7 +5794,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			t = text(t_value);
-    			attr_dev(button, "class", button_class_value = "" + (null_to_empty(/*category*/ ctx[6]["enabled"] ? 'enabled' : 'disabled') + " svelte-5vtiha"));
+    			attr_dev(button, "class", button_class_value = "" + (null_to_empty(/*category*/ ctx[6]["enabled"] ? 'enabled' : 'disabled') + " svelte-1ozzfps"));
     			add_location(button, file, 62, 16, 1736);
     		},
     		m: function mount(target, anchor) {
@@ -5810,7 +5810,7 @@ var app = (function () {
     			ctx = new_ctx;
     			if (dirty & /*categories*/ 1 && t_value !== (t_value = /*category*/ ctx[6]["title"] + "")) set_data_dev(t, t_value);
 
-    			if (dirty & /*categories*/ 1 && button_class_value !== (button_class_value = "" + (null_to_empty(/*category*/ ctx[6]["enabled"] ? 'enabled' : 'disabled') + " svelte-5vtiha"))) {
+    			if (dirty & /*categories*/ 1 && button_class_value !== (button_class_value = "" + (null_to_empty(/*category*/ ctx[6]["enabled"] ? 'enabled' : 'disabled') + " svelte-1ozzfps"))) {
     				attr_dev(button, "class", button_class_value);
     			}
     		},
@@ -5935,11 +5935,12 @@ var app = (function () {
     			button.textContent = "Defaults";
     			set_style(br, "font-size", "100px");
     			add_location(br, file, 58, 4, 1590);
-    			attr_dev(button, "class", "default svelte-5vtiha");
+    			attr_dev(button, "class", "default svelte-1ozzfps");
+    			set_style(button, "color", "blue");
     			add_location(button, file, 68, 8, 1985);
-    			attr_dev(div, "class", "content svelte-5vtiha");
+    			attr_dev(div, "class", "content svelte-1ozzfps");
     			add_location(div, file, 59, 4, 1628);
-    			attr_dev(main, "class", "svelte-5vtiha");
+    			attr_dev(main, "class", "svelte-1ozzfps");
     			add_location(main, file, 56, 0, 1534);
     		},
     		l: function claim(nodes) {

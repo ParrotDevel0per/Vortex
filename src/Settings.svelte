@@ -66,7 +66,7 @@
                 >{ category["title"] }</button>
             {/each}
         {/key}
-        <button class="default" on:click={()=>{categories=defaultC}}>Defaults</button>
+        <button class="default" style="color: blue;" on:click={()=>{categories=defaultC}}>Defaults</button>
     </div>
 </main>
 
@@ -94,12 +94,10 @@
     }
     
     .enabled {
-        border: 3px solid green;
+        border: 2px solid blue;
     }
     
-    .disabled {
-        border: 3px solid red;
-    }
+
     button {
         width: 50%;
         height: 6vh;
