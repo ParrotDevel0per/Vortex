@@ -7,6 +7,7 @@ class Plugin:
         self.blueprints = []
         self.resolvers = {}
         self.plugins = []
+        self.access = {"public": [], "admin": []}
         self.setData()
 
     def __getSubclasses(self):
@@ -38,6 +39,12 @@ class Plugin:
                     "run": metadata["resolver"]["func"],
                     "ext": metadata["resolver"]["ext"]
                 }
+
+            if "admin" in metadata and metadata["admin"]:
+                self.access["admin"].extend(metadata["admin"])
+
+            if "public" in metadata and metadata["public"]:
+                self.access["public"].extend(metadata["public"])
 
 # Import all addons
 for addon in os.listdir(ADDONS_FOLDER):

@@ -84,6 +84,9 @@ def verifyRequest():
         "www.p"
     ]
 
+    public.extend(plugin.access["public"])
+    admin.extend(plugin.access["admin"])
+
     if endpoint in admin:
         #print(endpoint)
         if verify(request, verifyAdmin=True) == False:

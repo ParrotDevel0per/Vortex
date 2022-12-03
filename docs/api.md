@@ -216,6 +216,16 @@ GET /api/sources/<imdb id>?source=src
 ```
 
 ---
+## Addon Logo
+```
+GET /api/addonLogo/<addon id>
+```
+#### Response Example
+```
+Image
+```
+
+---
 ## Get poster
 ```
 GET /api/poster/<imdb id>?do=show/redirect
@@ -224,6 +234,7 @@ GET /api/poster/<imdb id>?do=show/redirect
 ```
 Image / Redirect
 ```
+
 
 ---
 ## Get banner

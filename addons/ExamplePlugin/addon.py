@@ -16,6 +16,14 @@ class Example(Plugin):
             #"css": {
             #    "www.index": "/* Example */"
             #}
+
+            # U can make routes that can be only accessed by specific role: admin, public, if no role is set, it can be accessed by anyone who is logged in
+            "admin": [
+                "ExamplePlugin.test"
+            ]
+            #"public": [
+            #    "ExamplePlugin.test"
+            #]
         }
     
     # Check /p/test

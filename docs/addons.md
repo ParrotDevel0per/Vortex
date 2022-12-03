@@ -1,5 +1,5 @@
 # Addons
-Vortex has addon (plugin) capabilities. Addons can use any part of vortex, they can also add custom CSS to any endpoint and add own movie / tv shows resolvers. 
+Vortex has addon (plugin) capabilities. Addons can use any part of vortex, they can also add custom CSS to any endpoint and add own movie / tv shows resolvers. Also addons can change permissions for routes
 
 ## Addon directories
 Preinstalled:  
@@ -15,7 +15,7 @@ $home/.Vortex/addons
 ```
 
 ## Example addon
-Example addon with basic capabilities, it is also located in "Preinstalled" directory  
+Example addon with basic capabilities, it is also located in "Preinstalled" directory on every version  
 
 ```python
 from flask import Blueprint
@@ -36,6 +36,14 @@ class Example(Plugin):
             #"css": {
             #    "www.index": "/* Example */"
             #}
+
+            # U can make routes that can be only accessed by specific role: admin, public, if no role is set, it can be accessed by anyone who is logged in
+            "admin": [
+                "ExamplePlugin.test"
+            ]
+            #"public": [
+            #    "ExamplePlugin.test"
+            #]
         }
     
     # Check /p/test
@@ -46,5 +54,6 @@ class Example(Plugin):
     # Required
     def blueprint(self) -> Blueprint:
         return example
+
 ```
 This addon creates sub-url in /p/ExamplePlugin/test  
