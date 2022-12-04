@@ -11,7 +11,7 @@ from routes.admin import admin
 
 # Rest
 from utils.settings import getSetting
-from utils.paths import DB_FOLDER
+from utils.paths import DB_FOLDER, ADDONS_FOLDER
 from utils.banner import intro, lenght, textColor
 from utils.common import cls, getLocalIP
 from utils.users import verify, getAdmins
@@ -31,6 +31,13 @@ for folder in os.listdir(os.path.join(os.path.dirname(__file__), "addons")):
     if folder.startswith("__"): continue
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), "addons", folder))
     data = open(os.path.join(os.path.dirname(__file__), "addons", folder, "addon.py"), "r").read()
+    exec(data)
+
+
+for folder in os.listdir(ADDONS_FOLDER):
+    if folder.startswith("__"): continue
+    sys.path.insert(0, os.path.join(ADDONS_FOLDER, folder))
+    data = open(os.path.join(ADDONS_FOLDER, folder, "addon.py"), "r").read()
     exec(data)
 
 
