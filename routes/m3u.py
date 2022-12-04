@@ -1,8 +1,9 @@
 from flask import Blueprint, request, redirect
 from utils.settings import getSetting
 from utils.paths import DB_FOLDER
-from utils.users import LAH, reqToToken
-import requests
+from utils.users import reqToToken
+from classes.net import NET
+from utils.common import baseurl
 import os
 
 m3u = Blueprint("m3u", __name__)
@@ -13,7 +14,7 @@ playlistFile = os.path.join(DB_FOLDER, "playlist.json")
 def play_m3u8(id, ext):
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
-    try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?source={source}", headers=LAH(request)).json()["url"]
+    try: resolved = NET().localGET(request, f"/api/resolve/{id}?source={source}").json()["url"]
     except: resolved = ""
     if "/" not in resolved: return "Error"
     if request.args.get("view") == "true":
@@ -25,7 +26,8 @@ def play_m3u8(id, ext):
 def play_m3u8_episode(id, episode, ext):
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
-    try: resolved = requests.get(f"{request.base_url.split('/play')[0]}/api/resolve/{id}?episode={episode}&source={source}", headers=LAH(request)).json()["url"]
+    try:
+        resolved = NET().localGET(request, f"/api/resolve/{id}?episode={episode}&source={source}").json()["url"]
     except: resolved = ""
     if request.args.get("view") == "true":
         return resolved
@@ -35,8 +37,8 @@ def play_m3u8_episode(id, episode, ext):
 def playlistm3u():
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
-    baseURL = request.base_url.split('/playlist')[0]
-    j = requests.get(f"{baseURL}/api/playlist/", headers=LAH(request)).json()['results']
+    baseURL = baseurl(request)
+    j = NET().localGET(request, "/api/playlist/").json()['results']
     proxifyPoster = getSetting("proxifyM3UPosters")
     m3u = "#EXTM3U\n"
 
@@ -56,8 +58,8 @@ def playlistm3u():
 def showm3u(id):
     source = getSetting('source')
     if request.args.get('source'): source = request.args.get('source')
-    baseURL = request.base_url.split('/show')[0]
-    resp = requests.get(f"{baseURL}/api/seriesToPlaylist/{id}", headers=LAH(request)).json()
+    baseURL = baseurl(request)
+    resp = NET().localGET(request, f"/api/seriesToPlaylist/{id}").json()
     poster = resp["poster"]
     m3u = "#EXTM3U\n"
 

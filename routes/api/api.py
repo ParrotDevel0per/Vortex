@@ -4,18 +4,17 @@ from utils.settings import getSetting
 from classes.imdb import IMDB
 from classes.fanarttv import FanartTV
 from classes.cli import CLI
-import requests
 import base64
 import json
 import random
 #from plugins import *
 from classes.plugin import Plugin
 from utils.paths import POSTER_FOLDER, BANNER_FOLDER, ADDONS_FOLDER
-from utils.users import deleteUser, reqToUID, LAH, userdata, UD, changeValue, deleteUser, defaultHome, reqToToken
+from utils.users import deleteUser, reqToUID, userdata, UD, changeValue, deleteUser, defaultHome, reqToToken
 from utils.cache import getCachedItem, cacheItem
 from classes.browser import Firefox
 from classes.net import NET
-from utils.common import chunkedDownload, sanitize, get_simple_keys
+from utils.common import chunkedDownload, sanitize, get_simple_keys, baseurl
 import os
 from prettytable import PrettyTable
 import time
@@ -44,8 +43,8 @@ featuredMovies = {
 @api.route('/featured')
 def featured():
     ft = random.choice(list(featuredMovies.values()))
-    ft["inFavorites"] = requests.get(request.base_url.split("/api")[0] + "/api/isInFavorites/" + ft["imdbID"].replace("tt", ""), headers=LAH(request)).json()['status'] == 'ok'
-    ft["inPlaylist"] = requests.get(request.base_url.split("/api")[0] + "/api/isInPlaylist/" + ft["imdbID"].replace("tt", ""), headers=LAH(request)).json()['status'] == 'ok'
+    ft["inFavorites"] = NET().localGET(request, f"/api/isInFavorites/{ft['imdbID'].replace('tt', '')}").json()['status'] == 'ok'
+    ft["inPlaylist"] = NET().localGET(request, f"/api/isInPlaylist/{ft['imdbID'].replace('tt', '')}").json()['status'] == 'ok'
     return ft
 
 @api.route('/homeMenu')
@@ -224,7 +223,7 @@ def resolve(id):
     if request.args.get("source") in sources: use = request.args.get("source")
 
     episode = str(request.args.get("episode") or "")
-    baseURL = request.base_url.split("/api")[0]
+    baseURL = baseurl(request)
 
     return jsonify({
         "id": id,
@@ -260,11 +259,11 @@ def sources(id):
     sources.insert(0, sources.pop(sources.index(default)))
     now = str(time.time()).split(".")[0]
 
-    baseURL = request.base_url.split("/api")[0]
+    baseURL = baseurl(request)
     response = []
 
     if kind == "show":
-        EC = requests.get(f"{baseURL}/api/episodeCount/{id}", headers=LAH(request)).json()["results"]
+        EC = NET().localGET(request, f"/api/episodeCount/{id}").json()["results"]
         NOS = len(get_simple_keys(EC))
 
         for i in range(NOS):
@@ -354,7 +353,7 @@ def banner(id):
         if f"tt{id}.png" not in os.listdir(BANNER_FOLDER):
             url = FanartTV().getBanner(f"tt{id}")
             if "/api/poster/" in url:
-                return redirect(request.base_url.split("/api")[0]+url)
+                return redirect(baseurl(request)+url)
             chunkedDownload(url, os.path.join(BANNER_FOLDER, f"tt{id}.png"))
         return send_from_directory(BANNER_FOLDER, f"tt{id}.png")
 
@@ -567,7 +566,6 @@ def getMovieInfo(id):
         cacheItem(f"Item-{id}.json", "ItemInfoCache", json.dumps(resp), expiry=(30*24*60*60))
         rp = resp
     else: rp = json.loads(cached)
-    rp["inFavorites"] = requests.get(request.base_url.split("/api")[0] + "/api/isInFavorites/" + id, headers=LAH(request)).json()['status'] == 'ok'
-    rp["inPlaylist"] = requests.get(request.base_url.split("/api")[0] + "/api/isInPlaylist/" + id, headers=LAH(request)).json()['status'] == 'ok'
-
+    rp["inFavorites"] = NET().localGET(request, f"/api/isInFavorites/{id}").json()['status'] == 'ok'
+    rp["inPlaylist"] = NET().localGET(request, f"/api/isInPlaylist/{id}").json()['status'] == 'ok'
     return jsonify(rp)

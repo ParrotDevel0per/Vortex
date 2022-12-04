@@ -12,6 +12,13 @@ from classes.net import NET
 symbols = "[@_!#$%^&*()<>?/\|}{~:]\"'"
 exceptions = ["!", ":", "?"]
 
+def baseurl(request):
+    resp = request.url_root[:-1]
+    if getSetting("forceHTTPS").lower() == "true":
+        resp = resp.replace("http://", "https://")
+    return resp
+    return request.url_root.split(f"/{request.url_root.split('/')[-2]}")[0]
+
 def insertInMiddle(string, item):
     midPoint = len(string)//2
     return string[:midPoint] + item + string[midPoint:]

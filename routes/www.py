@@ -1,8 +1,7 @@
 from flask import Blueprint, request, render_template, send_from_directory
-from utils.users import LAH
 from utils.paths import DB_FOLDER
 from classes.plugin import Plugin
-import requests
+from classes.net import NET
 import os
 import json
 
@@ -22,11 +21,10 @@ def index():
 @www.route('/watch/<id>/')
 @www.route('/watch/<id>')
 def watch(id):
-    baseURL = request.base_url.split('/watch')[0]
-    sourcesURL = f"{baseURL}/api/sources/{id}"
+    sourcesURL = f"/api/sources/{id}"
     if request.args.get('kind'): sourcesURL += f"?kind={request.args.get('kind')}"
     if request.args.get('source'): sourcesURL += f"&source={request.args.get('source')}"
-    sources=requests.get(sourcesURL, headers=LAH(request)).json()
+    sources = NET().localGET(request, sourcesURL).json()
     return render_template('play.html', id=id, sources=json.dumps(sources), sourcesURL=sourcesURL)
 
 

@@ -1,9 +1,10 @@
-from utils.common import randStr
 from classes.userdata import UserData
 from utils.crypto import encrypt, decrypt
 from utils.settings import getSetting
 import hashlib
 import time
+import random
+from string import ascii_lowercase, digits
 
 UD = UserData()
 
@@ -61,6 +62,7 @@ def getIP(request):
     if xff is not None: return xff
     return request.remote_addr
 
+
 def login(username, password):
     uid = usernameToUID(username)
     data = UD.read(uid)
@@ -69,7 +71,7 @@ def login(username, password):
     return encrypt(f"{username}-|-{password}-|-{uid}-|-{int(str(time.time()).split('.')[0])}")
 
 def createUser(username, password, email="", admin=False, banned=False):
-    UID = randStr(64)
+    UID = ''.join(random.choice(ascii_lowercase + digits) for _ in range(64))
     if UD.read(usernameToUID(username), ret="") != "": return "Username already exists"
 
     user = {

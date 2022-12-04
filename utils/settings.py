@@ -15,6 +15,7 @@ default = {
     "keepLogs": "false",
     "saveIPs": "false",
     "logger": "true",
+    "forceHTTPS": "false",
 
     "proxy": "",
     "proxyAuth": "",

@@ -3,6 +3,7 @@ import base64
 import json
 from classes.proxy import Proxy
 from utils.settings import getSetting
+from utils.users import LAH
 
 request_settings = {
     "timeout": 30,
@@ -63,3 +64,9 @@ class NET:
 
     def Session(self):
         return NET()
+
+    def localGET(self, request, path):
+        return requests.get(request.url_root[:-1] + path, headers=LAH(request))
+
+    def localPOST(self, request, path, data):
+        return requests.post(request.url_root[:-1] + path, headers=LAH(request), data=data)
