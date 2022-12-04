@@ -20,11 +20,19 @@ import threading
 import os
 import sys
 import logging
+import sys
 import time
 from classes.cli import CLI
 from classes.cliscript import CLIScript
 from classes.openvpn import OpenVPN
 from classes.plugin import Plugin
+
+for folder in os.listdir(os.path.join(os.path.dirname(__file__), "addons")):
+    if folder.startswith("__"): continue
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "addons", folder))
+    data = open(os.path.join(os.path.dirname(__file__), "addons", folder, "addon.py"), "r").read()
+    exec(data)
+
 
 sysArgv = sys.argv[1:]
 

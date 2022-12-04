@@ -1,5 +1,7 @@
 import os
+import sys
 from utils.paths import ADDONS_FOLDER
+
 
 class Plugin:
     def __init__(self) -> None:
@@ -44,24 +46,3 @@ class Plugin:
 
             if "public" in metadata and metadata["public"]:
                 self.access["public"].extend(metadata["public"])
-
-# Import all addons
-for addon in os.listdir(ADDONS_FOLDER):
-    if os.path.isdir(os.path.join(ADDONS_FOLDER, addon)):
-        continue
-
-    if addon.startswith("__"):
-        continue
-
-    exec(open(os.path.join(ADDONS_FOLDER, addon, "addon.py"), "r", encoding="utf-8").read())
-
-# Import preinstalled addons
-for addon in os.listdir(os.path.join(os.getcwd(), "addons")):
-    if os.path.isdir(os.path.join(os.getcwd(), "addons", addon)) == False:
-        continue
-
-    if addon.startswith("__"):
-        continue
-
-
-    exec(open(os.path.join(os.getcwd(), "addons", addon, "addon.py"), "r", encoding="utf-8").read())

@@ -6,7 +6,7 @@ There is currently only one way to install Vortex
 
 #### GIT
 ```bash
-git clone https://git.weboasis.app/HereIronman7746/Vortex.git
+git clone https://github.com/ParrotDevelopers/Vortex.git
 cd Vortex
 virtualenv -p python3 venv
 ```
