@@ -1,8 +1,6 @@
 from flask import Blueprint
 from classes.plugin import Plugin
-
-# For lib, resouces, ... add plugin ID iin front just in case of duplication
-from ExamplePluginData.test import test
+yyyyyyyyyyyyyyyyyy
 
 # Route will be on /p/ExamplePlugin/
 example = Blueprint("ExamplePlugin", __name__) # ID: ExamplePlugin
