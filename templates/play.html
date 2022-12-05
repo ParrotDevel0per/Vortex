@@ -26,23 +26,23 @@
             });
         }
 
-        var errorFixed = false;
+        //var errorFixed = false;
         var hls = 0;
 
         initPlayer(hls);
 
         function PlayerjsEvents(event,id,data){
             //console.log(event)
-            if(event=="loaderror" && errorFixed == false){
-                errorFixed = true;
+            if(event=="loaderror"){
+                //errorFixed = true;
                 if (hls == 0) hls = 1
                 else if (hls == 1) hls = 0
                 initPlayer(hls)
             }
 
-            if(event=="new") {
-                errorFixed = false;
-            }
+            //if(event=="new") {
+            //    errorFixed = false;
+            //}
         }
     </script>
 </body>
