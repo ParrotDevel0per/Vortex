@@ -86,7 +86,6 @@ def verifyRequest():
         "static"
     ]
     admin = [ # These endpoints require admin rights
-        "auth.create_",
         "admin.index",
         "admin.terminal",
         "api.terminal",
@@ -98,6 +97,11 @@ def verifyRequest():
         "api.requestsIP",
         "www.p"
     ]
+
+    if getSetting("registerPublic").lower() == "true":
+        public.append("auth.create_")
+    else:
+        admin.append("auth.create_")
 
     public.extend(plugin.access["public"])
     admin.extend(plugin.access["admin"])

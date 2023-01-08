@@ -27,7 +27,9 @@ default = {
     "OpenVPNCFG": "",
 
     "phpProxyEnabled": "false",
-    "phpProxyURL": ""
+    "phpProxyURL": "",
+
+    "registerPublic": "true"
 }
 
 # https://stackoverflow.com/questions/34327719/get-keys-from-json-in-python
@@ -68,7 +70,7 @@ def setSetting(key, value):
             settings = json.load(f)
             settings[key] = value
             open(SETTINGSFILE, 'w').write(json.dumps(settings))
-            return f"{key.capitalize()} is now {value}"
+            return f"{key} is now {value}"
     else:
         return "Invalid key"
 

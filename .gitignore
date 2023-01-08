@@ -15,8 +15,8 @@ venv
 openvpn/auth/*
 openvpn
 php/
-plugins/*
-!plugins/__init__.py
-!plugins/example.py
-!plugins/vidsrc.py
-!plugins/toembed.py
+addons/*
+
+!addons/ExamplePlugin/*
+!addons/vidsrc/*
+!addons/2embed/*

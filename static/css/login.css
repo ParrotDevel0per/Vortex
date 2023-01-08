@@ -6,13 +6,14 @@
 
 :root {
   --bg: black;
+  --bg-darken: 0.9;
   --bg-img: url("https://corsproxy.io/?https://assets.nflxext.com/ffe/siteui/vlv3/5aecc44d-2a1f-4313-8399-98df20908b64/5fbf316e-ca1a-4e9b-90d2-0c72608cc2b1/SK-en-20221114-popsignuptwoweeks-perspective_alpha_website_small.jpg");
 }
 
 html {
   background: linear-gradient(
-      rgba(0, 0, 0, 0.7), 
-      rgba(0, 0, 0, 0.7)
+      rgba(0, 0, 0, var(--bg-darken)), 
+      rgba(0, 0, 0, var(--bg-darken))
     ),
     var(--bg-img) no-repeat;
 }

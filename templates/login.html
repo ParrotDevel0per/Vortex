@@ -14,6 +14,13 @@
       <input name="username" type="text" placeholder="Username"/>
       <input name="password" type="password" placeholder="Password"/>
       <button>Sign In</button>
+      
+      {%if allowRegister%}
+      <div style="color: #848484;margin-top: 2px;text-align: left;margin-bottom: 16px;">
+        Don't have an account?
+        <a href="/create?login=true">register here</a>
+      </div>
+      {% endif %}
     </form>
   </div>
 </div>
