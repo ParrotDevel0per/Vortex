@@ -227,7 +227,7 @@ def resolve(id):
 
     return jsonify({
         "id": id,
-        "url": baseURL + plugin.resolvers[use]["run"](id, episode=episode or None).replace("[[token]]", reqToToken(request))
+        "url": plugin.resolvers[use]["run"](id, episode=episode or None).replace("[[token]]", reqToToken(request))
     })
 
 @api.route('/sources/<id>')
@@ -259,7 +259,6 @@ def sources(id):
     sources.insert(0, sources.pop(sources.index(default)))
     now = str(time.time()).split(".")[0]
 
-    baseURL = baseurl(request)
     response = []
 
     if kind == "show":
