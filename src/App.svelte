@@ -3,6 +3,7 @@
     import Mine from './Mine.svelte';
     import Search from './Search.svelte';
     import Settings from './Settings.svelte';
+    import Addons from './Addons.svelte';
 </script>
 
 
@@ -10,6 +11,8 @@
 <Search />
 {:else if tab == "mine"}
 <Mine />
+{:else if tab == "addons"}
+<Addons />
 {:else if tab == "settings"}
 <Settings />
 {:else}

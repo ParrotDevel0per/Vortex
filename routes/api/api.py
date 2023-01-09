@@ -57,6 +57,11 @@ def homeMenu():
 def defaultHome_():
     return defaultHome()
 
+@api.route('/addons')
+def addons_():
+    plugin = Plugin()
+    return plugin.plugins
+
 @api.route('/addonLogo/<id>')
 def addonLogo(id):
     plugin = Plugin()

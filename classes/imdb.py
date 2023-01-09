@@ -4,6 +4,7 @@ from utils.common import sanitize, insertInMiddle
 from classes.browser import Firefox
 from urllib.parse import quote
 import re
+import datetime
 
 """
 def runWhileNotDone(do):
@@ -40,10 +41,19 @@ class IMDB:
         firefox = Firefox()
         resp = requests.get(f"https://v3.sg.media-imdb.com/suggestion/titles/x/{quote(query)}.json?includeVideos=0", headers=firefox.headers)
         response = {}
+
+        
+        currentDateTime = datetime.datetime.now()
+        date = currentDateTime.date()
+        year = date.strftime("%Y")
+        
         for movie in resp.json()['d']:
             if movie["qid"] not in ["movie", "tvSeries"]: continue
             if "i" not in movie: continue
-            
+            if "y" in movie:
+                if int(movie["y"]) > int(year):
+                    continue
+
             response[movie["id"]] = {
                 "title": movie["l"],
                 #"year": movie["y"],
@@ -130,12 +140,15 @@ class IMDB:
         if id.startswith("tt"): id = id.replace("tt", "")
         data = dict(self.ia.get_movie(id))
         if "number of seasons" not in data:
-            duration = re.findall(
-                            r"\"duration\"\:\"(.*?)\"",
-                            requests.get(f"https://www.imdb.com/title/tt{id}", headers=Firefox().headers).text,
-                            re.MULTILINE
-                        )[1][2:]
-            data["duration"] = insertInMiddle(duration, " ").lower()
+            try:
+                duration = re.findall(
+                                r"\"duration\"\:\"(.*?)\"",
+                                requests.get(f"https://www.imdb.com/title/tt{id}", headers=Firefox().headers).text,
+                                re.MULTILINE
+                            )[1][2:]
+                data["duration"] = insertInMiddle(duration, " ").lower()
+            except:
+                data["duration"] = ""
         return data
             
                 

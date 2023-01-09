@@ -27,6 +27,7 @@ class Plugin:
                 "author": metadata["author"],
                 "id": metadata["id"],
                 "logo": metadata["logo"],
+                "open": metadata["open"] if "open" in metadata else "",
                 "addsCSS": "css" in metadata and metadata["css"],
                 "addsResolver": "resolver" in metadata and metadata["resolver"] != {}
             })

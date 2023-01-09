@@ -16,19 +16,9 @@
       nav.style.backgroundColor = `black`;
     }
   })
-
-  $: {
-    try {
-      if (scrollEffect == "false") { nav.style.backgroundColor = `black`; }
-      else { nav.style.backgroundColor = `transparent`; }
-    }
-    catch {
-      console.log("Nav not yet created, :pepesad:")
-    }
-  }
 </script>
 
-<nav bind:this={nav} class="navbar navbar-expand-lg fixed-top">
+<nav bind:this={nav} class="navbar navbar-expand-lg fixed-top {scrollEffect === 'true' ? 'transparent' : 'black'}">
     <a class="navbar-brand" href="/">Vortex</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -38,6 +28,7 @@
 
         <li class="nav-item"><a class="nav-link {active === 'home' ? 'active' : ''}" href="/">Home</a></li>
         <li class="nav-item"><a class="nav-link {active === 'search' ? 'active' : ''}" href="/?tab=search">Search</a></li>
+        <li class="nav-item"><a class="nav-link {active === 'addons' ? 'active' : ''}" href="/?tab=addons">Addons</a></li>
         <li class="nav-item"><a class="nav-link {active === 'mine' ? 'active' : ''}" href="/?tab=mine">Mine</a></li>
 
         {#await axios.get("/api/userInfo", {transformResponse: (res) => { return JSON.parse(res); }, responseType: 'json'})}
@@ -45,7 +36,7 @@
 				{:then resp}
 						{#if resp.data.isAdmin}
             <li class="nav-item">
-              <a class="nav-link" style="margin-left: 67vw;" href="/?tab=settings">Settings</a>
+              <a class="nav-link" style="margin-left: 65vw;" href="/?tab=settings">Settings</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/admin">Admin CP</a>
@@ -84,6 +75,14 @@
   border-bottom: #6d737a 3px solid;
 }
 */
+
+.black {
+  background-color: black;
+}
+
+.transparent {
+  background-color: transparent;
+}
 
 nav {
   background-color: transparent;
