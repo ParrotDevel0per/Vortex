@@ -81,6 +81,7 @@ def createUser(username, password, email="", admin=False, banned=False):
         "isAdmin": admin,
         "favorites": {},
         "playlist": {},
+        "playlisttv": {},
         "history": {},
         "home": defaultHome(),
         "email": email,

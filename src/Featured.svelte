@@ -86,9 +86,7 @@
             {#if imdbID && kind}
                 <a bind:this={playBTN} data-id="{ imdbID }" id="playButton" class="bgRed" on:click={() => play()}>Play</a>
                 <a bind:this={favsBTN} data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()}>{inFavorites ? "-" : "+"} Favorites</a>
-                {#if kind != "show"}
-                    <a bind:this={plBTN} data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>{inPlaylist ? "-" : "+"} Playlist</a>
-                {/if}
+                <a bind:this={plBTN} data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>{inPlaylist ? "-" : "+"} Playlist</a>
             {/if}
         </div>
     </div>

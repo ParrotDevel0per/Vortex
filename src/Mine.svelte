@@ -28,6 +28,11 @@
 			url: "/api/playlist/",
 			id: random(10)
 		},
+		playlisttv: {
+			title: "Playlist TV Shows",
+			url: "/api/playlisttv/",
+			id: random(10)
+		},
 	}
 	
 	const scrollRight = (id) => {

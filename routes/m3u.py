@@ -54,6 +54,38 @@ def playlistm3u():
         m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{id}" tvg-name="{title}", {title}\n{baseURL}/play/{id}?source={source}{auth}\n'
     return m3u
 
+
+
+@m3u.route('/playlisttv.m3u')
+def playlisttvm3u():
+    source = getSetting('source')
+    if request.args.get('source'): source = request.args.get('source')
+    baseURL = baseurl(request)
+    j = NET().localGET(request, "/api/playlisttv/").json()['results']
+    proxifyPoster = getSetting("proxifyM3UPosters")
+    m3u = "#EXTM3U\n"
+
+    auth = f"&token={reqToToken(request)}"
+    if request.args.get("username") and request.args.get("password"):
+        auth = f"&username={request.args.get('username')}&password={request.args.get('password')}"
+    
+    for show in j:
+        show = j[show]
+        resp = NET().localGET(request, f"/api/seriesToPlaylist/{show['id']}").json()
+        
+        if proxifyPoster:
+            poster = f"{baseURL}/api/poster/{show['id']}?do=show" + auth
+
+        for season in resp["seasons"]:
+            for episode in resp["seasons"][season]:
+                title = resp["seasons"][season][episode]["title"]
+                group = resp["seasons"][season][episode]["group"]
+                m3u += f'#EXTINF:-1 tvg-logo="{poster}" tvg-id="{show["id"]}" tvg-name="{title}" group-title="{group}", {title}\n'
+                m3u += f'{baseURL}/play/{show["id"]}/{season}-{episode}?source={source}{auth}\n'
+    return m3u
+
+
+
 @m3u.route('/show/<id>.m3u')
 def showm3u(id):
     source = getSetting('source')

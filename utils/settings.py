@@ -17,11 +17,11 @@ default = {
     "logger": "true",
     "forceHTTPS": "false",
 
-    "proxy": "",
+    "proxy": "false",
     "proxyAuth": "",
     "useProxy": "",
 
-    "OpenVPNEnabled": "False",
+    "OpenVPNEnabled": "false",
     "OpenVPNPath": "",
     "OpenVPNAuth": "",
     "OpenVPNCFG": "",

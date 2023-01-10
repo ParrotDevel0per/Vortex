@@ -32,7 +32,7 @@
         <li class="nav-item"><a class="nav-link {active === 'mine' ? 'active' : ''}" href="/?tab=mine">Mine</a></li>
 
         {#await axios.get("/api/userInfo", {transformResponse: (res) => { return JSON.parse(res); }, responseType: 'json'})}
-						{ console.log("Getting User Info ...") }
+						<p></p>
 				{:then resp}
 						{#if resp.data.isAdmin}
             <li class="nav-item">
@@ -53,7 +53,7 @@
             </li>
             {/if}
 				{:catch error}
-						{ console.log("Fuck, Error occured: " + error.message) }
+          <p></p>
 				{/await}
       </ul>
     </div>
