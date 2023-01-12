@@ -1,5 +1,5 @@
 
-(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35730/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 var app = (function () {
     'use strict';
 
@@ -6636,7 +6636,7 @@ var app = (function () {
     			t0 = text("Error: ");
     			t1 = text(t1_value);
     			set_style(p, "display", "none");
-    			add_location(p, file$1, 147, 12, 7735);
+    			add_location(p, file$1, 147, 12, 7737);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -6868,9 +6868,9 @@ var app = (function () {
     			attr_dev(button2, "class", "svelte-15lq60s");
     			add_location(button2, file$1, 79, 20, 3699);
     			attr_dev(button3, "class", "svelte-15lq60s");
-    			add_location(button3, file$1, 94, 20, 4582);
+    			add_location(button3, file$1, 94, 20, 4584);
     			attr_dev(button4, "class", "svelte-15lq60s");
-    			add_location(button4, file$1, 114, 20, 5736);
+    			add_location(button4, file$1, 114, 20, 5738);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button0, anchor);
@@ -7027,13 +7027,13 @@ var app = (function () {
     			attr_dev(img, "alt", "Playlist");
     			set_style(img, "width", "100%");
     			attr_dev(img, "class", "svelte-15lq60s");
-    			add_location(img, file$1, 138, 24, 7369);
-    			add_location(b, file$1, 140, 32, 7548);
+    			add_location(img, file$1, 138, 24, 7371);
+    			add_location(b, file$1, 140, 32, 7550);
     			attr_dev(h4, "class", "svelte-15lq60s");
-    			add_location(h4, file$1, 140, 28, 7544);
+    			add_location(h4, file$1, 140, 28, 7546);
     			attr_dev(div0, "class", "container svelte-15lq60s");
-    			add_location(div0, file$1, 139, 24, 7491);
-    			add_location(div1, file$1, 131, 20, 6794);
+    			add_location(div0, file$1, 139, 24, 7493);
+    			add_location(div1, file$1, 131, 20, 6796);
     			attr_dev(div2, "class", "grid-item card svelte-15lq60s");
     			attr_dev(div2, "id", /*i*/ ctx[39]);
     			add_location(div2, file$1, 31, 16, 939);
@@ -7372,7 +7372,7 @@ var app = (function () {
 
     		window.setTimeout(
     			function () {
-    				e.originalTarget.innerText = "Share";
+    				e.originalTarget.innerText = "Get M3U";
     			},
     			1000
     		);

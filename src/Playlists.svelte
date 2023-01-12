@@ -87,7 +87,7 @@
                         e.originalTarget.innerText = "Copied";
 
                         window.setTimeout(function(){
-                            e.originalTarget.innerText = "Share";
+                            e.originalTarget.innerText = "Get M3U";
                         }, 1000);
                     }}
                     >Get M3U</button>
