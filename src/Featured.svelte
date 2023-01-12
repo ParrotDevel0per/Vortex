@@ -6,7 +6,8 @@
     export let imdbID;
     export let kind;
     export var inFavorites;
-    export var inPlaylist;
+
+    import axios from "axios";
 
     if (id) imdbID = id;
 
@@ -37,27 +38,32 @@
 
     }
 
+    const addToPlaylist = (playlistID) => {
+        const imdbID = favsBTN.dataset.id;
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", `/api/addToPlaylist/${playlistID}/${imdbID}`, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) { 
+                const button = document.getElementById(playlistID);
+                button.style.color = "green";
+                button.style.borderColor = "green";
+            }
+        };
+        xhr.send();
+    }
 
     const handlePlaylist = () => {
         const imdbID = plBTN.dataset.id;
+        const modal = document.getElementById("playlistModal");
 
-        if (plBTN.innerText.includes("+")) {
-            console.log("Adding ...");
-            let xhr = new XMLHttpRequest();
-            xhr.open("GET", "/api/addToPlaylist/" + imdbID, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) { inPlaylist = true; }
-            };
-            xhr.send();
-        } else if (plBTN.innerText.includes("-")) {
-            console.log("Removing ...");
-            let xhr = new XMLHttpRequest();
-            xhr.open("GET", "/api/removeFromPlaylist/" + imdbID, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) { inPlaylist = false; }
-            };
-            xhr.send();
-        } else { console.log("Unknown button state"); }
+
+        if (modal.style.display == "flex") {
+            modal.style.display = "none"
+            document.getElementsByTagName("html")[0].style.overflow = "scroll"
+        } else {
+            modal.style.display = "flex"
+            document.getElementsByTagName("html")[0].style.overflow = "hidden"
+        }
     }
 
     const play = () => {
@@ -86,9 +92,24 @@
             {#if imdbID && kind}
                 <a bind:this={playBTN} data-id="{ imdbID }" id="playButton" class="bgRed" on:click={() => play()}>Play</a>
                 <a bind:this={favsBTN} data-id="{ imdbID }" id="favs" on:click={() => handleFavorites()}>{inFavorites ? "-" : "+"} Favorites</a>
-                <a bind:this={plBTN} data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>{inPlaylist ? "-" : "+"} Playlist</a>
+                <a bind:this={plBTN} data-id="{ imdbID }" id="pl" on:click={() => handlePlaylist()}>+ Playlist</a>
             {/if}
         </div>
+    </div>
+</div>
+
+<div class="playlistModal" id="playlistModal" style="display: none;">
+    <div class="list">
+        {#await axios.get("/api/playlists", {transformResponse: (res) => { return JSON.parse(res).results; }, responseType: 'json'})}
+            <p style="display: none;">Loading ...</p>
+        {:then resp}
+            {#each Object.entries(resp.data) as [i, d]}
+                <button id={d.playlistID} on:click={()=>{addToPlaylist(d.playlistID, this)}}>{ d.title }</button>
+            {/each}
+        {:catch error}
+            <p style="display: none;">Error: {error.message}</p>
+        {/await}
+        <button on:click={()=>{handlePlaylist()}}>Close</button>
     </div>
 </div>
 
@@ -106,6 +127,42 @@
         font-family: 'VanguardCF-Regular';
         src: url('/static/fonts/VanguardCF/VanguardCF-Regular.otf');
     }
+
+    .playlistModal {
+        display: flex;
+        position: absolute;
+        z-index: 9999;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: black;
+        height: 100vh;
+        width: 100vw;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .playlistModal .list button {
+        display: block;
+        width: 600px;
+        height: 60px;
+        margin-bottom: 5px;
+        color: blue;
+        border: 3px solid blue;
+        background-color: transparent;
+    }
+
+    .playlistModal .list button:hover {
+        color: beige!important;
+        border-color: beige!important;
+    }
+
+    .playlistModal .list button:last-child {
+        color: red;
+        border-color: red;
+        margin-top: 10px;
+    }
+
     /* input, */
     /*
     input {

@@ -4,126 +4,241 @@ import threading
 import json
 from utils.cache import getCachedItem, cacheItem
 from utils.users import userdata, changeValue, reqToUID
+from utils.common import randStr
+import os
+from utils.paths import DB_FOLDER
+from urllib.parse import unquote
 
 playlistRT = Blueprint('playlist', __name__)
+playlistsFile = os.path.join(DB_FOLDER, "playlists.json")
+if not os.path.exists(playlistsFile):
+    open(playlistsFile, "w", encoding="utf-8").write("{}")
 
-def createPlaylistDict(uid):
-    data = userdata(uid)
-    if "playlist" not in data:
-        changeValue(uid, "playlist", {})
 
-    if "playlisttv" not in data:
-        changeValue(uid, "playlisttv", {})
+"""
+# Playlists file structure
+{
+    "playlistID": {
+        "title": "Movies",
+        "owners": [],
+        "playlistID": "",
+        "public": True,
+        "count": 0,
+        "items": {
+            "movieID": {
+                "title": "",
+                "year": "",
+                "poster": "",
+                "id": "",
+                "kind": ""
+            }
+        }
+    }
 
-@playlistRT.route('/playlist/')
-def playlisttv():
-    createPlaylistDict(reqToUID(request))
+}
+
+"""
+
+def ok(msg):
     return jsonify({
-        "results": userdata(reqToUID(request))["playlist"]
+        'status': 'ok',
+        'message': msg
     })
 
-@playlistRT.route('/playlisttv/')
-def playlist():
-    createPlaylistDict(reqToUID(request))
+def error(msg):
     return jsonify({
-        "results": userdata(reqToUID(request))["playlisttv"]
+        'status': 'error',
+        'message': msg
     })
 
-def addToPlaylistThread(id, uid):
-    movie = IMDB().getMovieInfo(id)
-    show = "number of seasons" in movie
 
-    playlist = userdata(uid)["playlisttv" if show else "playlist"]
-    playlist[id] = {
+@playlistRT.route('/createPlaylist')
+def createPlaylist():
+    uid = reqToUID(request)
+    loaded = json.load(open(playlistsFile))
+
+    playlistID = randStr(length=32, incUpper=True)
+    loaded[playlistID] = {
+        "title": request.args.get("title", "Playlist"),
+        "owners": [uid],
+        "playlistID": playlistID,
+        "public": True,
+        "count": 0,
+        "logo": "https://cdn3.iconfinder.com/data/icons/flat-audio-video/16/02_music-playlist-512.png",
+        "items": {}
+    }
+    open(playlistsFile, "w", encoding="utf-8").write(json.dumps(loaded))
+    return ok("Created playlist")
+
+
+@playlistRT.route('/renamePlaylist')
+def renamePlaylist():
+    playlistID = request.args.get("playlistID")
+    title = request.args.get("title")
+
+    if not playlistID or not title:
+        return error("Invalid request")
+
+    loaded = json.load(open(playlistsFile))
+    uid = reqToUID(request)
+
+    if playlistID not in loaded:
+        return error("Playlist does not exist")
+
+    if uid not in loaded[playlistID]["owners"]:
+        return error("You are not authenticated to do that")
+
+    loaded[playlistID]["title"] = title
+    open(playlistsFile, "w", encoding="utf-8").write(json.dumps(loaded))
+
+    return ok("Successfully renamed playlist")
+
+@playlistRT.route('/changeIcon')
+def changeIcon():
+    playlistID = request.args.get("playlistID")
+    image = request.args.get("image")
+
+    if not playlistID or not image:
+        return error("Invalid request")
+
+    loaded = json.load(open(playlistsFile))
+    uid = reqToUID(request)
+
+    if playlistID not in loaded:
+        return error("Playlist does not exist")
+
+    if uid not in loaded[playlistID]["owners"]:
+        return error("You are not authenticated to do that")
+
+    loaded[playlistID]["logo"] = unquote(image)
+    open(playlistsFile, "w", encoding="utf-8").write(json.dumps(loaded))
+
+    return ok("Successfully renamed playlist")
+
+
+@playlistRT.route('/deletePlaylist/<playlistID>')
+@playlistRT.route('/deletePlaylist', defaults={"playlistID": None})
+def deletePlaylist(playlistID):
+    if not playlistID:
+        return error("No ID provided")
+
+    loaded = json.load(open(playlistsFile))
+    uid = reqToUID(request)
+
+    if playlistID not in loaded:
+        return error("Playlist does not exist")
+
+    if uid not in loaded[playlistID]["owners"]:
+        return error("You are not authenticated to do that")
+
+    del loaded[playlistID]
+    open(playlistsFile, "w", encoding="utf-8").write(json.dumps(loaded))
+
+    return ok("Successfully deleted playlist")
+
+
+@playlistRT.route('/playlist/<playlistID>')
+@playlistRT.route('/playlist', defaults={"playlistID": None})
+def playlist(playlistID):
+    if not playlistID:
+        return error("No ID provided")
+
+    loaded = json.load(open(playlistsFile))
+
+    if playlistID not in loaded:
+        return error("Playlist does not exist")
+
+    return jsonify({
+        "results": loaded[playlistID]
+    })
+
+@playlistRT.route('/playlists')
+def playlists():
+    uid = reqToUID(request)
+    loaded = json.load(open(playlistsFile))
+    response = {}
+
+    for playlistID, playlistData in loaded.items():
+        if uid in playlistData["owners"]:
+            response[playlistID] = playlistData
+
+
+    return jsonify({
+        "results": response
+    })
+
+
+def addToPlaylistThread(playlistID, imdbID):
+    movie = IMDB().getMovieInfo(imdbID)
+
+    loaded = json.load(open(playlistsFile))
+    loaded[playlistID]["items"][imdbID] = {
         "title": movie['title'],
         "year": movie['year'] if 'year' in movie else '0',
         "poster": movie["full-size cover url"],
-        "id": f"tt{id}"
+        "id": f"tt{imdbID}",
+        "kind": "show" if "number of seasons" in movie else "movie"
     }
-    changeValue(uid, "playlisttv" if show else "playlist", playlist)
 
-@playlistRT.route('/addToPlaylist/<id>')
-@playlistRT.route('/addToPlaylist/', defaults={'id': None})
-def addToPlaylist(id):
-    createPlaylistDict(reqToUID(request))
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    threading.Thread(target=addToPlaylistThread, args=(id, reqToUID(request), )).start()
-    return jsonify({
-        "status": "ok",
-        "message": "Item added to playlist"
-    })
+    loaded[playlistID]["count"] += 1
+    open(playlistsFile, "w", encoding="utf-8").write(json.dumps(loaded))
 
-@playlistRT.route('/removeFromPlaylist/<id>')
-@playlistRT.route('/removeFromPlaylist/', defaults={'id': None})
-def removeFromPlaylist(id):
-    createPlaylistDict(reqToUID(request))
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    playlist = userdata(reqToUID(request))["playlist"]
-    if id.startswith("tt"): id = id[2:]
-    if id in playlist:
-        del playlist[id]
-        changeValue(reqToUID(request), "playlist", playlist)
-        return jsonify({
-            "status": "ok",
-            "message": "Movie removed from playlist"
-        })
 
-    playlisttv = userdata(reqToUID(request))["playlisttv"]
-    if id in playlisttv:
-        del playlisttv[id]
-        changeValue(reqToUID(request), "playlisttv", playlisttv)
-        return jsonify({
-            "status": "ok",
-            "message": "Show removed from playlist"
-        })
 
-    return jsonify({
-        "status": "error",
-        "message": "Movie not found in playlist"
-    })
+@playlistRT.route('/addToPlaylist/<playlistID>/<imdbID>')
+@playlistRT.route('/addToPlaylist/', defaults={'playlistID': None, 'imdbID': None})
+def addToPlaylist(playlistID, imdbID):
+    if not playlistID or not imdbID:
+        return error("No ID provided")
 
-@playlistRT.route('/isInPlaylist/<id>')
-@playlistRT.route('/isInPlaylist/', defaults={'id': None})
-def isInPlaylist(id):
-    createPlaylistDict(reqToUID(request))
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if id.startswith("tt"): id = id[2:]
-    playlist = userdata(reqToUID(request))["playlist"]
-    if id in playlist:
-        return jsonify({
-            "status": "ok",
-            "message": "Movie found in playlist"
-        })
+    if imdbID.startswith("tt"):
+        imdbID = imdbID[2:]
 
-    playlisttv = userdata(reqToUID(request))["playlisttv"]
-    if id in playlisttv:
-        return jsonify({
-            "status": "ok",
-            "message": "Movie found in playlist"
-        })
-    return jsonify({
-        "status": "error",
-        "message": "Movie not found in playlist"
-    })
+    loaded = json.load(open(playlistsFile))
+    uid = reqToUID(request)
+
+    if playlistID not in loaded:
+        return error("Playlist does not exist")
+
+    if uid not in loaded[playlistID]["owners"]:
+        return error("You are not authenticated to do that")
+
+    threading.Thread(target=addToPlaylistThread, args=(playlistID, imdbID, )).start()
+    return ok("Item added to playlist")
+
+@playlistRT.route('/removeFromPlaylist/<playlistID>/<imdbID>')
+@playlistRT.route('/removeFromPlaylist/', defaults={'playlistID': None, 'imdbID': None})
+def removeFromPlaylist(playlistID, imdbID):
+    if not playlistID or not imdbID:
+        return error("No ID provided")
+
+    if imdbID.startswith("tt"):
+        imdbID = imdbID[2:]
+
+    loaded = json.load(open(playlistsFile))
+    uid = reqToUID(request)
+
+    if playlistID not in loaded:
+        return error("Playlist does not exist")
+
+    if uid not in loaded[playlistID]["owners"]:
+        return error("You are not authenticated to do t")
+
+    if imdbID not in loaded[playlistID]["items"]:
+        return error("Item is not in playlist")
+    
+    del loaded[playlistID]["items"][imdbID]
+    loaded[playlistID]["count"] -= 1
+    open(playlistsFile, "w", encoding="utf-8").write(json.dumps(loaded))
+    return ok("Successfully removed item from playlist")
+
+
 
 @playlistRT.route('/seriesToPlaylist/<id>')
 @playlistRT.route('/seriesToPlaylist/', defaults={'id': None})
 def seriesToPlaylist(id):
-    createPlaylistDict(reqToUID(request))
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
+    if not id: 
+        return error("No ID provided")
     if id.startswith("tt"): id = id[2:]
     #pl = imdb.createPlaylistFromSeries(id)
     cache = getCachedItem(f"playlist-{id}.json", "playlists")

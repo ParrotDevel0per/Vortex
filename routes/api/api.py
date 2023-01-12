@@ -44,7 +44,6 @@ featuredMovies = {
 def featured():
     ft = random.choice(list(featuredMovies.values()))
     ft["inFavorites"] = NET().localGET(request, f"/api/isInFavorites/{ft['imdbID'].replace('tt', '')}").json()['status'] == 'ok'
-    ft["inPlaylist"] = NET().localGET(request, f"/api/isInPlaylist/{ft['imdbID'].replace('tt', '')}").json()['status'] == 'ok'
     return ft
 
 @api.route('/homeMenu')
@@ -248,6 +247,9 @@ def sources(id):
         'status': 'error',
         'message': 'No Type provided'
     })
+
+    if kind == "tv series":
+        kind = "show"
 
 
     sources = []
@@ -571,5 +573,4 @@ def getMovieInfo(id):
         rp = resp
     else: rp = json.loads(cached)
     rp["inFavorites"] = NET().localGET(request, f"/api/isInFavorites/{id}").json()['status'] == 'ok'
-    rp["inPlaylist"] = NET().localGET(request, f"/api/isInPlaylist/{id}").json()['status'] == 'ok'
     return jsonify(rp)

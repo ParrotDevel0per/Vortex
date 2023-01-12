@@ -80,8 +80,6 @@ def createUser(username, password, email="", admin=False, banned=False):
         "password": hashlib.sha512(password.encode()).hexdigest(),
         "isAdmin": admin,
         "favorites": {},
-        "playlist": {},
-        "playlisttv": {},
         "history": {},
         "home": defaultHome(),
         "email": email,

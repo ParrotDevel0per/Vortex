@@ -28,15 +28,16 @@
 
         <li class="nav-item"><a class="nav-link {active === 'home' ? 'active' : ''}" href="/">Home</a></li>
         <li class="nav-item"><a class="nav-link {active === 'search' ? 'active' : ''}" href="/?tab=search">Search</a></li>
+        <li class="nav-item"><a class="nav-link {active === 'favorites' ? 'active' : ''}" href="/?tab=favorites">Favorites</a></li>
+        <li class="nav-item"><a class="nav-link {active === 'playlists' ? 'active' : ''}" href="/?tab=playlists">Playlists</a></li>
         <li class="nav-item"><a class="nav-link {active === 'addons' ? 'active' : ''}" href="/?tab=addons">Addons</a></li>
-        <li class="nav-item"><a class="nav-link {active === 'mine' ? 'active' : ''}" href="/?tab=mine">Mine</a></li>
 
         {#await axios.get("/api/userInfo", {transformResponse: (res) => { return JSON.parse(res); }, responseType: 'json'})}
 						<p></p>
 				{:then resp}
 						{#if resp.data.isAdmin}
             <li class="nav-item">
-              <a class="nav-link" style="margin-left: 65vw;" href="/?tab=settings">Settings</a>
+              <a class="nav-link" style="margin-left: 61vw;" href="/?tab=settings">Settings</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/admin">Admin CP</a>
@@ -46,7 +47,7 @@
             </li>
             {:else}
             <li class="nav-item">
-              <a class="nav-link {active === 'settings' ? 'active' : ''}" style="margin-left: 71vw;" href="/?tab=settings">Settings</a>
+              <a class="nav-link {active === 'settings' ? 'active' : ''}" style="margin-left: 65vw;" href="/?tab=settings">Settings</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/logout">Logout</a>

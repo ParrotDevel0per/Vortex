@@ -43,7 +43,6 @@
 				plot: data.plot,
 				imdbID: data.imdbID,
 				kind: data.kind,
-				inPlaylist: data.inPlaylist,
 				inFavorites: data.inFavorites,
 				episodeCount: data.episodeCount
 			}
@@ -87,7 +86,6 @@
 			featuredMetadata.imdbID = id;
 			featuredMetadata.kind = data.kind;
 			featuredMetadata.inFavorites = data.inFavorites;
-			featuredMetadata.inPlaylist = data.inPlaylist;
 			window.scrollTo(0, 0);
 			if (item) item.src = before;
 		}).catch(error => {

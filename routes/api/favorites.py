@@ -19,7 +19,7 @@ def addToFavsThread(id, uid):
         "year": movie["year"],
         "poster": movie["full-size cover url"],
         "id": f"tt{id}",
-        "kind": movie["kind"]
+        "kind": "show" if "number of seasons" in movie else "movie"
     }
     changeValue(uid, "favorites", favorites)
 

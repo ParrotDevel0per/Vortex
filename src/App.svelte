@@ -1,16 +1,22 @@
 <script>
     import Home from './Home.svelte';
-    import Mine from './Mine.svelte';
+    import Favorites from './Favorites.svelte';
     import Search from './Search.svelte';
     import Settings from './Settings.svelte';
     import Addons from './Addons.svelte';
+    import Playlists from './Playlists.svelte';
+    import Playlist from './Playlist.svelte';
 </script>
 
 
 {#if tab == "search"}
 <Search />
-{:else if tab == "mine"}
-<Mine />
+{:else if tab == "favorites"}
+<Favorites />
+{:else if tab == "playlists"}
+<Playlists />
+{:else if tab == "playlist"}
+<Playlist />
 {:else if tab == "addons"}
 <Addons />
 {:else if tab == "settings"}
