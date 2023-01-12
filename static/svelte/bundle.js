@@ -6581,16 +6581,16 @@ var app = (function () {
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[34] = list[i][0];
-    	child_ctx[35] = list[i][1];
+    	child_ctx[39] = list[i][0];
+    	child_ctx[40] = list[i][1];
     	return child_ctx;
     }
 
-    // (132:8) {:catch error}
+    // (147:8) {:catch error}
     function create_catch_block$1(ctx) {
     	let p;
     	let t0;
-    	let t1_value = /*error*/ ctx[38].message + "";
+    	let t1_value = /*error*/ ctx[43].message + "";
     	let t1;
 
     	const block = {
@@ -6599,7 +6599,7 @@ var app = (function () {
     			t0 = text("Error: ");
     			t1 = text(t1_value);
     			set_style(p, "display", "none");
-    			add_location(p, file$1, 132, 12, 6852);
+    			add_location(p, file$1, 147, 12, 7735);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -6616,7 +6616,7 @@ var app = (function () {
     		block,
     		id: create_catch_block$1.name,
     		type: "catch",
-    		source: "(132:8) {:catch error}",
+    		source: "(147:8) {:catch error}",
     		ctx
     	});
 
@@ -6626,7 +6626,7 @@ var app = (function () {
     // (29:8) {:then resp}
     function create_then_block$1(ctx) {
     	let div;
-    	let each_value = Object.entries(/*resp*/ ctx[33].data);
+    	let each_value = Object.entries(/*resp*/ ctx[38].data);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -6654,7 +6654,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (dirty[0] & /*showOptions*/ 1) {
-    				each_value = Object.entries(/*resp*/ ctx[33].data);
+    				each_value = Object.entries(/*resp*/ ctx[38].data);
     				validate_each_argument(each_value);
     				let i;
 
@@ -6703,87 +6703,109 @@ var app = (function () {
     	let button2;
     	let t5;
     	let button3;
+    	let t7;
+    	let button4;
     	let mounted;
     	let dispose;
 
     	function mouseover_handler_1() {
-    		return /*mouseover_handler_1*/ ctx[7](/*i*/ ctx[34]);
+    		return /*mouseover_handler_1*/ ctx[7](/*i*/ ctx[39]);
     	}
 
     	function focus_handler_1() {
-    		return /*focus_handler_1*/ ctx[8](/*i*/ ctx[34]);
+    		return /*focus_handler_1*/ ctx[8](/*i*/ ctx[39]);
     	}
 
     	function mouseout_handler_1() {
-    		return /*mouseout_handler_1*/ ctx[9](/*i*/ ctx[34]);
+    		return /*mouseout_handler_1*/ ctx[9](/*i*/ ctx[39]);
     	}
 
     	function blur_handler_1() {
-    		return /*blur_handler_1*/ ctx[10](/*i*/ ctx[34]);
+    		return /*blur_handler_1*/ ctx[10](/*i*/ ctx[39]);
     	}
 
     	function click_handler_1() {
-    		return /*click_handler_1*/ ctx[11](/*d*/ ctx[35]);
+    		return /*click_handler_1*/ ctx[11](/*d*/ ctx[40]);
     	}
 
     	function mouseover_handler_2() {
-    		return /*mouseover_handler_2*/ ctx[12](/*i*/ ctx[34]);
+    		return /*mouseover_handler_2*/ ctx[12](/*i*/ ctx[39]);
     	}
 
     	function focus_handler_2() {
-    		return /*focus_handler_2*/ ctx[13](/*i*/ ctx[34]);
+    		return /*focus_handler_2*/ ctx[13](/*i*/ ctx[39]);
     	}
 
     	function mouseout_handler_2() {
-    		return /*mouseout_handler_2*/ ctx[14](/*i*/ ctx[34]);
+    		return /*mouseout_handler_2*/ ctx[14](/*i*/ ctx[39]);
     	}
 
     	function blur_handler_2() {
-    		return /*blur_handler_2*/ ctx[15](/*i*/ ctx[34]);
+    		return /*blur_handler_2*/ ctx[15](/*i*/ ctx[39]);
     	}
 
     	function click_handler_2(...args) {
-    		return /*click_handler_2*/ ctx[16](/*d*/ ctx[35], ...args);
+    		return /*click_handler_2*/ ctx[16](/*d*/ ctx[40], ...args);
     	}
 
     	function mouseover_handler_3() {
-    		return /*mouseover_handler_3*/ ctx[17](/*i*/ ctx[34]);
+    		return /*mouseover_handler_3*/ ctx[17](/*i*/ ctx[39]);
     	}
 
     	function focus_handler_3() {
-    		return /*focus_handler_3*/ ctx[18](/*i*/ ctx[34]);
+    		return /*focus_handler_3*/ ctx[18](/*i*/ ctx[39]);
     	}
 
     	function mouseout_handler_3() {
-    		return /*mouseout_handler_3*/ ctx[19](/*i*/ ctx[34]);
+    		return /*mouseout_handler_3*/ ctx[19](/*i*/ ctx[39]);
     	}
 
     	function blur_handler_3() {
-    		return /*blur_handler_3*/ ctx[20](/*i*/ ctx[34]);
+    		return /*blur_handler_3*/ ctx[20](/*i*/ ctx[39]);
     	}
 
-    	function click_handler_3() {
-    		return /*click_handler_3*/ ctx[21](/*d*/ ctx[35]);
+    	function click_handler_3(...args) {
+    		return /*click_handler_3*/ ctx[21](/*d*/ ctx[40], ...args);
     	}
 
     	function mouseover_handler_4() {
-    		return /*mouseover_handler_4*/ ctx[22](/*i*/ ctx[34]);
+    		return /*mouseover_handler_4*/ ctx[22](/*i*/ ctx[39]);
     	}
 
     	function focus_handler_4() {
-    		return /*focus_handler_4*/ ctx[23](/*i*/ ctx[34]);
+    		return /*focus_handler_4*/ ctx[23](/*i*/ ctx[39]);
     	}
 
     	function mouseout_handler_4() {
-    		return /*mouseout_handler_4*/ ctx[24](/*i*/ ctx[34]);
+    		return /*mouseout_handler_4*/ ctx[24](/*i*/ ctx[39]);
     	}
 
     	function blur_handler_4() {
-    		return /*blur_handler_4*/ ctx[25](/*i*/ ctx[34]);
+    		return /*blur_handler_4*/ ctx[25](/*i*/ ctx[39]);
     	}
 
     	function click_handler_4() {
-    		return /*click_handler_4*/ ctx[26](/*d*/ ctx[35]);
+    		return /*click_handler_4*/ ctx[26](/*d*/ ctx[40]);
+    	}
+
+    	function mouseover_handler_5() {
+    		return /*mouseover_handler_5*/ ctx[27](/*i*/ ctx[39]);
+    	}
+
+    	function focus_handler_5() {
+    		return /*focus_handler_5*/ ctx[28](/*i*/ ctx[39]);
+    	}
+
+    	function mouseout_handler_5() {
+    		return /*mouseout_handler_5*/ ctx[29](/*i*/ ctx[39]);
+    	}
+
+    	function blur_handler_5() {
+    		return /*blur_handler_5*/ ctx[30](/*i*/ ctx[39]);
+    	}
+
+    	function click_handler_5() {
+    		return /*click_handler_5*/ ctx[31](/*d*/ ctx[40]);
     	}
 
     	const block = {
@@ -6795,10 +6817,13 @@ var app = (function () {
     			button1.textContent = "Share";
     			t3 = space();
     			button2 = element("button");
-    			button2.textContent = "Rename";
+    			button2.textContent = "Get M3U";
     			t5 = space();
     			button3 = element("button");
-    			button3.textContent = "Delete";
+    			button3.textContent = "Rename";
+    			t7 = space();
+    			button4 = element("button");
+    			button4.textContent = "Delete";
     			attr_dev(button0, "class", "svelte-15lq60s");
     			add_location(button0, file$1, 44, 20, 1660);
     			attr_dev(button1, "class", "svelte-15lq60s");
@@ -6806,7 +6831,9 @@ var app = (function () {
     			attr_dev(button2, "class", "svelte-15lq60s");
     			add_location(button2, file$1, 79, 20, 3699);
     			attr_dev(button3, "class", "svelte-15lq60s");
-    			add_location(button3, file$1, 99, 20, 4853);
+    			add_location(button3, file$1, 94, 20, 4582);
+    			attr_dev(button4, "class", "svelte-15lq60s");
+    			add_location(button4, file$1, 114, 20, 5736);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button0, anchor);
@@ -6816,6 +6843,8 @@ var app = (function () {
     			insert_dev(target, button2, anchor);
     			insert_dev(target, t5, anchor);
     			insert_dev(target, button3, anchor);
+    			insert_dev(target, t7, anchor);
+    			insert_dev(target, button4, anchor);
 
     			if (!mounted) {
     				dispose = [
@@ -6838,7 +6867,12 @@ var app = (function () {
     					listen_dev(button3, "focus", focus_handler_4, false, false, false),
     					listen_dev(button3, "mouseout", mouseout_handler_4, false, false, false),
     					listen_dev(button3, "blur", blur_handler_4, false, false, false),
-    					listen_dev(button3, "click", click_handler_4, false, false, false)
+    					listen_dev(button3, "click", click_handler_4, false, false, false),
+    					listen_dev(button4, "mouseover", mouseover_handler_5, false, false, false),
+    					listen_dev(button4, "focus", focus_handler_5, false, false, false),
+    					listen_dev(button4, "mouseout", mouseout_handler_5, false, false, false),
+    					listen_dev(button4, "blur", blur_handler_5, false, false, false),
+    					listen_dev(button4, "click", click_handler_5, false, false, false)
     				];
 
     				mounted = true;
@@ -6855,6 +6889,8 @@ var app = (function () {
     			if (detaching) detach_dev(button2);
     			if (detaching) detach_dev(t5);
     			if (detaching) detach_dev(button3);
+    			if (detaching) detach_dev(t7);
+    			if (detaching) detach_dev(button4);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -6887,48 +6923,48 @@ var app = (function () {
     	let div0;
     	let h4;
     	let b;
-    	let t5_value = /*d*/ ctx[35].title + "";
+    	let t5_value = /*d*/ ctx[40].title + "";
     	let t5;
     	let t6;
     	let mounted;
     	let dispose;
 
     	function mouseover_handler() {
-    		return /*mouseover_handler*/ ctx[2](/*i*/ ctx[34]);
+    		return /*mouseover_handler*/ ctx[2](/*i*/ ctx[39]);
     	}
 
     	function focus_handler() {
-    		return /*focus_handler*/ ctx[3](/*i*/ ctx[34]);
+    		return /*focus_handler*/ ctx[3](/*i*/ ctx[39]);
     	}
 
     	function mouseout_handler() {
-    		return /*mouseout_handler*/ ctx[4](/*i*/ ctx[34]);
+    		return /*mouseout_handler*/ ctx[4](/*i*/ ctx[39]);
     	}
 
     	function blur_handler() {
-    		return /*blur_handler*/ ctx[5](/*i*/ ctx[34]);
+    		return /*blur_handler*/ ctx[5](/*i*/ ctx[39]);
     	}
 
     	let if_block = /*showOptions*/ ctx[0] && create_if_block$2(ctx);
 
-    	function click_handler_5() {
-    		return /*click_handler_5*/ ctx[27](/*d*/ ctx[35]);
+    	function click_handler_6() {
+    		return /*click_handler_6*/ ctx[32](/*d*/ ctx[40]);
     	}
 
-    	function mouseover_handler_5() {
-    		return /*mouseover_handler_5*/ ctx[28](/*i*/ ctx[34]);
+    	function mouseover_handler_6() {
+    		return /*mouseover_handler_6*/ ctx[33](/*i*/ ctx[39]);
     	}
 
-    	function focus_handler_5() {
-    		return /*focus_handler_5*/ ctx[29](/*i*/ ctx[34]);
+    	function focus_handler_6() {
+    		return /*focus_handler_6*/ ctx[34](/*i*/ ctx[39]);
     	}
 
-    	function mouseout_handler_5() {
-    		return /*mouseout_handler_5*/ ctx[30](/*i*/ ctx[34]);
+    	function mouseout_handler_6() {
+    		return /*mouseout_handler_6*/ ctx[35](/*i*/ ctx[39]);
     	}
 
-    	function blur_handler_5() {
-    		return /*blur_handler_5*/ ctx[31](/*i*/ ctx[34]);
+    	function blur_handler_6() {
+    		return /*blur_handler_6*/ ctx[36](/*i*/ ctx[39]);
     	}
 
     	const block = {
@@ -6950,19 +6986,19 @@ var app = (function () {
     			t6 = space();
     			attr_dev(button, "class", "svelte-15lq60s");
     			add_location(button, file$1, 32, 20, 998);
-    			if (!src_url_equal(img.src, img_src_value = "https://corsproxy.io/?" + encodeURIComponent(/*d*/ ctx[35].logo))) attr_dev(img, "src", img_src_value);
+    			if (!src_url_equal(img.src, img_src_value = "https://corsproxy.io/?" + encodeURIComponent(/*d*/ ctx[40].logo))) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "Playlist");
     			set_style(img, "width", "100%");
     			attr_dev(img, "class", "svelte-15lq60s");
-    			add_location(img, file$1, 123, 24, 6486);
-    			add_location(b, file$1, 125, 32, 6665);
+    			add_location(img, file$1, 138, 24, 7369);
+    			add_location(b, file$1, 140, 32, 7548);
     			attr_dev(h4, "class", "svelte-15lq60s");
-    			add_location(h4, file$1, 125, 28, 6661);
+    			add_location(h4, file$1, 140, 28, 7544);
     			attr_dev(div0, "class", "container svelte-15lq60s");
-    			add_location(div0, file$1, 124, 24, 6608);
-    			add_location(div1, file$1, 116, 20, 5911);
+    			add_location(div0, file$1, 139, 24, 7491);
+    			add_location(div1, file$1, 131, 20, 6794);
     			attr_dev(div2, "class", "grid-item card svelte-15lq60s");
-    			attr_dev(div2, "id", /*i*/ ctx[34]);
+    			attr_dev(div2, "id", /*i*/ ctx[39]);
     			add_location(div2, file$1, 31, 16, 939);
     		},
     		m: function mount(target, anchor) {
@@ -6989,11 +7025,11 @@ var app = (function () {
     					listen_dev(button, "mouseout", mouseout_handler, false, false, false),
     					listen_dev(button, "blur", blur_handler, false, false, false),
     					listen_dev(button, "click", /*click_handler*/ ctx[6], false, false, false),
-    					listen_dev(div1, "click", click_handler_5, false, false, false),
-    					listen_dev(div1, "mouseover", mouseover_handler_5, false, false, false),
-    					listen_dev(div1, "focus", focus_handler_5, false, false, false),
-    					listen_dev(div1, "mouseout", mouseout_handler_5, false, false, false),
-    					listen_dev(div1, "blur", blur_handler_5, false, false, false)
+    					listen_dev(div1, "click", click_handler_6, false, false, false),
+    					listen_dev(div1, "mouseover", mouseover_handler_6, false, false, false),
+    					listen_dev(div1, "focus", focus_handler_6, false, false, false),
+    					listen_dev(div1, "mouseout", mouseout_handler_6, false, false, false),
+    					listen_dev(div1, "blur", blur_handler_6, false, false, false)
     				];
 
     				mounted = true;
@@ -7089,8 +7125,8 @@ var app = (function () {
     		pending: create_pending_block$1,
     		then: create_then_block$1,
     		catch: create_catch_block$1,
-    		value: 33,
-    		error: 38
+    		value: 38,
+    		error: 43
     	};
 
     	handle_promise(
@@ -7293,23 +7329,16 @@ var app = (function () {
     		document.getElementById(i.toString()).style.borderColor = 'blue';
     	};
 
-    	const click_handler_3 = d => {
-    		let newTitle = prompt("Change title:", "");
+    	const click_handler_3 = (d, e) => {
+    		navigator.clipboard.writeText(`${window.location.origin}/playlist.m3u?id=${d.playlistID}`);
+    		e.originalTarget.innerText = "Copied";
 
-    		if (newTitle == null || newTitle == "") {
-    			return;
-    		}
-
-    		let xhr = new XMLHttpRequest();
-    		xhr.open("GET", `/api/renamePlaylist?title=${newTitle}&playlistID=${d.playlistID}`, true);
-
-    		xhr.onreadystatechange = function () {
-    			if (xhr.readyState == 4 && xhr.status == 200) {
-    				window.location.reload();
-    			}
-    		};
-
-    		xhr.send();
+    		window.setTimeout(
+    			function () {
+    				e.originalTarget.innerText = "Share";
+    			},
+    			1000
+    		);
     	};
 
     	const mouseover_handler_4 = i => {
@@ -7329,6 +7358,41 @@ var app = (function () {
     	};
 
     	const click_handler_4 = d => {
+    		let newTitle = prompt("Change title:", "");
+
+    		if (newTitle == null || newTitle == "") {
+    			return;
+    		}
+
+    		let xhr = new XMLHttpRequest();
+    		xhr.open("GET", `/api/renamePlaylist?title=${newTitle}&playlistID=${d.playlistID}`, true);
+
+    		xhr.onreadystatechange = function () {
+    			if (xhr.readyState == 4 && xhr.status == 200) {
+    				window.location.reload();
+    			}
+    		};
+
+    		xhr.send();
+    	};
+
+    	const mouseover_handler_5 = i => {
+    		document.getElementById(i.toString()).style.borderColor = 'blue';
+    	};
+
+    	const focus_handler_5 = i => {
+    		document.getElementById(i.toString()).style.borderColor = 'blue';
+    	};
+
+    	const mouseout_handler_5 = i => {
+    		document.getElementById(i.toString()).style.borderColor = 'blue';
+    	};
+
+    	const blur_handler_5 = i => {
+    		document.getElementById(i.toString()).style.borderColor = 'blue';
+    	};
+
+    	const click_handler_5 = d => {
     		let xhr = new XMLHttpRequest();
     		xhr.open("GET", `/api/deletePlaylist/${d.playlistID}`, true);
 
@@ -7341,23 +7405,23 @@ var app = (function () {
     		xhr.send();
     	};
 
-    	const click_handler_5 = d => {
+    	const click_handler_6 = d => {
     		window.location = `/?tab=playlist&id=${d.playlistID}`;
     	};
 
-    	const mouseover_handler_5 = i => {
+    	const mouseover_handler_6 = i => {
     		document.getElementById(i.toString()).style.borderColor = 'beige';
     	};
 
-    	const focus_handler_5 = i => {
+    	const focus_handler_6 = i => {
     		document.getElementById(i.toString()).style.borderColor = 'beige';
     	};
 
-    	const mouseout_handler_5 = i => {
+    	const mouseout_handler_6 = i => {
     		document.getElementById(i.toString()).style.borderColor = 'blue';
     	};
 
-    	const blur_handler_5 = i => {
+    	const blur_handler_6 = i => {
     		document.getElementById(i.toString()).style.borderColor = 'blue';
     	};
 
@@ -7400,11 +7464,16 @@ var app = (function () {
     		mouseout_handler_4,
     		blur_handler_4,
     		click_handler_4,
-    		click_handler_5,
     		mouseover_handler_5,
     		focus_handler_5,
     		mouseout_handler_5,
-    		blur_handler_5
+    		blur_handler_5,
+    		click_handler_5,
+    		click_handler_6,
+    		mouseover_handler_6,
+    		focus_handler_6,
+    		mouseout_handler_6,
+    		blur_handler_6
     	];
     }
 
