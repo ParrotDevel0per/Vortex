@@ -66,6 +66,18 @@
         }
     }
 
+    const createPlaylist = () => {
+        let playlistName = prompt("Enter playlist name: ");
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", `/api/createPlaylist?title=${playlistName}`, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) { 
+                window.location.reload();
+            }
+        };
+        xhr.send();
+    }
+
     const play = () => {
         let url = `/watch/${playBTN.dataset.id}/`
         if (kind) url += `?kind=${kind}`;
@@ -109,6 +121,7 @@
         {:catch error}
             <p style="display: none;">Error: {error.message}</p>
         {/await}
+        <button style="color: lime;border-color: lime;margin-top: 15px;" on:click={()=>{createPlaylist()}}>Create</button>
         <button on:click={()=>{handlePlaylist()}}>Close</button>
     </div>
 </div>
@@ -160,7 +173,6 @@
     .playlistModal .list button:last-child {
         color: red;
         border-color: red;
-        margin-top: 10px;
     }
 
     /* input, */

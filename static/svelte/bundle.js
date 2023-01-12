@@ -3160,12 +3160,12 @@ var app = (function () {
 
     function get_each_context$7(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[24] = list[i][0];
-    	child_ctx[25] = list[i][1];
+    	child_ctx[26] = list[i][0];
+    	child_ctx[27] = list[i][1];
     	return child_ctx;
     }
 
-    // (82:12) {#if line}
+    // (94:12) {#if line}
     function create_if_block_3$1(ctx) {
     	let h2;
     	let t;
@@ -3174,8 +3174,8 @@ var app = (function () {
     		c: function create() {
     			h2 = element("h2");
     			t = text(/*line*/ ctx[3]);
-    			attr_dev(h2, "class", "svelte-suxjp4");
-    			add_location(h2, file$7, 82, 12, 2812);
+    			attr_dev(h2, "class", "svelte-1pvwqx6");
+    			add_location(h2, file$7, 94, 12, 3236);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
@@ -3193,14 +3193,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3$1.name,
     		type: "if",
-    		source: "(82:12) {#if line}",
+    		source: "(94:12) {#if line}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (85:12) {#if info}
+    // (97:12) {#if info}
     function create_if_block_2$2(ctx) {
     	let h3;
     	let t;
@@ -3209,8 +3209,8 @@ var app = (function () {
     		c: function create() {
     			h3 = element("h3");
     			t = text(/*info*/ ctx[4]);
-    			attr_dev(h3, "class", "svelte-suxjp4");
-    			add_location(h3, file$7, 85, 12, 2886);
+    			attr_dev(h3, "class", "svelte-1pvwqx6");
+    			add_location(h3, file$7, 97, 12, 3310);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h3, anchor);
@@ -3228,14 +3228,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$2.name,
     		type: "if",
-    		source: "(85:12) {#if info}",
+    		source: "(97:12) {#if info}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (88:12) {#if plot}
+    // (100:12) {#if plot}
     function create_if_block_1$2(ctx) {
     	let h4;
     	let t;
@@ -3244,8 +3244,8 @@ var app = (function () {
     		c: function create() {
     			h4 = element("h4");
     			t = text(/*plot*/ ctx[5]);
-    			attr_dev(h4, "class", "svelte-suxjp4");
-    			add_location(h4, file$7, 88, 12, 2960);
+    			attr_dev(h4, "class", "svelte-1pvwqx6");
+    			add_location(h4, file$7, 100, 12, 3384);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h4, anchor);
@@ -3263,14 +3263,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$2.name,
     		type: "if",
-    		source: "(88:12) {#if plot}",
+    		source: "(100:12) {#if plot}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (92:12) {#if imdbID && kind}
+    // (104:12) {#if imdbID && kind}
     function create_if_block$6(ctx) {
     	let a0;
     	let t0;
@@ -3298,36 +3298,36 @@ var app = (function () {
     			t5 = text("+ Playlist");
     			attr_dev(a0, "data-id", /*imdbID*/ ctx[0]);
     			attr_dev(a0, "id", "playButton");
-    			attr_dev(a0, "class", "bgRed svelte-suxjp4");
-    			add_location(a0, file$7, 92, 16, 3062);
+    			attr_dev(a0, "class", "bgRed svelte-1pvwqx6");
+    			add_location(a0, file$7, 104, 16, 3486);
     			attr_dev(a1, "data-id", /*imdbID*/ ctx[0]);
     			attr_dev(a1, "id", "favs");
-    			attr_dev(a1, "class", "svelte-suxjp4");
-    			add_location(a1, file$7, 93, 16, 3186);
+    			attr_dev(a1, "class", "svelte-1pvwqx6");
+    			add_location(a1, file$7, 105, 16, 3610);
     			attr_dev(a2, "data-id", /*imdbID*/ ctx[0]);
     			attr_dev(a2, "id", "pl");
-    			attr_dev(a2, "class", "svelte-suxjp4");
-    			add_location(a2, file$7, 94, 16, 3332);
+    			attr_dev(a2, "class", "svelte-1pvwqx6");
+    			add_location(a2, file$7, 106, 16, 3756);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a0, anchor);
     			append_dev(a0, t0);
-    			/*a0_binding*/ ctx[14](a0);
+    			/*a0_binding*/ ctx[15](a0);
     			insert_dev(target, t1, anchor);
     			insert_dev(target, a1, anchor);
     			append_dev(a1, t2);
     			append_dev(a1, t3);
-    			/*a1_binding*/ ctx[16](a1);
+    			/*a1_binding*/ ctx[17](a1);
     			insert_dev(target, t4, anchor);
     			insert_dev(target, a2, anchor);
     			append_dev(a2, t5);
-    			/*a2_binding*/ ctx[18](a2);
+    			/*a2_binding*/ ctx[19](a2);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(a0, "click", /*click_handler*/ ctx[15], false, false, false),
-    					listen_dev(a1, "click", /*click_handler_1*/ ctx[17], false, false, false),
-    					listen_dev(a2, "click", /*click_handler_2*/ ctx[19], false, false, false)
+    					listen_dev(a0, "click", /*click_handler*/ ctx[16], false, false, false),
+    					listen_dev(a1, "click", /*click_handler_1*/ ctx[18], false, false, false),
+    					listen_dev(a2, "click", /*click_handler_2*/ ctx[20], false, false, false)
     				];
 
     				mounted = true;
@@ -3350,13 +3350,13 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(a0);
-    			/*a0_binding*/ ctx[14](null);
+    			/*a0_binding*/ ctx[15](null);
     			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(a1);
-    			/*a1_binding*/ ctx[16](null);
+    			/*a1_binding*/ ctx[17](null);
     			if (detaching) detach_dev(t4);
     			if (detaching) detach_dev(a2);
-    			/*a2_binding*/ ctx[18](null);
+    			/*a2_binding*/ ctx[19](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -3366,18 +3366,18 @@ var app = (function () {
     		block,
     		id: create_if_block$6.name,
     		type: "if",
-    		source: "(92:12) {#if imdbID && kind}",
+    		source: "(104:12) {#if imdbID && kind}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (109:8) {:catch error}
+    // (121:8) {:catch error}
     function create_catch_block$6(ctx) {
     	let p;
     	let t0;
-    	let t1_value = /*error*/ ctx[28].message + "";
+    	let t1_value = /*error*/ ctx[30].message + "";
     	let t1;
 
     	const block = {
@@ -3386,7 +3386,7 @@ var app = (function () {
     			t0 = text("Error: ");
     			t1 = text(t1_value);
     			set_style(p, "display", "none");
-    			add_location(p, file$7, 109, 12, 4025);
+    			add_location(p, file$7, 121, 12, 4449);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -3403,17 +3403,17 @@ var app = (function () {
     		block,
     		id: create_catch_block$6.name,
     		type: "catch",
-    		source: "(109:8) {:catch error}",
+    		source: "(121:8) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (105:8) {:then resp}
+    // (117:8) {:then resp}
     function create_then_block$6(ctx) {
     	let each_1_anchor;
-    	let each_value = Object.entries(/*resp*/ ctx[23].data);
+    	let each_value = Object.entries(/*resp*/ ctx[25].data);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -3438,7 +3438,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*Object, axios, JSON, addToPlaylist*/ 2048) {
-    				each_value = Object.entries(/*resp*/ ctx[23].data);
+    				each_value = Object.entries(/*resp*/ ctx[25].data);
     				validate_each_argument(each_value);
     				let i;
 
@@ -3471,32 +3471,32 @@ var app = (function () {
     		block,
     		id: create_then_block$6.name,
     		type: "then",
-    		source: "(105:8) {:then resp}",
+    		source: "(117:8) {:then resp}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (106:12) {#each Object.entries(resp.data) as [i, d]}
+    // (118:12) {#each Object.entries(resp.data) as [i, d]}
     function create_each_block$7(ctx) {
     	let button;
-    	let t_value = /*d*/ ctx[25].title + "";
+    	let t_value = /*d*/ ctx[27].title + "";
     	let t;
     	let mounted;
     	let dispose;
 
     	function click_handler_3() {
-    		return /*click_handler_3*/ ctx[21](/*d*/ ctx[25]);
+    		return /*click_handler_3*/ ctx[22](/*d*/ ctx[27]);
     	}
 
     	const block = {
     		c: function create() {
     			button = element("button");
     			t = text(t_value);
-    			attr_dev(button, "id", /*d*/ ctx[25].playlistID);
-    			attr_dev(button, "class", "svelte-suxjp4");
-    			add_location(button, file$7, 106, 16, 3869);
+    			attr_dev(button, "id", /*d*/ ctx[27].playlistID);
+    			attr_dev(button, "class", "svelte-1pvwqx6");
+    			add_location(button, file$7, 118, 16, 4293);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -3521,14 +3521,14 @@ var app = (function () {
     		block,
     		id: create_each_block$7.name,
     		type: "each",
-    		source: "(106:12) {#each Object.entries(resp.data) as [i, d]}",
+    		source: "(118:12) {#each Object.entries(resp.data) as [i, d]}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (103:133)               <p style="display: none;">Loading ...</p>          {:then resp}
+    // (115:133)               <p style="display: none;">Loading ...</p>          {:then resp}
     function create_pending_block$6(ctx) {
     	let p;
 
@@ -3537,7 +3537,7 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "Loading ...";
     			set_style(p, "display", "none");
-    			add_location(p, file$7, 103, 12, 3731);
+    			add_location(p, file$7, 115, 12, 4155);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -3552,7 +3552,7 @@ var app = (function () {
     		block,
     		id: create_pending_block$6.name,
     		type: "pending",
-    		source: "(103:133)               <p style=\\\"display: none;\\\">Loading ...</p>          {:then resp}",
+    		source: "(115:133)               <p style=\\\"display: none;\\\">Loading ...</p>          {:then resp}",
     		ctx
     	});
 
@@ -3577,7 +3577,9 @@ var app = (function () {
     	let div4;
     	let div3;
     	let t6;
-    	let button;
+    	let button0;
+    	let t8;
+    	let button1;
     	let mounted;
     	let dispose;
     	let if_block0 = /*line*/ ctx[3] && create_if_block_3$1(ctx);
@@ -3593,13 +3595,13 @@ var app = (function () {
     		pending: create_pending_block$6,
     		then: create_then_block$6,
     		catch: create_catch_block$6,
-    		value: 23,
-    		error: 28
+    		value: 25,
+    		error: 30
     	};
 
     	handle_promise(
     		axios.get("/api/playlists", {
-    			transformResponse: /*func*/ ctx[20],
+    			transformResponse: /*func*/ ctx[21],
     			responseType: 'json'
     		}),
     		info_1
@@ -3626,38 +3628,46 @@ var app = (function () {
     			div3 = element("div");
     			info_1.block.c();
     			t6 = space();
-    			button = element("button");
-    			button.textContent = "Close";
-    			attr_dev(img, "class", "featuredIMG svelte-suxjp4");
+    			button0 = element("button");
+    			button0.textContent = "Create";
+    			t8 = space();
+    			button1 = element("button");
+    			button1.textContent = "Close";
+    			attr_dev(img, "class", "featuredIMG svelte-1pvwqx6");
 
     			if (!src_url_equal(img.src, img_src_value = /*imdbID*/ ctx[0]
     			? `/api/banner/${/*imdbID*/ ctx[0]}?do=show`
     			: "")) attr_dev(img, "src", img_src_value);
 
     			attr_dev(img, "alt", "Featured");
-    			add_location(img, file$7, 77, 8, 2500);
+    			add_location(img, file$7, 89, 8, 2924);
 
     			attr_dev(h1, "class", h1_class_value = "" + (null_to_empty(/*title*/ ctx[2].toLowerCase() == "joker"
     			? "jokerFont"
-    			: "normalFont") + " svelte-suxjp4"));
+    			: "normalFont") + " svelte-1pvwqx6"));
 
-    			add_location(h1, file$7, 79, 12, 2654);
+    			add_location(h1, file$7, 91, 12, 3078);
     			attr_dev(div0, "id", "featuredInfo");
-    			attr_dev(div0, "class", "info svelte-suxjp4");
-    			add_location(div0, file$7, 78, 8, 2604);
+    			attr_dev(div0, "class", "info svelte-1pvwqx6");
+    			add_location(div0, file$7, 90, 8, 3028);
     			attr_dev(div1, "id", "featured");
-    			attr_dev(div1, "class", "featured svelte-suxjp4");
-    			add_location(div1, file$7, 76, 4, 2454);
+    			attr_dev(div1, "class", "featured svelte-1pvwqx6");
+    			add_location(div1, file$7, 88, 4, 2878);
     			attr_dev(div2, "class", "featuredContainer");
-    			add_location(div2, file$7, 75, 0, 2417);
-    			attr_dev(button, "class", "svelte-suxjp4");
-    			add_location(button, file$7, 111, 8, 4105);
+    			add_location(div2, file$7, 87, 0, 2841);
+    			set_style(button0, "color", "lime");
+    			set_style(button0, "border-color", "lime");
+    			set_style(button0, "margin-top", "15px");
+    			attr_dev(button0, "class", "svelte-1pvwqx6");
+    			add_location(button0, file$7, 123, 8, 4529);
+    			attr_dev(button1, "class", "svelte-1pvwqx6");
+    			add_location(button1, file$7, 124, 8, 4653);
     			attr_dev(div3, "class", "list");
-    			add_location(div3, file$7, 101, 4, 3564);
-    			attr_dev(div4, "class", "playlistModal svelte-suxjp4");
+    			add_location(div3, file$7, 113, 4, 3988);
+    			attr_dev(div4, "class", "playlistModal svelte-1pvwqx6");
     			attr_dev(div4, "id", "playlistModal");
     			set_style(div4, "display", "none");
-    			add_location(div4, file$7, 100, 0, 3489);
+    			add_location(div4, file$7, 112, 0, 3913);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3685,10 +3695,16 @@ var app = (function () {
     			info_1.mount = () => div3;
     			info_1.anchor = t6;
     			append_dev(div3, t6);
-    			append_dev(div3, button);
+    			append_dev(div3, button0);
+    			append_dev(div3, t8);
+    			append_dev(div3, button1);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler_4*/ ctx[22], false, false, false);
+    				dispose = [
+    					listen_dev(button0, "click", /*click_handler_4*/ ctx[23], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_5*/ ctx[24], false, false, false)
+    				];
+
     				mounted = true;
     			}
     		},
@@ -3704,7 +3720,7 @@ var app = (function () {
     			if (dirty & /*title*/ 4 && raw_value !== (raw_value = /*title*/ ctx[2].replace(": ", ": <br />") + "")) h1.innerHTML = raw_value;
     			if (dirty & /*title*/ 4 && h1_class_value !== (h1_class_value = "" + (null_to_empty(/*title*/ ctx[2].toLowerCase() == "joker"
     			? "jokerFont"
-    			: "normalFont") + " svelte-suxjp4"))) {
+    			: "normalFont") + " svelte-1pvwqx6"))) {
     				attr_dev(h1, "class", h1_class_value);
     			}
 
@@ -3776,7 +3792,7 @@ var app = (function () {
     			info_1.token = null;
     			info_1 = null;
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -3867,6 +3883,20 @@ var app = (function () {
     		}
     	};
 
+    	const createPlaylist = () => {
+    		let playlistName = prompt("Enter playlist name: ");
+    		let xhr = new XMLHttpRequest();
+    		xhr.open("GET", `/api/createPlaylist?title=${playlistName}`, true);
+
+    		xhr.onreadystatechange = function () {
+    			if (xhr.readyState == 4 && xhr.status == 200) {
+    				window.location.reload();
+    			}
+    		};
+
+    		xhr.send();
+    	};
+
     	const play = () => {
     		let url = `/watch/${playBTN.dataset.id}/`;
     		if (kind) url += `?kind=${kind}`;
@@ -3915,6 +3945,10 @@ var app = (function () {
     	};
 
     	const click_handler_4 = () => {
+    		createPlaylist();
+    	};
+
+    	const click_handler_5 = () => {
     		handlePlaylist();
     	};
 
@@ -3943,6 +3977,7 @@ var app = (function () {
     		handleFavorites,
     		addToPlaylist,
     		handlePlaylist,
+    		createPlaylist,
     		play
     	});
 
@@ -3977,6 +4012,7 @@ var app = (function () {
     		handleFavorites,
     		addToPlaylist,
     		handlePlaylist,
+    		createPlaylist,
     		play,
     		a0_binding,
     		click_handler,
@@ -3986,7 +4022,8 @@ var app = (function () {
     		click_handler_2,
     		func,
     		click_handler_3,
-    		click_handler_4
+    		click_handler_4,
+    		click_handler_5
     	];
     }
 
