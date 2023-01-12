@@ -4329,7 +4329,7 @@ var app = (function () {
     			t1 = text(t1_value);
     			t2 = space();
     			set_style(p, "display", "none");
-    			add_location(p, file$6, 134, 6, 3566);
+    			add_location(p, file$6, 134, 6, 3700);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -4409,20 +4409,20 @@ var app = (function () {
     			set_custom_element_data(box_icon0, "name", "chevron-left");
     			set_custom_element_data(box_icon0, "color", "white");
     			set_custom_element_data(box_icon0, "class", "svelte-ik8q7s");
-    			add_location(box_icon0, file$6, 121, 6, 3004);
+    			add_location(box_icon0, file$6, 121, 6, 3125);
     			attr_dev(div0, "class", "arrows left svelte-ik8q7s");
-    			add_location(div0, file$6, 120, 5, 2927);
+    			add_location(div0, file$6, 120, 5, 3047);
     			set_custom_element_data(box_icon1, "name", "chevron-right");
     			set_custom_element_data(box_icon1, "color", "white");
     			set_custom_element_data(box_icon1, "class", "svelte-ik8q7s");
-    			add_location(box_icon1, file$6, 124, 6, 3156);
+    			add_location(box_icon1, file$6, 124, 6, 3280);
     			attr_dev(div1, "class", "arrows right svelte-ik8q7s");
-    			add_location(div1, file$6, 123, 5, 3077);
+    			add_location(div1, file$6, 123, 5, 3200);
     			attr_dev(div2, "class", "placeholder svelte-ik8q7s");
-    			add_location(div2, file$6, 127, 6, 3274);
+    			add_location(div2, file$6, 127, 6, 3401);
     			attr_dev(div3, "id", div3_id_value = "" + (/*m*/ ctx[12].title + "Box"));
     			attr_dev(div3, "class", "outer svelte-ik8q7s");
-    			add_location(div3, file$6, 126, 5, 3230);
+    			add_location(div3, file$6, 126, 5, 3356);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -4525,7 +4525,7 @@ var app = (function () {
     			attr_dev(img, "id", img_id_value = /*d*/ ctx[16].id);
     			if (!src_url_equal(img.src, img_src_value = "/api/poster/" + /*d*/ ctx[16].id + "?do=show")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", img_alt_value = /*d*/ ctx[16].title);
-    			add_location(img, file$6, 129, 7, 3357);
+    			add_location(img, file$6, 129, 7, 3486);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -4568,7 +4568,7 @@ var app = (function () {
     	return block;
     }
 
-    // (117:119)        <p style="display: none;">Loading ...</p>      {:then resp}
+    // (117:119)         <p style="display: none;">Loading ...</p>       {:then resp}
     function create_pending_block$5(ctx) {
     	let p;
     	let t1;
@@ -4579,7 +4579,7 @@ var app = (function () {
     			p.textContent = "Loading ...";
     			t1 = space();
     			set_style(p, "display", "none");
-    			add_location(p, file$6, 117, 6, 2829);
+    			add_location(p, file$6, 117, 6, 2946);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -4596,7 +4596,7 @@ var app = (function () {
     		block,
     		id: create_pending_block$5.name,
     		type: "pending",
-    		source: "(117:119)        <p style=\\\"display: none;\\\">Loading ...</p>      {:then resp}",
+    		source: "(117:119)         <p style=\\\"display: none;\\\">Loading ...</p>       {:then resp}",
     		ctx
     	});
 
@@ -4675,9 +4675,9 @@ var app = (function () {
     			if (if_block1) if_block1.c();
     			attr_dev(div, "id", "content");
     			attr_dev(div, "class", "content svelte-ik8q7s");
-    			add_location(div, file$6, 111, 1, 2549);
+    			add_location(div, file$6, 111, 1, 2660);
     			attr_dev(main, "class", "svelte-ik8q7s");
-    			add_location(main, file$6, 106, 0, 2452);
+    			add_location(main, file$6, 106, 0, 2558);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
