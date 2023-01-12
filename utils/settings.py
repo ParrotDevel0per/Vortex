@@ -16,6 +16,9 @@ default = {
     "saveIPs": "false",
     "logger": "true",
     "forceHTTPS": "false",
+    
+    "gzipPosters": "true",
+    "gzipBanners": "true",
 
     "proxy": "false",
     "proxyAuth": "",

@@ -18,6 +18,7 @@ from utils.common import chunkedDownload, sanitize, get_simple_keys, baseurl
 import os
 from prettytable import PrettyTable
 import time
+import gzip
 
 api = Blueprint('api', __name__)
 
@@ -314,6 +315,8 @@ def sources(id):
 @api.route('/poster/<id>')
 @api.route('/poster/', defaults={'id': None})
 def poster(id):
+    if not os.path.exists(POSTER_FOLDER):
+        os.makedirs(POSTER_FOLDER)
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -331,15 +334,36 @@ def poster(id):
         return redirect(posterURL)
 
     elif do == 'show':
-        if not os.path.exists(POSTER_FOLDER): os.makedirs(POSTER_FOLDER)
-        if f"tt{id}.png" not in os.listdir(POSTER_FOLDER):
+        listed = os.listdir(POSTER_FOLDER)
+
+        if f"tt{id}.png" not in listed and f"tt{id}.png.gz" not in listed:
             p = IMDB().IMDBtoPoster(id)
-            chunkedDownload(p if p else f"{baseURL}/static/img/nopicture.jpg", os.path.join(POSTER_FOLDER, f"tt{id}.png"))
-        return send_from_directory(POSTER_FOLDER, f"tt{id}.png")
+            chunkedDownload(
+                p if p else f"{baseURL}/static/img/nopicture.jpg",
+                os.path.join(POSTER_FOLDER,f"tt{id}.png")
+            )
+
+            if getSetting("gzipPosters").lower() == "true":
+                with gzip.open(os.path.join(POSTER_FOLDER,f"tt{id}.png.gz"), "wb") as imageGzip:
+                    imageGzip.write(open(os.path.join(POSTER_FOLDER,f"tt{id}.png"), "rb").read())
+                os.remove(os.path.join(POSTER_FOLDER,f"tt{id}.png"))
+            listed = os.listdir(POSTER_FOLDER)
+
+        if f"tt{id}.png" in listed:
+            return send_from_directory(POSTER_FOLDER, f"tt{id}.png")
+
+        if f"tt{id}.png.gz" in listed:
+            return Response(gzip.open(os.path.join(POSTER_FOLDER,f"tt{id}.png.gz"), 'rb').read(), mimetype="image/png")
+        return "Error Occurred"
+ 
+    return "Wrong option"
 
 @api.route('/banner/<id>')
 @api.route('/banner/', defaults={'id': None})
 def banner(id):
+    if not os.path.exists(BANNER_FOLDER):
+        os.makedirs(BANNER_FOLDER)
+
     if not id: return jsonify({
         'status': 'error',
         'message': 'No ID provided'
@@ -355,13 +379,34 @@ def banner(id):
         return redirect(FanartTV().getBanner(f"tt{id}"))
 
     elif do == 'show':
-        if not os.path.exists(BANNER_FOLDER): os.makedirs(BANNER_FOLDER)
-        if f"tt{id}.png" not in os.listdir(BANNER_FOLDER):
-            url = FanartTV().getBanner(f"tt{id}")
-            if "/api/poster/" in url:
-                return redirect(baseurl(request)+url)
-            chunkedDownload(url, os.path.join(BANNER_FOLDER, f"tt{id}.png"))
-        return send_from_directory(BANNER_FOLDER, f"tt{id}.png")
+        listed = os.listdir(BANNER_FOLDER)
+
+        if f"tt{id}.png" not in listed and f"tt{id}.png.gz" not in listed:
+            p = FanartTV().getBanner(f"tt{id}")
+            if not p:
+                return ""
+            if "/api/poster/" in p:
+                return redirect(baseurl(request)+p)
+
+            chunkedDownload(
+                p if p else f"{baseURL}/static/img/nopicture.jpg",
+                os.path.join(BANNER_FOLDER,f"tt{id}.png")
+            )
+
+            if getSetting("gzipBanners").lower() == "true":
+                with gzip.open(os.path.join(BANNER_FOLDER,f"tt{id}.png.gz"), "wb") as imageGzip:
+                    imageGzip.write(open(os.path.join(BANNER_FOLDER,f"tt{id}.png"), "rb").read())
+                os.remove(os.path.join(BANNER_FOLDER,f"tt{id}.png"))
+            listed = os.listdir(POSTER_FOLDER)
+
+
+        if f"tt{id}.png" in listed:
+            return send_from_directory(BANNER_FOLDER, f"tt{id}.png")
+
+        if f"tt{id}.png.gz" in listed:
+            return Response(gzip.open(os.path.join(BANNER_FOLDER,f"tt{id}.png.gz"), 'rb').read(), mimetype="image/png")
+        return "Error Occurred"
+
 
 @api.route('/search/<query>')
 @api.route('/search/', defaults={'query': None})
