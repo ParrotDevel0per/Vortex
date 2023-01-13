@@ -24,11 +24,6 @@ default = {
     "proxyAuth": "",
     "useProxy": "",
 
-    "OpenVPNEnabled": "false",
-    "OpenVPNPath": "",
-    "OpenVPNAuth": "",
-    "OpenVPNCFG": "",
-
     "phpProxyEnabled": "false",
     "phpProxyURL": "",
 

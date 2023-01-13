@@ -3,6 +3,7 @@ import os
 USERDATA = ""
 FOLDERNAME = "Vortex"
 CACHEFOLDERNAME = "cache"
+
 if os.name == 'nt': USERDATA = os.environ['APPDATA']
 else:
     USERDATA = os.environ['HOME']

@@ -24,7 +24,6 @@ import sys
 import time
 from classes.cli import CLI
 from classes.cliscript import CLIScript
-from classes.openvpn import OpenVPN
 from classes.plugin import Plugin
 
 for folder in os.listdir(os.path.join(os.path.dirname(__file__), "addons")):
@@ -155,18 +154,15 @@ def cli():
 
 
 if __name__ == "__main__":
-    if getSetting("OpenVPNEnabled").lower() == "true":
-        try: OpenVPN().connect()
-        except Exception as e:
-            print(e)
-            time.sleep(3)
-
     if len(getAdmins()) == 0:
         CLI().user("create", "admin", "admin", "admin@tpp.com", "true");
 
     if os.path.exists("autoexec.tpps"):
         CLIScript("autoexec.tpps").run()
 
+
+    ip = str(getSetting("ip"))
+    port = int(getSetting("port"))
 
     cls()
     intro()
@@ -182,6 +178,12 @@ if __name__ == "__main__":
     if "--sveltedebug" in sysArgv:
         os.system("npm run dev")
 
+    if "--host" in sysArgv:
+        ip = sysArgv[sysArgv.index("--host") + 1]
+
+    if "--port" in sysArgv:
+        port = int(sysArgv[sysArgv.index("--port") + 1])
+
     threading.Thread(target=sendFirstRequest).start()
-    app.run(host=str(getSetting("ip")), port=int(getSetting("port")), debug="--debug" in sysArgv)
+    app.run(host=ip, port=port, debug="--debug" in sysArgv)
 
