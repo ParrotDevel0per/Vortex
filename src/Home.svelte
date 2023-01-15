@@ -7,6 +7,7 @@
 	export let id;
 	export let showFt;
 
+
 	var homeItem = [];
 	if (showG == "true") {
 		axios({

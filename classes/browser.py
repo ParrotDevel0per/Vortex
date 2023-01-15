@@ -1,6 +1,6 @@
 class Firefox:
     def __init__(self) -> None:
-        self.ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0"
+        self.ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"
         self.version = self.ua.split("Firefox/")[1]
         self.headers = {
             "User-Agent": self.ua,

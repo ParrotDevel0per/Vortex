@@ -10,7 +10,6 @@ UD = UserData()
 
 genres = [
     "Favorites",
-    "Playlist",
     "Action",
     "Adventure",
     "Animation",

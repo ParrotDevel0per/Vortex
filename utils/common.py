@@ -117,3 +117,38 @@ def base64encode(data):
 
 def base64decode(data):
     return base64.b64decode(data.encode()).decode()
+
+def cleanse_html(html):
+    for match in re.finditer('<!--(.*?)-->', html, re.DOTALL):
+        if match.group(1)[-2:] != '//':
+            html = html.replace(match.group(0), '')
+
+    html = re.sub(r'''<(div|span)[^>]+style=["'](visibility:\s*hidden|display:\s*none);?["']>.*?</\\1>''', '', html, re.I | re.DOTALL)
+    return html
+
+def get_hidden(html, form_id=None, index=None, include_submit=True):
+    hidden = {}
+    if form_id:
+        pattern = r'''<form [^>]*(?:id|name)\s*=\s*['"]?%s['"]?[^>]*>(.*?)</form>''' % (form_id)
+    else:
+        pattern = '''<form[^>]*>(.*?)</form>'''
+
+    html = cleanse_html(html)
+
+    for i, form in enumerate(re.finditer(pattern, html, re.DOTALL | re.I)):
+        if index is None or i == index:
+            for field in re.finditer('''<input [^>]*type=['"]?hidden['"]?[^>]*>''', form.group(1)):
+                match = re.search(r'''name\s*=\s*['"]([^'"]+)''', field.group(0))
+                match1 = re.search(r'''value\s*=\s*['"]([^'"]*)''', field.group(0))
+                if match and match1:
+                    hidden[match.group(1)] = match1.group(1)
+
+            if include_submit:
+                match = re.search('''<input [^>]*type=['"]?submit['"]?[^>]*>''', form.group(1))
+                if match:
+                    name = re.search(r'''name\s*=\s*['"]([^'"]+)''', match.group(0))
+                    value = re.search(r'''value\s*=\s*['"]([^'"]*)''', match.group(0))
+                    if name and value:
+                        hidden[name.group(1)] = value.group(1)
+
+    return hidden

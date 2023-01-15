@@ -389,7 +389,7 @@ def banner(id):
                 return redirect(baseurl(request)+p)
 
             chunkedDownload(
-                p if p else f"{baseURL}/static/img/nopicture.jpg",
+                p if p else f"{baseurl(request)}/static/img/nopicture.jpg",
                 os.path.join(BANNER_FOLDER,f"tt{id}.png")
             )
 
@@ -556,7 +556,9 @@ def getMoviesByGenres():
 
 @api.route('/proxy/<path:url>')
 def proxy(url):
-    if url.startswith("base64:"): url = base64.b64decode(url[7:]).decode("utf-8")
+    if url.startswith("base64:"):
+        url = base64.b64decode(url[7:]).decode("utf-8")
+
     headers = Firefox().headers
     try:
         if request.args.get("headers"): headers.update(json.loads(base64.b64decode(request.args.get("headers")).decode('utf-8')))
@@ -585,7 +587,7 @@ def getMovieInfo(id):
         movie = IMDB().getMovieInfo(id)
         resp = {}
         resp["title"] = movie['title']
-        resp["plot"] = movie['plot'][0]
+        resp["plot"] = movie['plot outline'] if 'plot outline' in movie else movie['plot'][0]
         resp["poster"] = movie["full-size cover url"]
         resp["year"] = movie['year']
         resp["genres"] = ", ".join(movie['genres'][0:3])

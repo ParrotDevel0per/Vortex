@@ -60,10 +60,12 @@
     <div class="content">
         {#key rerender}
             {#each categories as category}
-                <button 
-                    class="{category["enabled"] ? 'enabled' : 'disabled'}"
-                    on:click={()=>{handleClick(category["title"])}}
-                >{ category["title"] }</button>
+                {#if category["title"] != "Playlist"}
+                    <button 
+                        class="{category["enabled"] ? 'enabled' : 'disabled'}"
+                        on:click={()=>{handleClick(category["title"])}}
+                    >{ category["title"] }</button>
+                {/if}
             {/each}
         {/key}
         <button class="default" style="color: blue;" on:click={()=>{categories=defaultC}}>Defaults</button>

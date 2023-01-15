@@ -1,5 +1,5 @@
 from classes.browser import Firefox
-from ..utils.unpacker import unpack
+from utils.unpacker import unpack
 import re
 from classes.net import NET
 
