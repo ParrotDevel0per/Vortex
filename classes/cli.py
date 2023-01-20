@@ -139,6 +139,19 @@ class CLI:
 
         return open(os.path.join(DB_FOLDER, "app.log"), 'r').read() if open(os.path.join(DB_FOLDER, "app.log"), 'r').read() != "" else "Log is empty"
 
+
+    def web(self, *args):
+        """Do http requests"""
+        print("ffs")
+        print(args)
+        data = list(args)
+        print(data)
+        type = data[0]
+        url = data[1]
+        headers = json.loads(data[2])
+        return " ".join()
+
+
     def user(self, *args) -> str:
         """Create, Edit, Remove users"""
 

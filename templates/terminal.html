@@ -36,8 +36,8 @@
     }
 
     .terminal span{
-        display:table-cell; 
-        width:11%;
+        display: table-cell;
+        width: 0px;
     }
 
     .terminal input{
@@ -48,6 +48,7 @@
         color: #c3e88d;
         outline: none;
         font-size: 1em;
+        margin-left: 10px;
     }
     </style>
 </head>
@@ -79,7 +80,13 @@
     
         $('#input').on('keydown', function search(e) {
             if (e.keyCode == 13) {
-                $('#history').append(exec($(this).val()) + '<br/>');
+                if ($(this).val()) {
+                    $('#history').append(`${username}@Vortex$ ${$(this).val()} <br/>`);
+                    $('#history').append($(this).val() + '<br/>');
+                }
+                else {
+                    $('#history').append(`${username}@Vortex$ <br/>`);
+                }
                 $('#input').val('');
             }
         });

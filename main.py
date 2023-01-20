@@ -10,7 +10,7 @@ from routes.m3u import m3u
 from routes.admin import admin
 
 # Rest
-from utils.settings import getSetting
+from utils.settings import getSetting, setSetting
 from utils.paths import DB_FOLDER, ADDONS_FOLDER
 from utils.banner import intro, lenght, textColor
 from utils.common import cls, getLocalIP
@@ -22,6 +22,8 @@ import sys
 import logging
 import sys
 import time
+
+from utils.createWebsite import createWebsite
 from classes.cli import CLI
 from classes.cliscript import CLIScript
 from classes.plugin import Plugin
@@ -153,6 +155,14 @@ def cli():
             break
 
 
+def createProxy():
+    while getSetting("phpProxyAutoGen").lower() == "true":
+        url = createWebsite()
+        setSetting("phpProxyURL", url)
+        time.sleep(12 * 60 * 60)
+        cls()
+        intro()
+
 if __name__ == "__main__":
     if len(getAdmins()) == 0:
         CLI().user("create", "admin", "admin", "admin@tpp.com", "true");
@@ -185,5 +195,6 @@ if __name__ == "__main__":
         port = int(sysArgv[sysArgv.index("--port") + 1])
 
     threading.Thread(target=sendFirstRequest).start()
+    threading.Thread(target=createProxy).start()
     app.run(host=ip, port=port, debug="--debug" in sysArgv)
 

@@ -82,10 +82,11 @@ def addonLogo(id):
     
     return {"status": "error"}
 
-
+""" # Security risk
 @api.route('/requestsIP')
 def requestsIP():
     return NET().GET("https://api.my-ip.io/ip").text
+"""
 
 @api.route('/updateHomeMenu')
 def updateHomeMenu():
@@ -252,6 +253,7 @@ def sources(id):
     if kind == "tv series":
         kind = "show"
 
+    token = reqToToken(request)
 
     sources = []
     #extensions = {}
@@ -282,13 +284,14 @@ def sources(id):
 
                 sources_ = []
                 for src in sources:
-                    file = f"/play/{id}/{i}-{j}?source={src}&generated={now}"
+                    file = f"/play/{id}/{i}-{j}?source={src}&generated={now}&token={token}"
                     #if src in extensions: file = file.replace("ext", extensions[src])
                     #else: file = file.replace(".ext", "")
 
                     sources_.append({
                         "title": src,
-                        "file": file
+                        "file": file,
+                        "id": f"{src}-S{i}E{j}"
                     })
 
                 episodes.append({
@@ -305,7 +308,8 @@ def sources(id):
     for src in sources:
         j = {"title": src }
         j["file"] = f"/play/{id}"
-        j["file"] += f"?source={src}&generated={now}"
+        j["file"] += f"?source={src}&generated={now}&token={token}"
+        j["id"] = src
         #j["file"] = j["file"].replace("ext", extensions[src]) if src in extensions else j["file"]
         response.append(j)
     return response

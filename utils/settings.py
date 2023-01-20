@@ -26,6 +26,7 @@ default = {
 
     "phpProxyEnabled": "false",
     "phpProxyURL": "",
+    "phpProxyAutoGen": "false",
 
     "registerPublic": "true"
 }
