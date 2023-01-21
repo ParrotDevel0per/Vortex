@@ -24,3 +24,15 @@
 {:else}
 <Home id="{ id }" showG="{ showG }" showFt = "{ showFt }"/>
 {/if}
+
+<style>
+:global(html)::-webkit-scrollbar {
+  display: none;
+}
+
+
+:global(html) {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+} 
+</style>

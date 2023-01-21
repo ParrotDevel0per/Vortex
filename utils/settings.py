@@ -11,7 +11,7 @@ default = {
     #"preloader": "1.png",
     "language": "en",
     "debug": "false",
-    "fernetKey": str(Fernet.generate_key()).replace("b'", "").replace("'", ""),
+    "fernetKey": Fernet.generate_key().decode(),
     "keepLogs": "false",
     "saveIPs": "false",
     "logger": "true",
