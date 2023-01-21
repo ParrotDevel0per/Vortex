@@ -14,6 +14,7 @@ from utils.users import deleteUser, reqToUID, userdata, UD, changeValue, deleteU
 from utils.cache import getCachedItem, cacheItem
 from classes.browser import Firefox
 from classes.net import NET
+from utils.addonSettings import setAddonSetting, getAddonSetting
 from utils.common import chunkedDownload, sanitize, get_simple_keys, baseurl
 import os
 from prettytable import PrettyTable
@@ -82,12 +83,6 @@ def addonLogo(id):
     
     return {"status": "error"}
 
-""" # Security risk
-@api.route('/requestsIP')
-def requestsIP():
-    return NET().GET("https://api.my-ip.io/ip").text
-"""
-
 @api.route('/updateHomeMenu')
 def updateHomeMenu():
     new = request.args.get("new")
@@ -98,6 +93,23 @@ def updateHomeMenu():
     changeValue(reqToUID(request), "home", new)
 
     return "Done"
+
+
+@api.route('/addonSettings')
+def addonSettings():
+    id = request.args.get("id")
+    do = request.args.get("do", "").lower()
+    key = request.args.get("key")
+    value = request.args.get("value", "")
+
+    if do == "set":
+        setAddonSetting(id, key, value)
+        return "Done"
+    elif do == "get":
+        return getAddonSetting(id, key)
+    else:
+        return "Invalid key"
+
 
 @api.route('/terminal')
 def terminal():
@@ -569,11 +581,8 @@ def proxy(url):
     except:
         pass
     
-    usePHPProxy = False
-    if request.args.get("usePHPProxy") == "true":
-        usePHPProxy = True
 
-    r = NET().GET(url, headers=headers, stream=True, usePHPProxy=usePHPProxy)
+    r = NET().GET(url, headers=headers, stream=True, usePHPProxy=request.args.get("usePHPProxy") == "true", useProxy=request.args.get("useProxy"))
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'] if 'Content-Type' in r.headers else "")
 
 @api.route('/getMovieInfo/<id>')

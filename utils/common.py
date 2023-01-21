@@ -23,17 +23,14 @@ def insertInMiddle(string, item):
     midPoint = len(string)//2
     return string[:midPoint] + item + string[midPoint:]
 
-def girc(page_data, url, co, useNET=False):
+def girc(page_data, url, co, useProxy=False, usePHPProxy=False):
     """
     Code adapted from https://github.com/vb6rocod/utils/
     Copyright (C) 2019 vb6rocod
     and https://github.com/addon-lab/addon-lab_resolver_Project
     Copyright (C) 2021 ADDON-LAB, KAR10S
     """
-    if useNET:
-        net = NET()
-    else:
-        net = requests.Session()
+    net = NET()
     hdrs = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0",
             'Referer': url}
     rurl = 'https://www.google.com/recaptcha/api.js'
@@ -42,7 +39,7 @@ def girc(page_data, url, co, useNET=False):
     if key:
         key = key.group(1)
         rurl = '{0}?render={1}'.format(rurl, key)
-        page_data1 = net.get(rurl, headers=hdrs).text
+        page_data1 = net.get(rurl, headers=hdrs, useProxy=useProxy, usePHPProxy=usePHPProxy).text
         v = re.findall('releases/([^/]+)', page_data1)[0]
         rdata = {'ar': 1,
                  'k': key,
@@ -51,7 +48,7 @@ def girc(page_data, url, co, useNET=False):
                  'v': v,
                  'size': 'invisible',
                  'cb': '123456789'}
-        page_data2 = net.get('{0}/anchor?{1}'.format(aurl, urlencode(rdata)), headers=hdrs).text
+        page_data2 = net.get('{0}/anchor?{1}'.format(aurl, urlencode(rdata)), headers=hdrs, useProxy=useProxy, usePHPProxy=usePHPProxy).text
         rtoken = re.search('recaptcha-token.+?="([^"]+)', page_data2)
         if rtoken:
             rtoken = rtoken.group(1)
@@ -64,7 +61,7 @@ def girc(page_data, url, co, useNET=False):
                  'sa': '',
                  'co': co}
         hdrs.update({'Referer': aurl})
-        page_data3 = net.post('{0}/reload?k={1}'.format(aurl, key), data=pdata, headers=hdrs).text
+        page_data3 = net.post('{0}/reload?k={1}'.format(aurl, key), data=pdata, headers=hdrs, useProxy=useProxy, usePHPProxy=usePHPProxy).text
         gtoken = re.search('rresp","([^"]+)', page_data3)
         if gtoken:
             return gtoken.group(1)

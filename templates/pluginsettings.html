@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
+    <title>Addon Settings</title>
+</head>
+<style>
+    body {
+        background-color: black;
+        height: 100vh;
+        width: 100vw;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+
+    #setting p {
+        display: inline;
+        color: white;
+    }
+
+    #setting input {
+        border: 0px;
+        background-color: black;
+        border-bottom: 2px solid white;
+        color: white;
+        margin-left: 5px;
+    }
+
+    #setting input:focus {
+        outline: 0;
+    }
+
+    #setting button {
+        border: 2px solid white;
+        background-color: black;
+        color: white;
+    }
+
+    #setting button:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
+</style>
+<body>
+    {%for setting in settings%}
+    <div id="setting">
+        <p>{{ setting.key }}:</p>
+        <input id="{{ setting.inputID }}" type="text" value="{{ setting.value }}">
+        <button onclick="update('{{ setting.key }}', '{{ setting.inputID }}')">Update</button>
+    </div>
+    {% endfor %}
+</body>
+<script>
+    const update = (key, input) => {
+        const value = document.getElementById(input).value;
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("GET", `/api/addonSettings?do=set&id={{ id }}&key=${key}&value=${value}`, true);
+        xhttp.send();
+    }
+</script>
+</html>

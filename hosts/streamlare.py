@@ -7,10 +7,10 @@ class StreamLare:
     def __init__(self):
         self.firefox = Firefox()
 
-    def get_redirect_url(self, url, headers={}, form_data=None):
-        return NET().GET(url, headers=headers, allow_redirects=False).headers.get('location') or url
+    def get_redirect_url(self, url, headers={}, form_data=None, useProxy=False, usePHPProxy=False):
+        return NET().GET(url, headers=headers, allow_redirects=False, usePHPProxy=usePHPProxy, useProxy=useProxy).headers.get('location') or url
 
-    def grab(self, url):
+    def grab(self, url, useProxy=False, usePHPProxy=False):
         parsed = urlparse(url)
         host = parsed.netloc
         media_id = parsed.path.replace("/e/", "").replace("/d/", "")
@@ -21,17 +21,17 @@ class StreamLare:
                 'Referer': url,
                 'X-Requested-With': 'XMLHttpRequest'}
         data = {'id': media_id}
-        html = NET().POST(api_surl, headers=headers, data=data).json()
+        html = NET().POST(api_surl, headers=headers, data=data, usePHPProxy=usePHPProxy, useProxy=useProxy).json()
         result = html.get('result', {})
         source = result.get('file') \
             or result.get('Original', {}).get('file') \
             or result.get(list(result.keys())[0], {}).get('file')
         if not source:
-            html = NET().POST(api_durl, headers=headers, data=data).text
+            html = NET().POST(api_durl, headers=headers, data=data, usePHPProxy=usePHPProxy, useProxy=useProxy).text
             source = json.loads(html).get('result', {}).get('Original', {}).get('url')
         
         if source:
             headers.pop('X-Requested-With')
             if '?token=' in source:
-                source = self.get_redirect_url(source, headers=headers)
+                source = self.get_redirect_url(source, headers=headers, useProxy=useProxy, usePHPProxy=usePHPProxy)
             return source, headers

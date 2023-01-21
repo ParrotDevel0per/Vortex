@@ -20,7 +20,6 @@ default = {
     "gzipPosters": "true",
     "gzipBanners": "true",
 
-    "proxy": "false",
     "proxyAuth": "",
     "useProxy": "",
 
@@ -28,7 +27,9 @@ default = {
     "phpProxyURL": "",
     "phpProxyAutoGen": "false",
 
-    "registerPublic": "true"
+    "registerPublic": "true",
+
+    "proxyExceptions": "",
 }
 
 # https://stackoverflow.com/questions/34327719/get-keys-from-json-in-python

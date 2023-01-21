@@ -96,7 +96,9 @@ def verifyRequest():
         "api.deleteUser_",
         "api.changePassword_",
         "api.requestsIP",
-        "www.p"
+        "api.addonSettings",
+        "www.p",
+        "www.ps"
     ]
 
     if getSetting("registerPublic").lower() == "true":
@@ -195,6 +197,6 @@ if __name__ == "__main__":
         port = int(sysArgv[sysArgv.index("--port") + 1])
 
     threading.Thread(target=sendFirstRequest).start()
-    threading.Thread(target=createProxy).start()
+    #threading.Thread(target=createProxy).start()
     app.run(host=ip, port=port, debug="--debug" in sysArgv)
 

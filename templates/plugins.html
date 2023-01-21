@@ -60,6 +60,9 @@
                   <p>by {{ plugin.author }}</p>
                   <p>Adds Resolver: {{ plugin.addsResolver }}</p>
                   <p>Adds Extra CSS: {{ plugin.addsCSS }}</p>
+                  {%if plugin.settings %}
+                  <a href="/ps?id={{ plugin.id }}">Settings</a>
+                  {% endif %}
                 </div>
             </div>
         </div>
