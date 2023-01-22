@@ -20,8 +20,8 @@ default = {
     "gzipPosters": "true",
     "gzipBanners": "true",
 
+    "proxy": "",
     "proxyAuth": "",
-    "useProxy": "",
 
     "phpProxyEnabled": "false",
     "phpProxyURL": "",
