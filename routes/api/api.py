@@ -582,7 +582,7 @@ def proxy(url):
         pass
     
 
-    r = NET().GET(url, headers=headers, stream=True, usePHPProxy=request.args.get("usePHPProxy") == "true", useProxy=request.args.get("useProxy"))
+    r = NET().GET(url, headers=headers, stream=True, usePHPProxy=request.args.get("usePHPProxy").lower() == "true", useProxy=request.args.get("useProxy").lower() == "true")
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'] if 'Content-Type' in r.headers else "")
 
 @api.route('/getMovieInfo/<id>')
