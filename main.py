@@ -89,6 +89,7 @@ def verifyRequest():
     admin = [ # These endpoints require admin rights
         "admin.index",
         "admin.terminal",
+        "admin.log",
         "api.terminal",
         "api.users",
         "api.promoteDemote",
