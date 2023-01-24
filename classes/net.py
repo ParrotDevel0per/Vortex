@@ -4,10 +4,12 @@ import json
 from classes.proxy import Proxy
 from utils.settings import getSetting
 from utils.users import LAH
+from requests.adapters import HTTPAdapter, Retry
 
 request_settings = {
-    "timeout": 30,
-    "verify": True
+    "timeout": 120,
+    "verify": True,
+    "max-retries": 10
 }
 
 class NET:
@@ -28,7 +30,12 @@ class NET:
         if useProxy == False:
             proxies = {}
 
-        return requests.get(
+        s = requests.Session()
+        retries = Retry(total=request_settings["max-retries"], backoff_factor=1, status_forcelist=[ 502, 503, 504 ])
+        s.mount('http://', HTTPAdapter(max_retries=retries))
+        s.mount('https://', HTTPAdapter(max_retries=retries))
+
+        return s.get(
             url,
             headers=headers,
             allow_redirects=allow_redirects,
@@ -54,8 +61,13 @@ class NET:
         if useProxy == False:
             proxies = {}
 
+        s = requests.Session()
+        retries = Retry(total=request_settings["max-retries"], backoff_factor=1, status_forcelist=[ 502, 503, 504 ])
+        s.mount('http://', HTTPAdapter(max_retries=retries))
+        s.mount('https://', HTTPAdapter(max_retries=retries))
 
-        return requests.post(
+
+        return s.post(
             url,
             headers=headers,
             data=data,

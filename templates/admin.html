@@ -4,128 +4,57 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vortex | Users</title>
-    <link rel="stylesheet" href="/static/css/admin.css">
+    <title>Vortex | Admin</title>
+    <style>
+        html {
+            background-color: black;
+        }
+
+        .content {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            height: 50%;
+            width: 30%;
+        }
+
+        .btn {
+            display: block;
+            width: 98%;
+            margin-left: 1%;
+            margin-right: 1%;
+            margin-bottom: 12px;
+            background-color: black;
+            color: white;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            border-radius: 10px;
+            border: 3px solid black;
+            -webkit-box-shadow: 3px 3px 5px 0px rgba(255,0,0,1);
+            -moz-box-shadow: 3px 3px 5px 0px rgba(255,0,0,1);
+            box-shadow: 3px 3px 5px 0px rgba(255,0,0,1);
+        }
+
+        .btn:hover {
+            border-left: 3px solid red;
+            cursor: pointer;
+            background-color: rgb(19, 18, 18);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <table id="table">
-            <thead id="thead">
-                <tr>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>IP</th>
-                    <th>Admin</th>
-                    <th>Banned</th>
-                    <th>Promote / Demote</th>
-                    <th>Ban / Unban</th>
-                    <th>Reset Reset Password</th>
-                    <th>Delete Account</th>
-                </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-        </table>
-
-        <button id="createAccountAsk" onclick="createAccount()">Create Account</button>
-        <button onclick="redirect('/p')">Open addon manager</button>
-        <!--<button onclick="redirect('/admin/terminal')">Open Web Terminal</button>-->
-        <button onclick="redirect('/admin/log')">Log</button>
+    <div class="content">
+        <button onclick="redirect('/admin/addons')" class="btn">Addons</button>
+        <button onclick="redirect('/admin/users')" class="btn">Users</button>
+        <button onclick="redirect('/admin/terminal')" class="btn">Terminal</button>
+        <button onclick="redirect('/admin/log')" class="btn">Log</button>
     </div>
 </body>
 <script>
-    let thead = document.getElementById("thead");
-    let tbody = document.getElementById("tbody");
-
     const redirect = (url) => {
         location = url
-    }
-
-    const clearTR = () => {
-        while (tbody.firstChild) {
-            tbody.removeChild(tbody.firstChild);
-        }
-    }
-
-    setInterval(() => {
-        xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/users", true);
-        xhr.onreadystatechange = function() { 
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                let data = JSON.parse(xhr.responseText);
-                clearTR();
-                for (key in data) {
-                    tr = document.createElement("tr");
-                    const uid = data[key]["UID"];
-                    let em = data[key]["email"];
-                    if (!em) em = "-"
-
-                    tr.innerHTML = `
-                    <td>${data[key]["username"]}</td>
-                    <td>${em}</td>
-                    <td>${data[key]["ip"]}</td>
-                    <td>${data[key]["isAdmin"] == true}</td>
-                    <td>${data[key]["isBanned"] == true}</td>
-                    <td><button onclick="sendRequest('/api/promoteDemote/${uid}')">Promote / Demote</button></td>
-                    <td><button onclick="sendRequest('/api/banUnban/${uid}')">Ban / Unban</button></td>
-                    <td><button onclick="resetPassword('${uid}')">Reset Password</button></td>
-                    <td><button onclick="sendRequest('/api/deleteUser/${uid}')">Delete Account</button></td>`;
-
-                    tbody.appendChild(tr);
-                }
-            }
-        }
-        xhr.send();
-    }, 1500);
-
-
-    const deleteAccount = (username) => {
-        xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/deleteUser/" + username, true);
-        xhr.onreadystatechange = function() { 
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                alert("Successfully deleted account");
-                window.location.reload();
-            }
-        }
-        xhr.send();
-    }
-
-    const createAccount = () => {
-        //let loc = window.location;
-        //let base = loc.split("/admin")[0]
-        Window = window.open("/create", "create", "width=500, height=600");
-
-    }
-
-    const sendRequest = (url) => {
-        xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.onreadystatechange = function() { 
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                alert("Successfully set request");
-                window.location.reload();
-            }
-        }
-        xhr.send();
-    }
-
-    // Credits: https://stackoverflow.com/questions/1497481/javascript-password-generator
-    function generatePassword() {
-        var length = 12,
-            charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-            retVal = "";
-        for (var i = 0, n = charset.length; i < length; ++i) {
-            retVal += charset.charAt(Math.floor(Math.random() * n));
-        }
-        return retVal;
-    }
-
-    const resetPassword = (uid) => {
-        let text;
-        let pssw = prompt("Enter new password:", generatePassword());
-        if (pssw == null || pssw == "") { return; }
-
-        sendRequest(`/api/changePassword/${uid}/${pssw}`);
     }
 </script>
 </html>

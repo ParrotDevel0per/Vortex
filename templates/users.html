@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex | Users</title>
+    <link rel="stylesheet" href="/static/css/users.css">
+</head>
+<body>
+    <div class="container">
+        <table id="table">
+            <thead id="thead">
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>IP</th>
+                    <th>Admin</th>
+                    <th>Banned</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+
+        <button id="createAccountAsk" onclick="createAccount()">Create Account</button>
+    </div>
+    <div class="options" id="options" style="display: none;">
+        <div class="opts" id="opts"></div>
+    </div>
+</body>
+<script>
+    let thead = document.getElementById("thead");
+    let tbody = document.getElementById("tbody");
+
+    const clearTR = () => {
+        while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+        }
+    }
+
+    setInterval(() => {
+        xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/users", true);
+        xhr.onreadystatechange = function() { 
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                let data = JSON.parse(xhr.responseText);
+                clearTR();
+                for (key in data) {
+                    tr = document.createElement("tr");
+                    const uid = data[key]["UID"];
+                    let em = data[key]["email"];
+                    if (!em) em = "-"
+
+                    tr.innerHTML = `
+                    <td>${data[key]["username"]}</td>
+                    <td>${em}</td>
+                    <td>${data[key]["ip"]}</td>
+                    <td>${data[key]["isAdmin"] == true}</td>
+                    <td>${data[key]["isBanned"] == true}</td>
+                    <td><button onclick="options('${data[key]["username"]}', '${uid}')">Options</button></td>`;
+
+                    tbody.appendChild(tr);
+                }
+            }
+        }
+        xhr.send();
+    }, 1500);
+
+
+    const options = (username, uid) => {
+        const div = document.getElementById("options");
+        const opts = document.getElementById("opts");
+
+        opts.innerHTML = `<h1>Options for: <strong>${username}</strong></h1><button onclick="sendRequest('/api/promoteDemote/${uid}')">Promote / Demote</button>
+        <button onclick="sendRequest('/api/banUnban/${uid}')">Ban / Unban</button>
+        <button onclick="resetPassword('${uid}')">Reset Password</button>
+        <button onclick="sendRequest('/api/deleteUser/')">Delete Account</button>
+        <button class="optsclose" onclick="closeOptions()">Close Popup</button>`;
+        div.style.display = "block";
+    }
+
+    const closeOptions = () => {
+        const div = document.getElementById("options");
+        const opts = document.getElementById("opts");
+
+        div.style.display = "none";
+        div.opts = "";
+    }
+
+    const deleteAccount = (username) => {
+        xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/deleteUser/" + username, true);
+        xhr.onreadystatechange = function() { 
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                alert("Successfully deleted account");
+                window.location.reload();
+            }
+        }
+        xhr.send();
+    }
+
+    const createAccount = () => {
+        //let loc = window.location;
+        //let base = loc.split("/admin")[0]
+        Window = window.open("/create", "create", "width=500, height=600");
+
+    }
+
+    const sendRequest = (url) => {
+        xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function() { 
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                alert("Successfully set request");
+                window.location.reload();
+            }
+        }
+        xhr.send();
+    }
+
+    // Credits: https://stackoverflow.com/questions/1497481/javascript-password-generator
+    function generatePassword() {
+        var length = 12,
+            charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            retVal = "";
+        for (var i = 0, n = charset.length; i < length; ++i) {
+            retVal += charset.charAt(Math.floor(Math.random() * n));
+        }
+        return retVal;
+    }
+
+    const resetPassword = (uid) => {
+        let text;
+        let pssw = prompt("Enter new password:", generatePassword());
+        if (pssw == null || pssw == "") { return; }
+
+        sendRequest(`/api/changePassword/${uid}/${pssw}`);
+    }
+</script>
+</html>

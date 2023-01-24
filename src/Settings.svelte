@@ -52,12 +52,23 @@
             });  
         }
     }
+
+    const openclose = (id, o="block") => {
+        const item = document.getElementById(id);
+        if (item.style.display == "none") {
+            item.style.display = o
+        } else {
+            item.style.display = "none"
+        }
+    }
 </script>
 
 <main>
 	<Nav active="home" scrollEffect="false"/>
     <br style="font-size: 100px;" />
     <div class="content">
+        <button on:click={()=>{openclose("homeSettings", "flex")}}>Home Settings</button>
+        <div id="homeSettings" style="display: none;">
         {#key rerender}
             {#each categories as category}
                 {#if category["title"] != "Playlist"}
@@ -69,6 +80,7 @@
             {/each}
         {/key}
         <button class="default" style="color: blue;" on:click={()=>{categories=defaultC}}>Defaults</button>
+        </div>
     </div>
 </main>
 
@@ -94,6 +106,16 @@
         align-items:center;
         width: 100vw;
     }
+
+    #homeSettings {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        padding-top: 0px;
+    }
     
     .enabled {
         border: 2px solid blue;
@@ -102,6 +124,7 @@
 
     button {
         width: 50%;
+        display: block;
         height: 6vh;
         background-color: black;
         border: 3px solid black;

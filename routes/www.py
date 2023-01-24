@@ -1,9 +1,7 @@
 from flask import Blueprint, request, render_template, send_from_directory, url_for
 from utils.paths import DB_FOLDER
-from classes.plugin import Plugin
 from classes.net import NET
 from urllib.parse import quote
-from utils.common import randStr
 import os
 import json
 
@@ -91,31 +89,9 @@ def watch(id):
     if request.args.get('kind'): sourcesURL += f"?kind={request.args.get('kind')}"
     if request.args.get('source'): sourcesURL += f"&source={request.args.get('source')}"
     sources = NET().localGET(request, sourcesURL).json()
-    return render_template('play.html', id=id, sources=json.dumps(sources), sourcesURL=sourcesURL)
+    return render_template('play.html', id=id, sources=json.dumps(sources), sourcesURL=sourcesURL, version=open("VERSION", "r").read())
 
 
-@www.route("/p")
-def p(): # Plugins
-    return render_template("plugins.html", plugins=Plugin().plugins)
-
-@www.route("/ps")
-def ps(): # Plugin Settings
-    id = request.args.get('id')
-    if not id:
-        return "No ID"
-    settings = {}
-    for plugin in Plugin().plugins:
-        if plugin["id"] == id:
-            settings = plugin["settings"]
-
-    settings_ = []
-    for setting in settings:
-        settings_.append({
-            "key": setting,
-            "value": NET().localGET(request, f"/api/addonSettings?do=get&id={id}&key={setting}").text,
-            "inputID": randStr()
-        })
-    return render_template("pluginsettings.html", settings=settings_, id=id)
 
 @www.route('/static/<path:path>')
 def send_static(path):

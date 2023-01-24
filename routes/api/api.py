@@ -20,6 +20,8 @@ import os
 from prettytable import PrettyTable
 import time
 import gzip
+import io
+import urllib
 
 api = Blueprint('api', __name__)
 
@@ -241,12 +243,71 @@ def resolve(id):
     if request.args.get("source") in sources: use = request.args.get("source")
 
     episode = str(request.args.get("episode") or "")
-    baseURL = baseurl(request)
 
     return jsonify({
         "id": id,
         "url": plugin.resolvers[use]["run"](id, episode=episode or None).replace("[[token]]", reqToToken(request))
     })
+
+
+@api.route("/subtitles/<id>")
+def subtitles(id):
+    if id.startswith("tt"): id = id[2:]
+
+    cached = getCachedItem(f"Subtitles-{id}.json", "SubtitlesData")
+    if cached == None:
+        browser = Firefox()
+        browser.addHeader("X-User-Agent", "trailers.to-UA")
+        data = NET().GET(f"https://rest.opensubtitles.org/search/imdbid-{id}", headers=browser.headers, usePHPProxy=False, useProxy=False).json()
+        type = data[0]["MovieKind"]
+        results = {}
+
+        if type == "movie":
+            d = []
+            grabbed = []
+            for sub in data:
+                if sub["LanguageName"] in grabbed:
+                    continue
+                d.append({
+                    "lang": sub["LanguageName"],
+                    "url": sub["SubDownloadLink"]
+                })
+                grabbed.append(sub["LanguageName"])
+            results = {
+                "results": d
+            }
+
+        else:
+            for sub in data:
+                if sub["SeriesSeason"] not in results:
+                    results[sub["SeriesSeason"]] = {}
+                
+                if sub["SeriesEpisode"] not in results[sub["SeriesSeason"]]:
+                    results[sub["SeriesSeason"]][sub["SeriesEpisode"]] = {}
+
+                if sub["LanguageName"] not in results[sub["SeriesSeason"]][sub["SeriesEpisode"]]:
+                    results[sub["SeriesSeason"]][sub["SeriesEpisode"]][sub["LanguageName"]] = sub["SubDownloadLink"]
+
+            results = {
+                "results": results
+            }
+        
+        cacheItem(f"Subtitles-{id}.json", "SubtitlesData", json.dumps(results))
+
+
+    return jsonify({
+        "id": "tt"+id,
+        "results": json.loads(getCachedItem(f"Subtitles-{id}.json", "SubtitlesData"))["results"]
+    })
+
+@api.route("/ungzip.<ext>")
+def ungzip(ext):
+    url = request.args.get("url")
+    response = urllib.request.urlopen(url)
+    compressed_file = io.BytesIO(response.read())
+    decompressed_file = gzip.GzipFile(fileobj=compressed_file)
+    return decompressed_file.read()
+
 
 @api.route('/sources/<id>')
 @api.route('/sources/', defaults={'id': None})
@@ -280,6 +341,8 @@ def sources(id):
     
     sources.insert(0, sources.pop(sources.index(default)))
     now = str(time.time()).split(".")[0]
+
+    #subtitles = NET().localGET(request, f"/api/subtitles/{id}").json()["results"]
 
     response = []
 
@@ -317,11 +380,17 @@ def sources(id):
             })
         return response
 
+    #s = ""
+    #for lang in subtitles:
+    #    s += f"[{lang['lang']}]/api/ungzip.srt?url={lang['url']}&generated={int(time.time())},"
+    #s = s[:-1]
+
     for src in sources:
         j = {"title": src }
         j["file"] = f"/play/{id}"
         j["file"] += f"?source={src}&generated={now}&token={token}"
         j["id"] = src
+        #j["subtitle"] = s
         #j["file"] = j["file"].replace("ext", extensions[src]) if src in extensions else j["file"]
         response.append(j)
     return response
@@ -582,7 +651,7 @@ def proxy(url):
         pass
     
 
-    r = NET().GET(url, headers=headers, stream=True, usePHPProxy=request.args.get("usePHPProxy").lower() == "true", useProxy=request.args.get("useProxy").lower() == "true")
+    r = NET().GET(url, headers=headers, stream=True, usePHPProxy=request.args.get("usePHPProxy", "").lower() == "true", useProxy=request.args.get("useProxy", "").lower() == "true")
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'] if 'Content-Type' in r.headers else "")
 
 @api.route('/getMovieInfo/<id>')
