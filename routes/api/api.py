@@ -378,7 +378,7 @@ def sources(id):
                 "title": f"Season {i}",
                 "folder": episodes
             })
-        return response
+        return jsonify(response)
 
     #s = ""
     #for lang in subtitles:
@@ -393,7 +393,7 @@ def sources(id):
         #j["subtitle"] = s
         #j["file"] = j["file"].replace("ext", extensions[src]) if src in extensions else j["file"]
         response.append(j)
-    return response
+    return jsonify(response)
 
 
 
