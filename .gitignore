@@ -15,6 +15,7 @@ venv
 openvpn/auth/*
 openvpn
 addons/*
+geckodriver.log
 
 !addons/ExamplePlugin/*
 !addons/vidsrc/*

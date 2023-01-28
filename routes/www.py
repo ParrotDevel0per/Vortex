@@ -91,7 +91,33 @@ def watch(id):
     sources = NET().localGET(request, sourcesURL).json()
     return render_template('play.html', id=id, sources=json.dumps(sources), sourcesURL=sourcesURL, version=open("VERSION", "r").read())
 
+@www.route("/recaptcha/solve")
+def solve():
+    sitekey = request.args.get("sitekey")
+    if not sitekey:
+        return ""
+    return """<html>
+  <head>
+    <title>Fuck reCaptcha</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  </head>
+  <body>
+    <form action="/recaptcha/solved?sitekey={sitekey}" method="POST">
+      <div class="g-recaptcha" data-sitekey="{sitekey}"></div>
+      <br/>
+      <input id="submit" type="submit" value="Submit">
+    </form>
+  </body>
+</html>
+""".replace("{sitekey}", sitekey)
 
+@www.route("/recaptcha/solved", methods=["POST", "GET"])
+def solved():
+    global DB
+    if request.method == "GET":
+        return "Only POST requests"
+
+    return request.form["g-recaptcha-response"]
 
 @www.route('/static/<path:path>')
 def send_static(path):

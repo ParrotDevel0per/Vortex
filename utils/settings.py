@@ -75,4 +75,11 @@ def setSetting(key, value):
         return "Invalid key"
 
 
-
+def createSetting(key):
+    if key in settingsKeys:
+        return "Key already exists"
+    with open(SETTINGSFILE, 'r') as f:
+        settings = json.load(f)
+        settings[key] = ""
+        open(SETTINGSFILE, 'w').write(json.dumps(settings))
+        return f"{key} was created"

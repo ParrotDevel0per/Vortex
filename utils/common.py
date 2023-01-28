@@ -23,7 +23,7 @@ def insertInMiddle(string, item):
     midPoint = len(string)//2
     return string[:midPoint] + item + string[midPoint:]
 
-def girc(page_data, url, co, useProxy=False, usePHPProxy=False):
+def girc(page_data, url, co, key="", useProxy=False, usePHPProxy=False):
     """
     Code adapted from https://github.com/vb6rocod/utils/
     Copyright (C) 2019 vb6rocod
@@ -35,9 +35,11 @@ def girc(page_data, url, co, useProxy=False, usePHPProxy=False):
             'Referer': url}
     rurl = 'https://www.google.com/recaptcha/api.js'
     aurl = 'https://www.google.com/recaptcha/api2'
-    key = re.search(r'(?:src="{0}\?.*?render|data-sitekey)="?([^"]+)'.format(rurl), page_data)
+    if not key:
+        key = re.search(r'(?:src="{0}\?.*?render|data-sitekey)="?([^"]+)'.format(rurl), page_data)
     if key:
-        key = key.group(1)
+        if type(key) != str:
+            key = key.group(1)
         rurl = '{0}?render={1}'.format(rurl, key)
         page_data1 = net.get(rurl, headers=hdrs, useProxy=useProxy, usePHPProxy=usePHPProxy).text
         v = re.findall('releases/([^/]+)', page_data1)[0]

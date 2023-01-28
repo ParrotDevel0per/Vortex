@@ -16,7 +16,7 @@ class NET:
     def __init__(self) -> None:
         self.phpProxyURL = getSetting("phpProxyURL")
         
-    def GET(self, url, headers={}, allow_redirects=True, stream=False, usePHPProxy=False, useProxy=False):
+    def GET(self, url, headers={}, cookies={}, allow_redirects=True, stream=False, usePHPProxy=False, useProxy=False):
         if usePHPProxy:
             if allow_redirects:
                 headers["X-PHPProxy-AllowRedirects"] = "true"
@@ -41,11 +41,12 @@ class NET:
             allow_redirects=allow_redirects,
             verify=request_settings["verify"],
             timeout=request_settings["timeout"],
+            cookies=cookies,
             proxies=proxies,
             stream=stream
         )
 
-    def POST(self, url, headers={}, data=None, allow_redirects=True, usePHPProxy=False, useProxy=False):
+    def POST(self, url, headers={}, cookies={}, data=None, allow_redirects=True, usePHPProxy=False, useProxy=False):
         if usePHPProxy:
             settingHeaders = {}
             if allow_redirects:
@@ -74,7 +75,8 @@ class NET:
             allow_redirects=allow_redirects,
             verify=request_settings["verify"],
             timeout=request_settings["timeout"],
-            proxies=proxies
+            proxies=proxies,
+            cookies=cookies,
         )
 
     def get(self, url, headers={}, allow_redirects=True, stream=False, useProxy=False, usePHPProxy=False):
