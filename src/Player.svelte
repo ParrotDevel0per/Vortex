@@ -1,7 +1,6 @@
 <script>
     import Nav from './Nav.svelte';
 	import axios from 'axios';
-    import { each } from 'svelte/internal';
 	let source;
 	let season;
 	let episode;
