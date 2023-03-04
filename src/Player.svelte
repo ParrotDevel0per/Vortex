@@ -57,7 +57,7 @@
 </script>
 
 <main>
-	<Nav active="home"/>
+	<Nav/>
 	<div id="content" class="content">
 		{#key rerender}
 			<select name="Source" id="selectSource" bind:value={source} on:change={()=>changeSource()}>
