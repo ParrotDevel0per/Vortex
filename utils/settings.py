@@ -22,11 +22,6 @@ default = {
 
     "proxy": "",
     "proxyAuth": "",
-
-    "phpProxyEnabled": "false",
-    "phpProxyURL": "",
-    "phpProxyAutoGen": "false",
-
     "registerPublic": "true",
 
     "proxyExceptions": "",

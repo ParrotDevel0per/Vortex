@@ -1,4 +1,3 @@
-from cryptography.fernet import Fernet
 from utils.paths import DB_FOLDER
 import os
 import json

@@ -14,18 +14,9 @@ request_settings = {
 
 class NET:
     def __init__(self) -> None:
-        self.phpProxyURL = getSetting("phpProxyURL")
+        pass
         
-    def GET(self, url, headers={}, cookies={}, allow_redirects=True, stream=False, usePHPProxy=False, useProxy=False):
-        if usePHPProxy:
-            if allow_redirects:
-                headers["X-PHPProxy-AllowRedirects"] = "true"
-
-            return requests.get(
-                f"{self.phpProxyURL}/get.php?url={base64.b64encode(url.encode()).decode()}&headers={base64.b64encode(json.dumps(headers).encode()).decode()}",
-                allow_redirects=False
-            )
-
+    def GET(self, url, headers={}, cookies={}, allow_redirects=True, stream=False, useProxy=False):
         proxies = Proxy().json()
         if useProxy == False:
             proxies = {}
@@ -46,18 +37,7 @@ class NET:
             stream=stream
         )
 
-    def POST(self, url, headers={}, cookies={}, data=None, allow_redirects=True, usePHPProxy=False, useProxy=False):
-        if usePHPProxy:
-            settingHeaders = {}
-            if allow_redirects:
-                settingHeaders["X-PHPProxy-AllowRedirects"] = "true"
-            
-            return requests.post(
-                f"{self.phpProxyURL}/post.php?url={base64.b64encode(url.encode()).decode()}&headers={base64.b64encode(json.dumps(headers).encode()).decode()}&data={base64.b64encode(json.dumps(data).encode()).decode()}",
-                headers=settingHeaders,
-                allow_redirects=False
-            )
-
+    def POST(self, url, headers={}, cookies={}, data=None, allow_redirects=True, useProxy=False):
         proxies = Proxy().json()
         if useProxy == False:
             proxies = {}
@@ -79,11 +59,11 @@ class NET:
             cookies=cookies,
         )
 
-    def get(self, url, headers={}, allow_redirects=True, stream=False, useProxy=False, usePHPProxy=False):
-        return self.GET(url, headers=headers, allow_redirects=allow_redirects, stream=stream, useProxy=useProxy, usePHPProxy=usePHPProxy)
+    def get(self, url, headers={}, allow_redirects=True, stream=False, useProxy=False):
+        return self.GET(url, headers=headers, allow_redirects=allow_redirects, stream=stream, useProxy=useProxy)
 
-    def post(self, url, headers={}, data=None, allow_redirects=True, useProxy=False, usePHPProxy=False):
-        return self.POST(url, headers=headers, data=data, allow_redirects=allow_redirects, useProxy=useProxy, usePHPProxy=usePHPProxy)
+    def post(self, url, headers={}, data=None, allow_redirects=True, useProxy=False):
+        return self.POST(url, headers=headers, data=data, allow_redirects=allow_redirects, useProxy=useProxy)
 
     def Session(self):
         return NET()

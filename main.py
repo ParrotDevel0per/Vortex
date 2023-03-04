@@ -1,4 +1,5 @@
 from flask import Flask, request, redirect, render_template
+from flask_minify import Minify
 
 # App routes
 from routes.api.api import api
@@ -6,7 +7,6 @@ from routes.api.favorites import favoritesRT
 from routes.api.playlist import playlistRT
 from routes.auth import auth
 from routes.www import www
-from routes.m3u import m3u
 from routes.admin import admin
 
 # Rest
@@ -21,9 +21,7 @@ import os
 import sys
 import logging
 import sys
-import time
 
-from utils.createWebsite import createWebsite
 from classes.cli import CLI
 from classes.cliscript import CLIScript
 from classes.plugin import Plugin
@@ -51,13 +49,14 @@ if getSetting("logger").lower() == "true":
     logging.basicConfig(filename=logFile, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 app = Flask("Vortex")
 app.config['JSON_SORT_KEYS'] = False
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(favoritesRT, url_prefix='/api')
 app.register_blueprint(playlistRT, url_prefix='/api')
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(www, url_prefix='/')
-app.register_blueprint(m3u, url_prefix='/')
 app.register_blueprint(auth, url_prefix='/')
+Minify(app=app, html=True, js=True, cssless=True)
 
 plugin = Plugin()
 
@@ -158,13 +157,6 @@ def cli():
             break
 
 
-def createProxy():
-    while getSetting("phpProxyAutoGen").lower() == "true":
-        url = createWebsite()
-        setSetting("phpProxyURL", url)
-        time.sleep(12 * 60 * 60)
-        cls()
-        intro()
 
 if __name__ == "__main__":
     if len(getAdmins()) == 0:
@@ -198,6 +190,5 @@ if __name__ == "__main__":
         port = int(sysArgv[sysArgv.index("--port") + 1])
 
     threading.Thread(target=sendFirstRequest).start()
-    threading.Thread(target=createProxy).start()
     app.run(host=ip, port=port, debug="--debug" in sysArgv)
 

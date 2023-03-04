@@ -3,10 +3,12 @@
 	import Featured from './Featured.svelte';
 	import axios from 'axios';
 	import 'boxicons'
-	export let showG;
-	export let id;
-	export let showFt;
 
+	// Grab url parameters
+	const params = new URLSearchParams(window.location.search);
+    const showG = params.get("showG") ? params.get("showG") : "true";
+	const showFt = params.get("showFt") ? params.get("showFt") : "true";
+	const id = params.get("id") ? params.get("id") : "";
 
 	var homeItem = [];
 	if (showG == "true") {

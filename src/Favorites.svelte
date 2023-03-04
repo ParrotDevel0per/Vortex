@@ -28,7 +28,7 @@
         {:then resp}
             <div class="grid-container">
             {#each Object.entries(resp.data) as [i, d]}
-                <div class="grid-item card" on:click={()=>{window.location=`/watch/${d.id}/?kind=${d.kind}`}}>
+                <div class="grid-item card" on:click={()=>{window.location=`/?tab=player&id=${d.id}&kind=${d.kind}`}}>
                     <img src="/api/poster/{ d.id }?do=show" alt="Movie" style="width:100%">
                 </div> 
             {/each}

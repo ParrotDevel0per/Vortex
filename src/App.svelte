@@ -6,6 +6,9 @@
     import Addons from './Addons.svelte';
     import Playlists from './Playlists.svelte';
     import Playlist from './Playlist.svelte';
+    import Player from './Player.svelte';
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
 </script>
 
 
@@ -17,12 +20,14 @@
 <Playlists />
 {:else if tab == "playlist"}
 <Playlist />
+{:else if tab == "player"}
+<Player />
 {:else if tab == "addons"}
 <Addons />
 {:else if tab == "settings"}
 <Settings />
 {:else}
-<Home id="{ id }" showG="{ showG }" showFt = "{ showFt }"/>
+<Home />
 {/if}
 
 <style>

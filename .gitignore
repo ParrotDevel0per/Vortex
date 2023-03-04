@@ -14,9 +14,4 @@ venv
 *.tpps
 openvpn/auth/*
 openvpn
-addons/*
 geckodriver.log
-
-!addons/ExamplePlugin/*
-!addons/vidsrc/*
-!addons/2embed/*

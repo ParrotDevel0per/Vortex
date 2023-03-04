@@ -7,7 +7,7 @@ class Plugin:
     def __init__(self) -> None:
         self.css = {}
         self.blueprints = []
-        self.resolvers = {}
+        self.sources = {}
         self.plugins = []
         self.access = {"public": [], "admin": []}
         self.setData()
@@ -30,17 +30,17 @@ class Plugin:
                 "open": metadata["open"] if "open" in metadata else "",
                 "settings": metadata["settings"] if "settings" in metadata else [],
                 "addsCSS": "css" in metadata and metadata["css"],
-                "addsResolver": "resolver" in metadata and metadata["resolver"] != {}
+                "addsSource": "source" in metadata and metadata["source"] != {}
             })
 
             # Add custom css
             if "css" in metadata and metadata["css"]:
                 self.css.update(metadata["css"])
             
-            # Check for resolvers
-            if "resolver" in metadata and metadata["resolver"]:
-                self.resolvers[metadata["resolver"]["name"]] = {
-                    "run": metadata["resolver"]["func"],
+            # Check for sources
+            if "source" in metadata and metadata["source"]:
+                self.sources[metadata["source"]["name"]] = {
+                    "run": metadata["source"]["func"],
                 }
 
             if "admin" in metadata and metadata["admin"]:

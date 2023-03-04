@@ -42,6 +42,7 @@
 
 
                     {#if showOptions}
+                    <!-- svelte-ignore missing-declaration -->
                     <button 
                     on:mouseover={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
                     on:focus={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
@@ -92,6 +93,7 @@
                     }}
                     >Get M3U</button>
 
+                    <!-- svelte-ignore missing-declaration -->
                     <button 
                     on:mouseover={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
                     on:focus={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
@@ -112,6 +114,7 @@
                     }}
                     >Rename</button>
 
+                    <!-- svelte-ignore missing-declaration -->
                     <button 
                         on:mouseover={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
                         on:focus={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}

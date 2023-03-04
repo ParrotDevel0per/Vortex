@@ -224,32 +224,6 @@ def changePassword_(uid, password):
     return "Done"
 
 
-@api.route('/resolve/<id>')
-@api.route('/resolve/', defaults={'id': None})
-def resolve(id):
-    if not id: return jsonify({
-        'status': 'error',
-        'message': 'No ID provided'
-    })
-    if not id.startswith("tt"): id = f"tt{id}"
-
-    plugin = Plugin()
-    sources = []
-    for k,v in plugin.resolvers.items():
-        sources.append(k)
-
-    use = sources[0]
-    if getSetting("source") in sources:       use = getSetting("source")
-    if request.args.get("source") in sources: use = request.args.get("source")
-
-    episode = str(request.args.get("episode") or "")
-
-    return jsonify({
-        "id": id,
-        "url": plugin.resolvers[use]["run"](id, episode=episode or None).replace("[[token]]", reqToToken(request))
-    })
-
-
 @api.route("/subtitles/<id>")
 def subtitles(id):
     if id.startswith("tt"): id = id[2:]
@@ -258,7 +232,7 @@ def subtitles(id):
     if cached == None:
         browser = Firefox()
         browser.addHeader("X-User-Agent", "trailers.to-UA")
-        data = NET().GET(f"https://rest.opensubtitles.org/search/imdbid-{id}", headers=browser.headers, usePHPProxy=False, useProxy=False).json()
+        data = NET().GET(f"https://rest.opensubtitles.org/search/imdbid-{id}", headers=browser.headers, useProxy=False).json()
         type = data[0]["MovieKind"]
         results = {}
 
@@ -331,69 +305,95 @@ def sources(id):
     sources = []
     #extensions = {}
 
-    for k,v in Plugin().resolvers.items():
-        #extensions[k] = v["ext"]
-        sources.append(k)
+    #for k,v in Plugin().resolvers.items():
+    #    #extensions[k] = v["ext"]
+    #    sources.append(k)
 
-    default = sources[0]
-    if getSetting("source") in sources:       default = getSetting("source")
-    if request.args.get("source") in sources: default = request.args.get("source")
-    
-    sources.insert(0, sources.pop(sources.index(default)))
-    now = str(time.time()).split(".")[0]
 
-    #subtitles = NET().localGET(request, f"/api/subtitles/{id}").json()["results"]
-
+    response = [
+        {
+            "name": "VidSrc",
+            "url": "",
+            "id": "vidsrc",
+            "seasons": [
+                {
+                    "name": "Season 1",
+                    "id": "season1",
+                    "episodes": [
+                        {
+                            "name": "Episode 1",
+                            "id": "episode1",
+                            "url": "https://google.com"
+                        },
+                        {
+                            "name": "Episode 2",
+                            "id": "episode2",
+                            "url": "https://bing.com"
+                        }
+                    ]
+                },
+                {
+                    "name": "Season 2",
+                    "id": "season2",
+                    "episodes": [
+                        {
+                            "name": "Episode 1",
+                            "id": "episode1",
+                            "url": "https://duckduckgo.com"
+                        },
+                        {
+                            "name": "Episode 2",
+                            "id": "episode2",
+                            "url": "https://example.com"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
     response = []
 
-    if kind == "show":
-        EC = NET().localGET(request, f"/api/episodeCount/{id}").json()["results"]
-        NOS = len(get_simple_keys(EC))
-
-        for i in range(NOS):
-            i += 1
-
-            episodes = []
-            for j in range(int(EC[str(i)])):
-                j += 1
-
-                sources_ = []
-                for src in sources:
-                    file = f"/play/{id}/{i}-{j}?source={src}&generated={now}&token={token}"
-                    #if src in extensions: file = file.replace("ext", extensions[src])
-                    #else: file = file.replace(".ext", "")
-
-                    sources_.append({
-                        "title": src,
-                        "file": file,
-                        "id": f"{src}-S{i}E{j}"
-                    })
-
-                episodes.append({
-                    "title": f"Episode {j}",
-                    "folder": sources_
-                })
-
+    if kind == "movie":
+        for k,v in Plugin().sources.items():
             response.append({
-                "title": f"Season {i}",
-                "folder": episodes
+                "name": k,
+                "url": v["run"](id),
+                "id": k,
             })
         return jsonify(response)
 
-    #s = ""
-    #for lang in subtitles:
-    #    s += f"[{lang['lang']}]/api/ungzip.srt?url={lang['url']}&generated={int(time.time())},"
-    #s = s[:-1]
+    EC = NET().localGET(request, f"/api/episodeCount/{id}").json()["results"]
+    NOS = len(get_simple_keys(EC))
+    
+    for k,v in Plugin().sources.items():
+        temp = {
+            "name": k,
+            "url": "",
+            "id": k,
+            "seasons": []
+        }
 
-    for src in sources:
-        j = {"title": src }
-        j["file"] = f"/play/{id}"
-        j["file"] += f"?source={src}&generated={now}&token={token}"
-        j["id"] = src
-        #j["subtitle"] = s
-        #j["file"] = j["file"].replace("ext", extensions[src]) if src in extensions else j["file"]
-        response.append(j)
+        for i in range(NOS-1):
+            i += 1
+            seasonTemp = {
+                "name": f"Season {i}",
+                "id": f"season{i}",
+                "episodes": []
+            }
+            for j in range(int(EC[str(i)])):
+                j += 1
+                seasonTemp["episodes"].append({
+                    "name": f"Episode {j}",
+                    "id": f"episode{i}-{j}",
+                    "url": v["run"](id, f"{i}-{j}")
+                })
+            temp["seasons"].append(seasonTemp)
+        response.append(temp)
     return jsonify(response)
+            
+
+
+
 
 
 
@@ -642,7 +642,7 @@ def getMoviesByGenres():
 @api.route('/proxy/<path:url>')
 def proxy(url):
     if url.startswith("base64:"):
-        url = base64.b64decode(url[7:]).decode("utf-8")
+        url = base64.b64decode(url.split("base64:")[1]).decode("utf-8")
 
     headers = Firefox().headers
     try:
@@ -651,7 +651,7 @@ def proxy(url):
         pass
     
 
-    r = NET().GET(url, headers=headers, stream=True, usePHPProxy=request.args.get("usePHPProxy", "").lower() == "true", useProxy=request.args.get("useProxy", "").lower() == "true")
+    r = NET().GET(url, headers=headers, stream=True, useProxy=request.args.get("useProxy", "").lower() == "true")
     return Response(r.iter_content(chunk_size=10*1024), content_type=r.headers['Content-Type'] if 'Content-Type' in r.headers else "")
 
 @api.route('/getMovieInfo/<id>')

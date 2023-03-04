@@ -58,66 +58,31 @@ def index():
         image = url_for("www.send_static", path="img/screenshots/Vortex-Settings.png", _external=True)
         url = url_for("www.index", _external=True) + '?tab=settings'
 
-    metaTags.append(f'<title>{name}</title>')
-    metaTags.append(f'<meta name="description" content="{desc}">')
-    metaTags.append(f'<meta name="theme-color" content="#0000ff">')
-    metaTags.append(f'<meta property="og:type" content="website">')
-    metaTags.append(f'<meta property="og:url" content="{url}">')
-    metaTags.append(f'<meta property="og:title" content="{name}">')
-    metaTags.append(f'<meta property="og:description" content="{desc}">')
-    metaTags.append(f'<meta property="og:image" content="{image}">')
-    metaTags.append(f'<meta property="twitter:card" content="summary_large_image">')
-    metaTags.append(f'<meta property="twitter:url" content="{url}">')
-    metaTags.append(f'<meta property="twitter:title" content="{name}">')
-    metaTags.append(f'<meta property="twitter:description" content="{desc}">')
-    metaTags.append(f'<meta property="twitter:image" content="{image}">')
+    elif tab == "player":
+        name = "Vortex | Player"
+        desc = "Vortex Player"
+        image = url_for("www.send_static", path="img/screenshots/Vortex-Player.png", _external=True)
+        url = url_for("www.index", _external=True) + '?tab=player'
+
+    metaTags.append(f'    <title>{name}</title>')
+    metaTags.append(f'    <meta name="description" content="{desc}">')
+    metaTags.append(f'    <meta name="theme-color" content="#0000ff">')
+    metaTags.append(f'    <meta property="og:type" content="website">')
+    metaTags.append(f'    <meta property="og:url" content="{url}">')
+    metaTags.append(f'    <meta property="og:title" content="{name}">')
+    metaTags.append(f'    <meta property="og:description" content="{desc}">')
+    metaTags.append(f'    <meta property="og:image" content="{image}">')
+    metaTags.append(f'    <meta property="twitter:card" content="summary_large_image">')
+    metaTags.append(f'    <meta property="twitter:url" content="{url}">')
+    metaTags.append(f'    <meta property="twitter:title" content="{name}">')
+    metaTags.append(f'    <meta property="twitter:description" content="{desc}">')
+    metaTags.append(f'    <meta property="twitter:image" content="{image}">')
 
 
     return render_template(
         'index.html',
-        tab=tab,
-        id=id,
-        showG=request.args.get("showG") or "true",
-        showFt=request.args.get("showFt") or "true",
         metaTags="\n".join(metaTags)
     )
-
-@www.route('/watch/<id>/')
-@www.route('/watch/<id>')
-def watch(id):
-    sourcesURL = f"/api/sources/{id}"
-    if request.args.get('kind'): sourcesURL += f"?kind={request.args.get('kind')}"
-    if request.args.get('source'): sourcesURL += f"&source={request.args.get('source')}"
-    sources = NET().localGET(request, sourcesURL).json()
-    return render_template('play.html', id=id, sources=json.dumps(sources), sourcesURL=sourcesURL, version=open("VERSION", "r").read())
-
-@www.route("/recaptcha/solve")
-def solve():
-    sitekey = request.args.get("sitekey")
-    if not sitekey:
-        return ""
-    return """<html>
-  <head>
-    <title>Fuck reCaptcha</title>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  </head>
-  <body>
-    <form action="/recaptcha/solved?sitekey={sitekey}" method="POST">
-      <div class="g-recaptcha" data-sitekey="{sitekey}"></div>
-      <br/>
-      <input id="submit" type="submit" value="Submit">
-    </form>
-  </body>
-</html>
-""".replace("{sitekey}", sitekey)
-
-@www.route("/recaptcha/solved", methods=["POST", "GET"])
-def solved():
-    global DB
-    if request.method == "GET":
-        return "Only POST requests"
-
-    return request.form["g-recaptcha-response"]
 
 @www.route('/static/<path:path>')
 def send_static(path):

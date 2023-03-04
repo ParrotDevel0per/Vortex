@@ -32,6 +32,10 @@
 	}).catch(error => {
 		console.log(error);
 	});
+
+    // Grab url parameters
+	const params = new URLSearchParams(window.location.search);
+	const id = params.get("id") ? params.get("id") : "";
 </script>
 
 <main>
@@ -44,6 +48,7 @@
             {#each Object.entries(resp.data.items) as [i, d]}
                 <div class="grid-item card">
                     {#if resp.data.owners.includes(UID)}
+                    <!-- svelte-ignore missing-declaration -->
                     <button 
                     on:mouseover={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
                     on:focus={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
@@ -61,7 +66,7 @@
                     }}
                     >Remove</button>
                     {/if}
-                    <div class="container" on:click={()=>{window.location=`/watch/${d.id}/?kind=${d.kind}`}}>
+                    <div class="container" on:click={()=>{window.location=`/?tab=player&id=${d.id}&kind=${d.kind}`}}>
                         <img src="/api/poster/{ d.id }?do=show" alt="Movie" style="width:100%">
                     </div>
                 </div> 

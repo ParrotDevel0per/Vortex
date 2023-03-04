@@ -9,8 +9,6 @@
 
     import axios from "axios";
 
-    if (id) imdbID = id;
-
     var favsBTN = "";
     var plBTN = "";
     var playBTN = "";
@@ -79,8 +77,8 @@
     }
 
     const play = () => {
-        let url = `/watch/${playBTN.dataset.id}/`
-        if (kind) url += `?kind=${kind}`;
+        let url = `/?tab=player&id=${playBTN.dataset.id}`
+        if (kind) url += `&kind=${kind}`;
         location = url
     }
 </script>

@@ -3,7 +3,7 @@ from classes.imdb import IMDB
 import threading
 import json
 from utils.cache import getCachedItem, cacheItem
-from utils.users import userdata, changeValue, reqToUID
+from utils.users import reqToUID
 from utils.common import randStr
 import os
 from utils.paths import DB_FOLDER
