@@ -7,7 +7,7 @@ default = {
     "ip": "127.0.0.1",
     "port": "5000",
     "source": "vidsrc",
-    "proxifyM3UPosters": "true",
+
     #"preloader": "1.png",
     "language": "en",
     "debug": "false",
@@ -23,8 +23,6 @@ default = {
     "proxy": "",
     "proxyAuth": "",
     "registerPublic": "true",
-
-    "proxyExceptions": "",
 }
 
 # https://stackoverflow.com/questions/34327719/get-keys-from-json-in-python

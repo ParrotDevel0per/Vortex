@@ -31,6 +31,8 @@
 	const changeSource = (force=false) => {
 		rerender = !rerender;
 		if (kind == "show") {
+			console.log(player.dataset.source)
+			console.log(source)
 			if (
 				source == player.dataset.source &&
 				season == player.dataset.season &&
@@ -59,7 +61,7 @@
 	<Nav/>
 	<div id="content" class="content">
 		{#key rerender}
-			<select name="Source" id="selectSource" bind:value={source} on:change={()=>changeSource()}>
+			<select name="Source" id="selectSource" bind:value={source} on:change={()=>{changeSource()}}>
 				{#each sources as s}
 				<option value={s.id} data-url={s.url}>{s.name}</option>
 				{/each}
@@ -78,7 +80,7 @@
 
 
 
-			<select name="Episode" id="selectEpisode" bind:value={episode} on:change={()=>changeSource()}>
+			<select name="Episode" id="selectEpisode" bind:value={episode} on:change={()=>{changeSource()}}>
 				{#each sources as s}
 					{#each s.seasons as ss}
 						{#if ss.id == season && s.id == source}
@@ -103,6 +105,9 @@
 				data-episode=""
 				src="about:blank"
 				frameborder="0"
+				allow="fullscreen"
+				allowfullscreen
+				referrerpolicy="no-referrer"
 				bind:this={player}
 				on:load={()=>changeSource()}>
 			</iframe>

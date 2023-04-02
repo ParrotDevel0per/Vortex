@@ -88,7 +88,10 @@ def verifyRequest():
     admin = [ # These endpoints require admin rights
         "admin.index",
         "admin.terminal",
+        "admin.users",
         "admin.log",
+        "admin.addons",
+        "admin.ps",
         "api.terminal",
         "api.users",
         "api.promoteDemote",
@@ -97,8 +100,6 @@ def verifyRequest():
         "api.changePassword_",
         "api.requestsIP",
         "api.addonSettings",
-        "www.p",
-        "www.ps"
     ]
 
     if getSetting("registerPublic").lower() == "true":

@@ -41,6 +41,24 @@ featuredMovies = {
         "plot": "A socially inept clown for hire - Arthur Fleck aspires to be a stand up comedian among his small job working dressed as a clown holding a sign for advertising. He takes care of his mother- Penny Fleck, and as he learns more about his mental illness, he learns more about his past. Dealing with all the negativity and bullying from society he heads downwards on a spiral, in turn showing how his alter ego \"Joker\", came to be.",
 		"imdbID": "tt7286456",
 		"kind": "movie",
+    },
+    "JohnWick4": {
+        "img": "/api/banner/tt10366206?do=show",
+        "title": "John Wick: Chapter 4",
+        "line": "",
+        "info": "8.5/10\u00A0\u00A02023\u00A0\u00A0Action, Crime, Thriller\u00A0\u00A02h 49m",
+        "plot": "John Wick uncovers a path to defeating The High Table. But before he can earn his freedom, Wick must face off against a new enemy with powerful alliances across the globe and forces that turn old friends into foes.",
+		"imdbID": "tt10366206",
+		"kind": "movie",
+    },
+    "ScreamVI": {
+        "img": "/api/banner/tt17663992?do=show",
+        "title": "Scream <strong style=\"color:red;\">VI</strong>",
+        "line": "",
+        "info": "7.2/10\u00A0\u00A02023\u00A0\u00A0Horror, Mystery, Thriller\u00A0\u00A02h 2m",
+        "plot": 'Following the latest Ghostface killings, the four survivors leave Woodsboro behind and start a fresh chapter. In Scream VI, Melissa Barrera ("Sam Carpenter"), Jasmin Savoy Brown ("Mindy Meeks-Martin"), Mason Gooding ("Chad Meeks-Martin"), Jenna Ortega ("Tara Carpenter"), Hayden Panettiere ("Kirby Reed") and Courteney Cox ("Gale Weathers") return to their roles in the franchise alongside Jack Champion, Henry Czerny, Liana Liberato, Dermot Mulroney, Devyn Nekoda, Tony Revolori, Josh Segarra, and Samara Weaving.',
+		"imdbID": "tt17663992",
+		"kind": "movie",
     }
 }
 
@@ -300,57 +318,7 @@ def sources(id):
     if kind == "tv series":
         kind = "show"
 
-    token = reqToToken(request)
 
-    sources = []
-    #extensions = {}
-
-    #for k,v in Plugin().resolvers.items():
-    #    #extensions[k] = v["ext"]
-    #    sources.append(k)
-
-
-    response = [
-        {
-            "name": "VidSrc",
-            "url": "",
-            "id": "vidsrc",
-            "seasons": [
-                {
-                    "name": "Season 1",
-                    "id": "season1",
-                    "episodes": [
-                        {
-                            "name": "Episode 1",
-                            "id": "episode1",
-                            "url": "https://google.com"
-                        },
-                        {
-                            "name": "Episode 2",
-                            "id": "episode2",
-                            "url": "https://bing.com"
-                        }
-                    ]
-                },
-                {
-                    "name": "Season 2",
-                    "id": "season2",
-                    "episodes": [
-                        {
-                            "name": "Episode 1",
-                            "id": "episode1",
-                            "url": "https://duckduckgo.com"
-                        },
-                        {
-                            "name": "Episode 2",
-                            "id": "episode2",
-                            "url": "https://example.com"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
     response = []
 
     if kind == "movie":
@@ -373,7 +341,7 @@ def sources(id):
             "seasons": []
         }
 
-        for i in range(NOS-1):
+        for i in range(NOS):
             i += 1
             seasonTemp = {
                 "name": f"Season {i}",
