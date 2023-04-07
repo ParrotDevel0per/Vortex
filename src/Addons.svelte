@@ -28,14 +28,14 @@
         {:then resp}
             <div class="grid-container">
             {#each Object.entries(resp.data) as [i, d]}
-                {#if d.open}
-                    <div class="grid-item card" on:click={()=>{window.location=d.open}}>
-                        <img src="/api/addonLogo/{ d.id }" alt="Addon" style="width:100%">
-                        <div class="container">
-                        <h4><b>{ d.name }</b></h4>
-                        </div>
-                    </div> 
-                {/if}
+                <div class="grid-item card" on:click={()=>{window.location=d.open ? d.open : "#"}}>
+                    <img src="/api/addonLogo/{ d.id }" alt="Addon" style="width:100%">
+                    <div class="container">
+                    <h4><b>{ d.name }</b></h4>
+                    </div>
+                </div> 
+            {:else}
+                <h1 style="text-align:center; color: white;">Empty, Please install some addons to see them here</h1>
             {/each}
             </div>
         {:catch error}

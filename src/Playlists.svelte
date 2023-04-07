@@ -78,21 +78,6 @@
                     }}
                     >Share</button>
 
-                    <button 
-                    on:mouseover={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
-                    on:focus={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
-                    on:mouseout={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
-                    on:blur={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}
-                    on:click={(e)=>{
-                        navigator.clipboard.writeText(`${window.location.origin}/playlist.m3u?id=${d.playlistID}`);
-                        e.originalTarget.innerText = "Copied";
-
-                        window.setTimeout(function(){
-                            e.originalTarget.innerText = "Get M3U";
-                        }, 1000);
-                    }}
-                    >Get M3U</button>
-
                     <!-- svelte-ignore missing-declaration -->
                     <button 
                     on:mouseover={()=>{document.getElementById(i.toString()).style.borderColor='blue'}}

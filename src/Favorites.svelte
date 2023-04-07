@@ -31,6 +31,8 @@
                 <div class="grid-item card" on:click={()=>{window.location=`/?tab=player&id=${d.id}&kind=${d.kind}`}}>
                     <img src="/api/poster/{ d.id }?do=show" alt="Movie" style="width:100%">
                 </div> 
+            {:else}
+                <h1 style="text-align:center; color: white;">Empty, Please add items to favorites to see them here</h1>
             {/each}
             </div>
         {:catch error}

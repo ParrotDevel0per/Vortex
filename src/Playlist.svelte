@@ -70,6 +70,9 @@
                         <img src="/api/poster/{ d.id }?do=show" alt="Movie" style="width:100%">
                     </div>
                 </div> 
+            
+            {:else}
+                <h1 style="text-align:center; color: white;">Empty, Please add items to playlist to see them here</h1>
             {/each}
             </div>
         {:catch error}

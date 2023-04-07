@@ -29,7 +29,9 @@ def searchForExpiredItems():
     for key in reg:
         if reg[key]["expiry"] < time.time():
             removeFromCacheRegistry(reg[key]["filename"], reg[key]["folder"])
-            os.remove(os.path.join(CACHE_FOLDER, reg[key]['folder'], reg[key]['filename']))
+            file = os.path.join(CACHE_FOLDER, reg[key]['folder'], reg[key]['filename'])
+            if os.path.exists(file):
+                os.remove(file)
             #print(f"Removed {reg[key]['filename']} from {reg[key]['folder']}")
 
 def cacheItem(filename, folder, data, expiry=(7 * 24 * 60 * 60)):

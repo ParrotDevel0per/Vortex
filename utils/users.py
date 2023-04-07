@@ -16,7 +16,7 @@ genres = [
     "Biography",
     "Comedy",
     "Crime",
-    "Documentary",
+    #"Documentary",
     "Drama",
     "Family",
     "Fantasy",
