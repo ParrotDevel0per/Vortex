@@ -636,23 +636,18 @@ def getMovieInfo(id):
     if cached == None:
         movie = IMDB().getMovieInfo(id)
         resp = {}
-        resp["title"] = movie['title']
-        resp["plot"] = movie['plot outline'] if 'plot outline' in movie else movie['plot'][0]
-        resp["poster"] = movie["full-size cover url"]
-        resp["year"] = movie['year']
-        resp["genres"] = ", ".join(movie['genres'][0:3])
+        resp["title"] = movie.get('title', '')
+        resp["plot"] = movie.get('plot outline', movie.get("plot", ["No Description was provided"])[0])
+        resp["poster"] = movie.get("full-size cover url", "")
+        resp["year"] = movie.get('year', '')
+        resp["genres"] = ", ".join(movie['genres'][0:3]) if 'genres' in movie else 'N/A'
         resp["episodeCount"] = "0"
+        resp["airDate"] = movie.get('original air date', "N/A")
+        resp["budget"] = movie.get("box office", {"Budget": "N/A"}).get('Budget', "N/A")
+        resp["rating"] = round(float(movie['rating']), 1) if 'rating' in movie else "N/A"
 
-        # Get info that might / might not be in imdb's database
-        try: resp["airDate"] = movie['original air date']
-        except: resp["airDate"] = "N/A"
-        try: resp["rating"] = round(float(movie['rating']), 1)
-        except: resp["rating"] = "N/A"
-        try: resp["budget"] = movie["box office"]['Budget']
-        except: resp["budget"] = "N/A"
-
-        # Create line with informations about movie, \u00A0 is unicode for space in JS
-        resp["info"] = f"{resp['rating']}/10\u00A0\u00A0{resp['year']}\u00A0\u00A0{resp['genres']}\u00A0\u00A0"
+        # \u00A0 is unicode for space in JS
+        resp["info"] = f"{resp['rating']}/10\u00A0{resp['year']}\u00A0{resp['genres']}\u00A0"
         
         # Add data based on if its movie / tv show
         if "number of seasons" in movie:
@@ -661,10 +656,7 @@ def getMovieInfo(id):
             resp["info"] += f"{resp['NOS']} Seasons"
         else: 
             resp["kind"] = "movie"
-            if "duration" in movie:
-                resp["info"] += movie["duration"]
-            else:
-                resp["info"] += "0h 0m"
+            resp["info"] += movie.get("duration", "0h 0m")
 
         cacheItem(f"Item-{id}.json", "ItemInfoCache", json.dumps(resp), expiry=(30*24*60*60))
         rp = resp

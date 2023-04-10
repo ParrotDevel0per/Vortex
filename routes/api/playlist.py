@@ -64,7 +64,7 @@ def createPlaylist():
         "playlistID": playlistID,
         "public": True,
         "count": 0,
-        "logo": "https://cdn3.iconfinder.com/data/icons/flat-audio-video/16/02_music-playlist-512.png",
+        "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.KDhva9uM2b3jvBQSLw-3hwHaGB%26pid%3DApi&f=1&ipt=4fd55b6b6f2a5ad2da5fd2c02809925578cd105cf30a6374222800227c8463ed&ipo=images",
         "items": {}
     }
     open(playlistsFile, "w", encoding="utf-8").write(json.dumps(loaded))
